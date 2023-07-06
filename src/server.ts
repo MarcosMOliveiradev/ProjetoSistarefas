@@ -1,14 +1,17 @@
 import fastify from 'fastify'
 import { env } from './env'
+import { atividades } from './routes/atividades'
+import { usuario } from './routes/usuarios'
 
 const app = fastify()
 
-app.get('/', () => {
-  const hello = 'hello word'
-
-  return hello
+app.register(atividades, {
+  prefix: '/atividade',
 })
 
+app.register(usuario, {
+  prefix: '/usuario',
+})
 app
   .listen({
     port: env.PORT,

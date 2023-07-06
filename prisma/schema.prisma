@@ -6,3 +6,48 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model Usuario {
+  id         String   @id @default(uuid())
+  nome       String
+  matricula  Int      @unique
+  password   String
+  permission Boolean
+  created_at DateTime @default(now())
+  update_at  DateTime @updatedAt
+
+  atividade Atividade[]
+
+  @@map("usuario")
+}
+
+model Tarefas {
+  id         String   @id @default(uuid())
+  codigo     Int
+  setor      String
+  descricao  String
+  created_at DateTime @default(now())
+  update_at  DateTime @updatedAt
+
+  atividade Atividade[]
+
+  @@map("tarefas")
+}
+
+model Atividade {
+  id                   String   @id @default(uuid())
+  id_documento         String?
+  quantidade_de_folhas String?
+  hora_inicio          String
+  hora_termino         String
+  data                 DateTime
+  created_at           DateTime @default(now())
+
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+  usuarioId String
+
+  Tarefas   Tarefas? @relation(fields: [tarefasId], references: [id])
+  tarefasId String?
+
+  @@map("atividade")
+}
