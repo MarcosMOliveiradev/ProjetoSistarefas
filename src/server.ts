@@ -5,13 +5,14 @@ import { usuario } from './routes/usuarios'
 
 const app = fastify()
 
+app.register(usuario, {
+  prefix: '/usuario',
+})
+
 app.register(atividades, {
   prefix: '/atividade',
 })
 
-app.register(usuario, {
-  prefix: '/usuario',
-})
 app
   .listen({
     port: env.PORT,

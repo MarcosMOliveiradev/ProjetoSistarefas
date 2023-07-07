@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify'
-import { CreatedUserControle } from '../controllers/CreatedUserControle'
+import { CreatedUserControlle } from '../controllers/CreatedUserControlle'
 
 export async function usuario(app: FastifyInstance) {
-  app.post('/', new CreatedUserControle().user)
+  app.post('/', new CreatedUserControlle().user)
 }

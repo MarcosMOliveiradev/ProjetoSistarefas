@@ -1,19 +1,15 @@
 import { FastifyInstance } from 'fastify'
-import { prisma } from '../lib/prisma'
+import { CreatedActivyController } from '../controllers/CreatedActivyController'
+import { GetActivyController } from '../controllers/GetActivyControllers'
 
 export async function atividades(app: FastifyInstance) {
-  app.get('/', async () => {
-    const atividade = prisma.atividade.findMany({
-      include: {
-        usuario: {
-          select: {
-            nome: true,
-            matricula: true,
-          },
-        },
-      },
-    })
+  app.post('/', new CreatedActivyController().activy)
 
-    return atividade
-  })
+  app.get('/', new GetActivyController().activyGet)
+
+  app.get('/:id', new GetActivyController().getActivyForId)
+
+  app.get('/data', new GetActivyController().getActivyForDate)
+
+  app.get('/intervalData', new GetActivyController().getActivyIntevalDate)
 }

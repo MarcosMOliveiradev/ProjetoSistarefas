@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
 
-export class CreatedUserControle {
+export class CreatedUserControlle {
   async user(request: FastifyRequest, reply: FastifyReply) {
     const userSchema = z.object({
       nome: z.string(),
@@ -12,6 +12,7 @@ export class CreatedUserControle {
     })
     const userInfo = userSchema.parse(request.body)
 
+    // refatorar
     let user = await prisma.usuario.findUnique({
       where: {
         matricula: userInfo.matricula,

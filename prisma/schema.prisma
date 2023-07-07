@@ -40,14 +40,14 @@ model Atividade {
   quantidade_de_folhas String?
   hora_inicio          String
   hora_termino         String
-  data                 DateTime
+  data                 String
   created_at           DateTime @default(now())
 
   usuario   Usuario @relation(fields: [usuarioId], references: [id])
   usuarioId String
 
-  Tarefas   Tarefas? @relation(fields: [tarefasId], references: [id])
-  tarefasId String?
+  Tarefas   Tarefas @relation(fields: [tarefasId], references: [id])
+  tarefasId String
 
   @@map("atividade")
 }
