@@ -6,6 +6,7 @@ const envSchema = z.object({
   DATABASE_CLIENT: z.string(),
   DATABASE_URL: z.string(),
   PORT: z.number().default(3333),
+  ACCESS_TOKEN: z.string(),
 })
 
 const _env = envSchema.safeParse(process.env)

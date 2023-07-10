@@ -23,8 +23,8 @@ export class CreatedActivyController {
         hora_termino: horaTermino,
         data,
 
-        usuarioId: '72ba2e82-cf48-47d9-8b0b-9a0f497eb0b2',
-        tarefasId: '0a1310d5-7b25-4e12-975c-abbe2d2ab21b',
+        usuarioId: 'e50e3a2e-bf07-4c5f-a3b9-c0db70d35570',
+        tarefasId: 'abb74444-74f2-48a8-a0b8-a76bb7d097d7',
       },
     })
 
