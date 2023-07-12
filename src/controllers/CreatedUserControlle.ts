@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
+import { hash } from 'bcrypt'
 
 export class CreatedUserControlle {
   async user(
@@ -13,33 +14,31 @@ export class CreatedUserControlle {
       matricula: z.number(),
       password: z.string(),
       permission: z.boolean().default(false),
-    })
-    const userInfo = userSchema.parse(request.body)
+    }) // Define o tipo das entradas
+    const userInfo = userSchema.parse(request.body) // Resgata do corpo da requisição as informações
 
-    let user = await prisma.usuario.findUnique({
+    const user = await prisma.usuario.findUnique({
       where: {
         matricula: userInfo.matricula,
       },
-    })
+    }) // Verifica se o usuario ja tem cadastro
 
     if (user) {
-      throw new Error('⚠ usuario ja existe')
+      return reply.status(404).send('⚠ Usuario ja existente!')
     }
 
+    const passwordHas = await hash(userInfo.password, 8)
+
     if (!user) {
-      user = await prisma.usuario.create({
+      await prisma.usuario.create({
         data: {
           nome: userInfo.nome,
           matricula: userInfo.matricula,
-          password: userInfo.password,
+          password: passwordHas,
           permission: userInfo.permission,
         },
       })
     }
-    // const token = app.jwt.sign({ user })
-    // console.log(token)
-    // reply.send({ token })
-
-    // return reply.status(201).send(user)
+    return reply.status(201).send('Usuario criado com sucesso!')
   }
 }

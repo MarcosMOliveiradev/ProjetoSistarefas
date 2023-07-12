@@ -10,12 +10,32 @@ export class CreatedActivyController {
       horaInicio: z.string(),
       horaTermino: z.string(),
       data: z.string(),
-    })
+      codigoTarefa: z.number(),
+    }) // Define o tipo das entradas
 
-    const { idDocumento, quantidadeFolhas, horaInicio, horaTermino, data } =
-      activySchema.parse(request.body)
+    const {
+      idDocumento,
+      quantidadeFolhas,
+      horaInicio,
+      horaTermino,
+      data,
+      codigoTarefa,
+    } = activySchema.parse(request.body) // Resgata do corpo da requisição as informações
 
-    const activy = await prisma.atividade.create({
+    const idTarefa = await prisma.tarefas.findUnique({
+      where: {
+        codigo: codigoTarefa,
+      },
+      select: {
+        id: true,
+      },
+    }) // Verifica o id da tarefa no banco de dados
+
+    if (idTarefa?.id == null) {
+      return reply.status(404).send('⚠ código invalido!')
+    } // Retorna erro caso o codigo seja invalido
+
+    await prisma.atividade.create({
       data: {
         id_documento: idDocumento,
         quantidade_de_folhas: quantidadeFolhas,
@@ -23,11 +43,11 @@ export class CreatedActivyController {
         hora_termino: horaTermino,
         data,
 
-        usuarioId: 'e50e3a2e-bf07-4c5f-a3b9-c0db70d35570',
-        tarefasId: 'abb74444-74f2-48a8-a0b8-a76bb7d097d7',
+        usuarioId: request.user.sub,
+        tarefasId: idTarefa?.id,
       },
     })
 
-    return reply.status(201).send(activy)
+    return reply.status(201)
   }
 }

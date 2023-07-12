@@ -25,10 +25,10 @@ Foram utilizado nesse projeto as seguintes tecnologias:
 ## Lista de afazeres
 
 [ x ] Criar estrutura e relacionamento do banco de dados </br>
-[  ] Criar authenticator de usuario </br>
-[  ] Deve ser possível listar as tarefas por dia </br>
+[ x ] Criar authenticator de usuario </br>
+[ x ] Deve ser possível listar as tarefas por dia </br>
 [  ] Deve ser possível gerar relatório em PDF </br>
-[  ] Usuario padrao deve ser capaz de criar listas de atividade </br>
-[  ] Usuario ADM deve ser capaz de criar novas tarefas, e adicionar novos setores </br>
-[  ] Usuario ADM deve ser capaz de crari novos usuario e permições </br>
+[ x ] Usuario padrao deve ser capaz de criar listas de atividade </br>
+[ x ] Usuario ADM deve ser capaz de criar novas tarefas, e adicionar novos setores </br>
+[ x ] Usuario ADM deve ser capaz de criar novos usuario e permições </br>
 

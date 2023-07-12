@@ -17,17 +17,21 @@ model Usuario {
   update_at  DateTime @updatedAt
 
   atividade Atividade[]
+  Tarefas   Tarefas[]
 
   @@map("usuario")
 }
 
 model Tarefas {
   id         String   @id @default(uuid())
-  codigo     Int
+  codigo     Int      @unique
   setor      String
   descricao  String
   created_at DateTime @default(now())
   update_at  DateTime @updatedAt
+
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+  usuarioId String
 
   atividade Atividade[]
 

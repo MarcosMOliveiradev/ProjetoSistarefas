@@ -2,7 +2,6 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import { prisma } from '../../lib/prisma'
 
 export class GetActivyController {
-  // get all ************
   async activyGet(request: FastifyRequest, reply: FastifyReply) {
     const activyGet = await prisma.atividade.findMany({
       select: {

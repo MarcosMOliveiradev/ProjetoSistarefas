@@ -16,6 +16,7 @@ export class GetActivyForDateController {
 
     const datainfo = await prisma.atividade.findMany({
       where: {
+        usuarioId: request.user.sub,
         data: {
           equals: data,
         },
