@@ -39,13 +39,14 @@ model Tarefas {
 }
 
 model Atividade {
-  id                   String   @id @default(uuid())
-  id_documento         String?
-  quantidade_de_folhas String?
-  hora_inicio          String
-  hora_termino         String
-  data                 String
-  created_at           DateTime @default(now())
+  id                    String   @id @default(uuid())
+  index_atividade_arefa Int
+  id_documento          String?
+  quantidade_de_folhas  String?
+  hora_inicio           String
+  hora_termino          String
+  data                  String
+  created_at            DateTime @default(now())
 
   usuario   Usuario @relation(fields: [usuarioId], references: [id])
   usuarioId String

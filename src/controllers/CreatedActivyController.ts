@@ -1,10 +1,12 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
+import { checkId } from '../middlewares/checkedIdTasck'
 
 export class CreatedActivyController {
   async activy(request: FastifyRequest, reply: FastifyReply) {
     const activySchema = z.object({
+      index: z.number(),
       idDocumento: z.string(),
       quantidadeFolhas: z.string(),
       horaInicio: z.string(),
@@ -14,6 +16,7 @@ export class CreatedActivyController {
     }) // Define o tipo das entradas
 
     const {
+      index,
       idDocumento,
       quantidadeFolhas,
       horaInicio,
@@ -22,21 +25,11 @@ export class CreatedActivyController {
       codigoTarefa,
     } = activySchema.parse(request.body) // Resgata do corpo da requisição as informações
 
-    const idTarefa = await prisma.tarefas.findUnique({
-      where: {
-        codigo: codigoTarefa,
-      },
-      select: {
-        id: true,
-      },
-    }) // Verifica o id da tarefa no banco de dados
-
-    if (idTarefa?.id == null) {
-      return reply.status(404).send('⚠ código invalido!')
-    } // Retorna erro caso o codigo seja invalido
+    const idTarefa = await checkId(codigoTarefa)
 
     await prisma.atividade.create({
       data: {
+        index_atividade_arefa: index,
         id_documento: idDocumento,
         quantidade_de_folhas: quantidadeFolhas,
         hora_inicio: horaInicio,
@@ -44,10 +37,10 @@ export class CreatedActivyController {
         data,
 
         usuarioId: request.user.sub,
-        tarefasId: idTarefa?.id,
+        tarefasId: idTarefa,
       },
     })
 
-    return reply.status(201)
+    return reply.status(201).send('Criado com sucesso')
   }
 }

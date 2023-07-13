@@ -5,6 +5,7 @@ export class GetActivyController {
   async activyGet(request: FastifyRequest, reply: FastifyReply) {
     const activyGet = await prisma.atividade.findMany({
       select: {
+        index_atividade_arefa: true,
         id_documento: true,
         quantidade_de_folhas: true,
         hora_inicio: true,

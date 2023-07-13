@@ -31,6 +31,6 @@ export class CreatedTascksControllers {
       },
     }) // Cria as tarefas no banco
 
-    return reply.status(201)
+    return reply.status(201).send('Criado com sucesso')
   }
 }

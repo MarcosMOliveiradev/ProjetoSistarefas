@@ -23,6 +23,7 @@ export class GetActivyForIntervalDateControllers {
         },
       },
       select: {
+        index_atividade_arefa: true,
         id_documento: true,
         quantidade_de_folhas: true,
         hora_inicio: true,

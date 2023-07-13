@@ -6,12 +6,14 @@ import { GetActivyIdController } from '../controllers/getActivy/GetActivyIdContr
 import { GetActivyForDateController } from '../controllers/getActivy/GetActivyForDateController'
 import { GetActivyForIntervalDateControllers } from '../controllers/getActivy/GetActivyForIntervalDateControllers'
 import { verify } from '../middlewares/jwtVerify'
+import { PutActivy } from '../controllers/PutActivyControllers'
 
 const createdActivi = new CreatedActivyController()
 const getActivi = new GetActivyController()
 const getActiviId = new GetActivyIdController()
 const getActiviDate = new GetActivyForDateController()
 const getActivyIntervalDate = new GetActivyForIntervalDateControllers()
+const putActivy = new PutActivy()
 
 export async function atividades(app: FastifyInstance) {
   app.post('/', { preHandler: [verify] }, async (request, reply) => {
@@ -32,5 +34,9 @@ export async function atividades(app: FastifyInstance) {
 
   app.get('/intervalData', { preHandler: [verify] }, async (request, reply) => {
     return getActivyIntervalDate.getActivyIntevalDate(request, reply)
+  })
+
+  app.put('/put', { preHandler: [verify] }, async (request, reply) => {
+    return putActivy.putActivy(request, reply)
   })
 }
