@@ -9,12 +9,11 @@ import { CreateUser } from '../application/use-cases/users/create-user'
 import { PrismaUserRepository } from '../database/prisma/repositoris/prisma-notification-repository'
 
 const prismaUser = new PrismaUserRepository()
-
 const createUserInstance = new CreateUser(prismaUser)
-
 const createdUser = new CreatedUserControlle(createUserInstance)
+const getUser = new GetUserController(prismaUser)
+
 const authenticate = new AuthenticateUserController()
-const getUser = new GetUserController()
 const updateUser = new UpdateUser()
 
 export async function usuario(app: FastifyInstance) {
@@ -26,7 +25,7 @@ export async function usuario(app: FastifyInstance) {
     return authenticate.authentication(request, reply, app) // login
   })
 
-  app.get('/', async (request, reply) => {
+  app.get('/', { preHandler: [verify] }, async (request, reply) => {
     return getUser.getUser(request, reply) // lista
   })
 

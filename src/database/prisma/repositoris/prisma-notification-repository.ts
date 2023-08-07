@@ -13,4 +13,16 @@ export class PrismaUserRepository extends UserRepository {
       },
     })
   }
+
+  async findMany(): Promise<User> {
+    const users = await prisma.usuario.findMany({
+      select: {
+        nome: true,
+        matricula: true,
+        permission: true,
+      },
+    })
+
+    return { users }
+  }
 }

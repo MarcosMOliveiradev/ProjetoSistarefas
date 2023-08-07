@@ -6,7 +6,6 @@ export class UserView {
       id: user.id,
       nome: user.nome,
       matricula: user.matricula,
-      password: user.password,
       permissao: user.permissao,
     }
   }
