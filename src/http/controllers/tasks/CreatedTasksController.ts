@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify'
 import { z } from 'zod'
-import { prisma } from '../lib/prisma'
-import { authenticate } from './../middlewares/UserAuthenticate'
+import { prisma } from '../../../database/prisma'
+import { authenticate } from '../../../middlewares/UserAuthenticate'
 
 export class CreatedTascksControllers {
   async createdTascks(

@@ -1,12 +1,12 @@
 import { FastifyInstance } from 'fastify'
 
-import { CreatedActivyController } from '../controllers/CreatedActivyController'
-import { GetActivyController } from '../controllers/getActivy/GetActivyControllers'
-import { GetActivyIdController } from '../controllers/getActivy/GetActivyIdControllers'
-import { GetActivyForDateController } from '../controllers/getActivy/GetActivyForDateController'
-import { GetActivyForIntervalDateControllers } from '../controllers/getActivy/GetActivyForIntervalDateControllers'
+import { CreatedActivyController } from './controllers/activy/CreatedActivyController'
+import { GetActivyController } from './controllers/activy/GetActivyControllers'
+import { GetActivyIdController } from './controllers/activy/GetActivyIdControllers'
+import { GetActivyForDateController } from './controllers/activy/GetActivyForDateController'
+import { GetActivyForIntervalDateControllers } from './controllers/activy/GetActivyForIntervalDateControllers'
+import { PutActivy } from './controllers/activy/PutActivyControllers'
 import { verify } from '../middlewares/jwtVerify'
-import { PutActivy } from '../controllers/PutActivyControllers'
 
 const createdActivi = new CreatedActivyController()
 const getActivi = new GetActivyController()

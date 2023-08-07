@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { prisma } from '../../lib/prisma'
-import { authenticate } from '../../middlewares/UserAuthenticate'
+import { prisma } from '../../../database/prisma'
+import { authenticate } from '../../../middlewares/UserAuthenticate'
 
 export class GetUserController {
   async getUser(request: FastifyRequest, reply: FastifyReply) {

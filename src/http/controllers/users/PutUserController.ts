@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
-import { prisma } from '../lib/prisma'
+import { prisma } from '../../../database/prisma'
 import { hash } from 'bcrypt'
 
-import { authenticate } from '../middlewares/UserAuthenticate'
+import { authenticate } from '../../../middlewares/UserAuthenticate'
 
 export class UpdateUser {
   async updateUser(request: FastifyRequest, reply: FastifyReply) {

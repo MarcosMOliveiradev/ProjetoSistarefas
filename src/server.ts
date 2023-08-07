@@ -1,9 +1,9 @@
 import fastify from 'fastify'
 import jwt from '@fastify/jwt'
 import { env } from './env'
-import { atividades } from './routes/atividades'
-import { usuario } from './routes/usuarios'
-import { tasck } from './routes/tascks'
+import { atividades } from './http/atividades'
+import { usuario } from './http/usuarios'
+import { tasck } from './http/tascks'
 
 const app = fastify()
 app.register(jwt, {

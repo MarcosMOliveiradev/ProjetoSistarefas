@@ -1,24 +1,25 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { prisma } from '../../lib/prisma'
+import { prisma } from '../../../database/prisma'
 import { z } from 'zod'
 
-export class GetActivyForDateController {
-  async getActivyForDate(request: FastifyRequest, reply: FastifyReply) {
+export class GetActivyForIntervalDateControllers {
+  async getActivyIntevalDate(request: FastifyRequest, reply: FastifyReply) {
     const dataSchema = z.object({
-      data: z.string(),
+      dataInicio: z.string(),
+      dataFim: z.string(),
     })
 
-    const { data } = dataSchema.parse(request.query)
+    const { dataInicio, dataFim } = dataSchema.parse(request.query)
 
-    if (!data) {
+    if (!dataInicio || !dataFim) {
       return reply.status(400).send('O campo "data" é obrigatório')
     }
 
     const datainfo = await prisma.atividade.findMany({
       where: {
-        usuarioId: request.user.sub,
         data: {
-          equals: data,
+          gte: dataInicio,
+          lte: dataFim,
         },
       },
       select: {

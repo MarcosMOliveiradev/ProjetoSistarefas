@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify'
 
-import { CreatedTascksControllers } from '../controllers/CreatedTascksController'
+import { CreatedTascksControllers } from './controllers/tasks/CreatedTasksController'
 import { verify } from '../middlewares/jwtVerify'
 
 const newTasck = new CreatedTascksControllers()

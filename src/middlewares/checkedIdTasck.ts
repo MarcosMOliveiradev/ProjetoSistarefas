@@ -1,4 +1,4 @@
-import { prisma } from '../lib/prisma'
+import { prisma } from '../database/prisma'
 
 // verifica o id de uma tarefa apartir do codigo
 export async function checkId(codigoTarefa: number) {

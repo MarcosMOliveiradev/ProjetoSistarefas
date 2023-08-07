@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify'
 import { z } from 'zod'
-import { prisma } from '../../lib/prisma'
+import { prisma } from '../../../database/prisma'
 import { compare } from 'bcrypt'
 
 export class AuthenticateUserController {

@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { prisma } from '../../lib/prisma'
+import { prisma } from '../../../database/prisma'
 
 export class GetActivyController {
   async activyGet(request: FastifyRequest, reply: FastifyReply) {

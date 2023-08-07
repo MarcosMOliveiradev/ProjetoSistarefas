@@ -1,8 +1,8 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
-import { prisma } from '../lib/prisma'
-import { checkId } from '../middlewares/checkedIdTasck'
-import { checkedIdActivy } from '../middlewares/CheckedIdActivy'
+import { prisma } from '../../../database/prisma'
+import { checkId } from '../../../middlewares/checkedIdTasck'
+import { checkedIdActivy } from '../../../middlewares/CheckedIdActivy'
 
 export class PutActivy {
   async putActivy(request: FastifyRequest, reply: FastifyReply) {

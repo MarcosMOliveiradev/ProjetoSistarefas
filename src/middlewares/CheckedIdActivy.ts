@@ -1,5 +1,5 @@
 import { FastifyRequest } from 'fastify'
-import { prisma } from '../lib/prisma'
+import { prisma } from '../database/prisma'
 
 export async function checkedIdActivy(
   request: FastifyRequest,
