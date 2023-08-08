@@ -32,3 +32,5 @@ Foram utilizado nesse projeto as seguintes tecnologias:
 [ x ] Usuario ADM deve ser capaz de criar novas tarefas, e adicionar novos setores </br>
 [ x ] Usuario ADM deve ser capaz de criar novos usuario e permições </br>
 
+inverter dependencia do prisma no arquivo createUserControler *Pasta* controler/users
+

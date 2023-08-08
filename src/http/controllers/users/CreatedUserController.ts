@@ -2,11 +2,14 @@ import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../../../database/prisma'
 import { hash } from 'bcrypt'
+
 import { CreateUser } from '../../../application/use-cases/users/create-user'
 import { UserView } from '../../view-models/user-view-modul'
 
 export class CreatedUserControlle {
-  constructor(private createUser: CreateUser) {}
+  constructor(private createUser: CreateUser) {
+    Promise<void>
+  }
 
   async user(
     request: FastifyRequest,

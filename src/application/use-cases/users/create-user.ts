@@ -13,7 +13,9 @@ interface ICreateUserRespose {
 }
 
 export class CreateUser {
-  constructor(private userRepository: UserRepository) {}
+  constructor(private userRepository: UserRepository) {
+    Promise<void>
+  }
 
   async execute(request: ICreateUserRequest): Promise<ICreateUserRespose> {
     const { nome, matricula, password, permissao } = request

@@ -3,6 +3,19 @@ import { UserRepository } from '../../../application/repositories/user/user-repo
 import { User } from '../../../application/entites/users/user'
 
 export class PrismaUserRepository extends UserRepository {
+  async authe(matricula: number): Promise<User> {
+    const auth = await prisma.usuario.findFirst({
+      where: {
+        matricula,
+      },
+      select: {
+        password: true,
+      },
+    })
+
+    return { auth }
+  }
+
   async create(user: User): Promise<void> {
     await prisma.usuario.create({
       data: {
