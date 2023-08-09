@@ -3,6 +3,10 @@ import { UserRepository } from '../../../application/repositories/user/user-repo
 import { User } from '../../../application/entites/users/user'
 
 export class PrismaUserRepository extends UserRepository {
+  async matricula(matricula: number): Promise<void> {
+    const matricula = await prisma.usuario.findUnique()
+  }
+
   async authe(matricula: number): Promise<User> {
     const auth = await prisma.usuario.findFirst({
       where: {
@@ -13,7 +17,7 @@ export class PrismaUserRepository extends UserRepository {
       },
     })
 
-    return { auth }
+    return auth
   }
 
   async create(user: User): Promise<void> {

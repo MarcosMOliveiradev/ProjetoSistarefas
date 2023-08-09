@@ -7,15 +7,15 @@ import { verify } from '../middlewares/jwtVerify'
 import { CreateUser } from '../application/use-cases/users/create-user'
 import { PrismaUserRepository } from '../database/prisma/repositoris/prisma-notification-repository'
 import { AuthenticateUserController } from '../application/authenticateUser/AuthenticateUserController'
-// import { AuthenticateUser } from '../application/use-cases/users/authenticate-user'
+import { AuthenticateUser } from '../application/use-cases/users/authenticate-user'
 
 const prismaUser = new PrismaUserRepository()
 const createUserInstance = new CreateUser(prismaUser)
 const createdUser = new CreatedUserControlle(createUserInstance)
 const getUser = new GetUserController(prismaUser)
-// const authenticate = new AuthenticateUser(prismaUser)
+const authenticateUser = new AuthenticateUser(prismaUser)
 
-const authenticate = new AuthenticateUserController()
+const authenticate = new AuthenticateUserController(authenticateUser)
 const updateUser = new UpdateUser()
 
 export async function usuario(app: FastifyInstance) {

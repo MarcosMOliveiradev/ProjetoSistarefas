@@ -8,8 +8,7 @@ interface IAuthentication {
 }
 
 interface ResponseUser {
-  matricula: number
-  password: string
+  token: string
 }
 
 export class AuthenticateUser {
