@@ -3,8 +3,18 @@ import { UserRepository } from '../../../application/repositories/user/user-repo
 import { User } from '../../../application/entites/users/user'
 
 export class PrismaUserRepository extends UserRepository {
-  async matricula(matricula: number): Promise<void> {
-    const matricula = await prisma.usuario.findUnique()
+  async matricula(verifyMatricula: number): Promise<void> {
+    const matricula = await prisma.usuario.findUnique({
+      where: {
+        matricula: verifyMatricula,
+      },
+    })
+
+    if (matricula) {
+      throw new Error('⚠ Usuario ja existente!')
+    }
+
+    console.log(matricula)
   }
 
   async authe(matricula: number): Promise<User> {

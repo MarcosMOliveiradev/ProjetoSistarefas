@@ -20,7 +20,7 @@ const updateUser = new UpdateUser()
 
 export async function usuario(app: FastifyInstance) {
   app.post('/created', async (request, reply) => {
-    return createdUser.user(request, reply, app)
+    return createdUser.user(request)
   })
 
   app.post('/', async (request, reply) => {
