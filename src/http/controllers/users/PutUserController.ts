@@ -1,40 +1,46 @@
-import { FastifyRequest, FastifyReply } from 'fastify'
+import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
-import { prisma } from '../../../database/prisma'
-import { hash } from 'bcrypt'
 
 import { authenticate } from '../../../middlewares/UserAuthenticate'
+import { UpdateUser } from '../../../application/use-cases/users/update-user'
+import { UserView } from '../../view-models/user-view-modul'
 
-export class UpdateUser {
-  async updateUser(request: FastifyRequest, reply: FastifyReply) {
+export class UpdateUserControler {
+  constructor(private updateUser: UpdateUser) {
+    Promise<void>
+  }
+
+  async put(request: FastifyRequest) {
     const userSchema = z.object({
       nome: z.string(),
       matricula: z.number(),
       password: z.string(),
-    })
-    const { nome, matricula, password } = userSchema.parse(request.body)
-
-    const querySchema = z.object({
-      queryMatricula: z.string(),
+      permissao: z.boolean().default(false),
     })
 
-    const { queryMatricula } = querySchema.parse(request.query)
-    const matriculaNum = parseInt(queryMatricula)
+    await authenticate(request.user.permissao)
+    console.log('putUserControler', request.user.permissao)
 
-    authenticate(request.user.permission)
+    const { nome, matricula, password, permissao } = userSchema.parse(
+      request.body,
+    )
 
-    const hashPassword = await hash(password, 8)
-    await prisma.usuario.update({
-      where: {
-        matricula: matriculaNum,
-      },
-      data: {
-        nome,
-        matricula,
-        password: hashPassword,
-      },
+    const idSchema = z.object({
+      id: z.string().uuid(),
     })
 
-    return reply.status(201).send('✔ Usuario modificado!')
+    const { id } = idSchema.parse(request.params)
+
+    const { user } = await this.updateUser.update({
+      _id: id,
+      nome,
+      matricula,
+      password,
+      permissao,
+    })
+
+    return { user: UserView.toHTTP(user) }
+
+    // return reply.status(201).send('✔ Usuario modificado!')
   }
 }

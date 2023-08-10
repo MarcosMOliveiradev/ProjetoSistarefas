@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Usuario {
-  id         String   @id @default(uuid())
+  id         String   @id
   nome       String
   matricula  Int      @unique
   password   String

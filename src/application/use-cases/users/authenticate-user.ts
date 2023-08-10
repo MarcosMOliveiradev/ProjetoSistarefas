@@ -32,11 +32,13 @@ export class AuthenticateUser {
 
     const getToken = await this.userRepository.findMany()
 
+    console.log('authentication user use-cases', getToken)
+
     const token = app.jwt.sign(
       {
         nome: getToken.nome,
         matricula: getToken.matricula,
-        permission: getToken.permissao,
+        permissao: getToken.permissao,
       },
       {
         sub: getToken.id,
@@ -44,6 +46,7 @@ export class AuthenticateUser {
       },
     )
 
+    console.log('authentication user use-cases', token)
     return { token }
   }
 }

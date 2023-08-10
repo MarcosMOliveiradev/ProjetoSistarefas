@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify'
 import { z } from 'zod'
 // import { prisma } from '../../database/prisma'
 // import { compare } from 'bcrypt'
-import { AuthenticateUser } from '../use-cases/users/authenticate-user'
+import { AuthenticateUser } from '../../../application/use-cases/users/authenticate-user'
 
 export class AuthenticateUserController {
   constructor(private autenticateUser: AuthenticateUser) {

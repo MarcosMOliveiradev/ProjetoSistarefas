@@ -3,6 +3,20 @@ import { UserRepository } from '../../../application/repositories/user/user-repo
 import { User } from '../../../application/entites/users/user'
 
 export class PrismaUserRepository extends UserRepository {
+  async update(user: User, id: string): Promise<void> {
+    await prisma.usuario.update({
+      where: {
+        id,
+      },
+      data: {
+        nome: user.nome,
+        matricula: user.matricula,
+        password: user.password,
+        permission: user.permissao,
+      },
+    })
+  }
+
   async matricula(verifyMatricula: number): Promise<void> {
     const matricula = await prisma.usuario.findUnique({
       where: {
@@ -13,8 +27,6 @@ export class PrismaUserRepository extends UserRepository {
     if (matricula) {
       throw new Error('⚠ Usuario ja existente!')
     }
-
-    console.log(matricula)
   }
 
   async authe(matricula: number): Promise<User> {
@@ -33,6 +45,7 @@ export class PrismaUserRepository extends UserRepository {
   async create(user: User): Promise<void> {
     await prisma.usuario.create({
       data: {
+        id: user.id,
         nome: user.nome,
         matricula: user.matricula,
         password: user.password,

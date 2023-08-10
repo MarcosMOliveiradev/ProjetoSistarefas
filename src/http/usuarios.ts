@@ -2,36 +2,38 @@ import { FastifyInstance } from 'fastify'
 
 import { CreatedUserControlle } from './controllers/users/CreatedUserController'
 import { GetUserController } from './controllers/users/getUserControllers'
-import { UpdateUser } from './controllers/users/PutUserController'
+import { UpdateUserControler } from './controllers/users/PutUserController'
 import { verify } from '../middlewares/jwtVerify'
 import { CreateUser } from '../application/use-cases/users/create-user'
 import { PrismaUserRepository } from '../database/prisma/repositoris/prisma-notification-repository'
-import { AuthenticateUserController } from '../application/authenticateUser/AuthenticateUserController'
+import { AuthenticateUserController } from './controllers/users/AuthenticateUserController'
 import { AuthenticateUser } from '../application/use-cases/users/authenticate-user'
+import { UpdateUser } from '../application/use-cases/users/update-user'
 
 const prismaUser = new PrismaUserRepository()
 const createUserInstance = new CreateUser(prismaUser)
 const createdUser = new CreatedUserControlle(createUserInstance)
 const getUser = new GetUserController(prismaUser)
+const updateUser = new UpdateUser(prismaUser)
 const authenticateUser = new AuthenticateUser(prismaUser)
 
 const authenticate = new AuthenticateUserController(authenticateUser)
-const updateUser = new UpdateUser()
+const updateUserControler = new UpdateUserControler(updateUser)
 
 export async function usuario(app: FastifyInstance) {
   app.post('/created', async (request, reply) => {
     return createdUser.user(request)
-  })
+  }) // criar
 
   app.post('/', async (request, reply) => {
     return authenticate.authentication(request, reply, app) // login
-  })
+  }) // autenticar
 
   app.get('/', { preHandler: [verify] }, async (request, reply) => {
     return getUser.getUser(request) // lista
-  })
+  }) // listar
 
-  app.put('/update', { preHandler: [verify] }, async (request, reply) => {
-    return updateUser.updateUser(request, reply)
+  app.put('/update/:id', { preHandler: [verify] }, async (request, reply) => {
+    return updateUserControler.put(request)
   })
 }
