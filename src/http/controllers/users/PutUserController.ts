@@ -15,13 +15,13 @@ export class UpdateUserControler {
       nome: z.string(),
       matricula: z.number(),
       password: z.string(),
-      permissao: z.boolean().default(false),
+      permission: z.boolean().default(false),
     })
 
-    await authenticate(request.user.permissao)
-    console.log('putUserControler', request.user.permissao)
+    await authenticate(request.user.permission)
+    console.log('putUserControler', request.user.permission)
 
-    const { nome, matricula, password, permissao } = userSchema.parse(
+    const { nome, matricula, password, permission } = userSchema.parse(
       request.body,
     )
 
@@ -36,7 +36,7 @@ export class UpdateUserControler {
       nome,
       matricula,
       password,
-      permissao,
+      permission,
     })
 
     return { user: UserView.toHTTP(user) }

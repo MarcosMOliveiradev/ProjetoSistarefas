@@ -6,7 +6,7 @@ interface IUpdateUserRequest {
   nome: string
   matricula: number
   password: string
-  permissao: boolean
+  permission: boolean
 }
 
 interface ICreateUserRespose {
@@ -19,14 +19,14 @@ export class UpdateUser {
   }
 
   async update(request: IUpdateUserRequest): Promise<ICreateUserRespose> {
-    const { nome, matricula, password, permissao, _id } = request
+    const { nome, matricula, password, permission, _id } = request
 
     const id = _id
 
     const user = new User({
       nome,
       matricula,
-      permissao,
+      permission,
       password,
     })
 

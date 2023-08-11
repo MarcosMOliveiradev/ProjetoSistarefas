@@ -8,7 +8,7 @@ export class GetUserController {
   }
 
   async getUser(request: FastifyRequest) {
-    authenticate(request.user.permissao) // verifica se é adm
+    authenticate(request.user.permission) // verifica se é adm
 
     const users = this.userRepository.findMany()
 

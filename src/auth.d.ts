@@ -6,7 +6,7 @@ declare module '@fastify/jwt' {
       sub: string
       name: string
       matricula: number
-      permissao: boolean
+      permission: boolean
     }
   }
 }

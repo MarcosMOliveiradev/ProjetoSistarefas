@@ -14,10 +14,10 @@ export class CreatedUserControlle {
       nome: z.string(),
       matricula: z.number(),
       password: z.string(),
-      permissao: z.boolean().default(false),
+      permission: z.boolean().default(false),
     }) // Define o tipo das entradas
 
-    const { nome, matricula, password, permissao } = userSchema.parse(
+    const { nome, matricula, password, permission } = userSchema.parse(
       request.body,
     )
     // const passwordHas = await hash(password, 6)
@@ -26,7 +26,7 @@ export class CreatedUserControlle {
       nome,
       matricula,
       password,
-      permissao,
+      permission,
     })
 
     return {

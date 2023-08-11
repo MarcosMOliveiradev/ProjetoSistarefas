@@ -30,23 +30,19 @@ export class AuthenticateUser {
       throw new Error('error')
     }
 
-    const getToken = await this.userRepository.findMany()
-
-    console.log('authentication user use-cases', getToken)
+    const getUser = await this.userRepository.findUnique(matricula)
 
     const token = app.jwt.sign(
       {
-        nome: getToken.nome,
-        matricula: getToken.matricula,
-        permissao: getToken.permissao,
+        nome: getUser.nome,
+        matricula: getUser.matricula,
+        permission: getUser.permission,
       },
       {
-        sub: getToken.id,
+        sub: getUser.id,
         expiresIn: '30 days',
       },
     )
-
-    console.log('authentication user use-cases', token)
     return { token }
   }
 }

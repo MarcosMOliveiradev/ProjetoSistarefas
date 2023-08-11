@@ -12,7 +12,7 @@ export class PrismaUserRepository extends UserRepository {
         nome: user.nome,
         matricula: user.matricula,
         password: user.password,
-        permission: user.permissao,
+        permission: user.permission,
       },
     })
   }
@@ -49,7 +49,7 @@ export class PrismaUserRepository extends UserRepository {
         nome: user.nome,
         matricula: user.matricula,
         password: user.password,
-        permission: user.permissao,
+        permission: user.permission,
       },
     })
   }
@@ -63,6 +63,21 @@ export class PrismaUserRepository extends UserRepository {
       },
     })
 
-    return { users }
+    return users
+  }
+
+  async findUnique(matricula: number): Promise<User> {
+    const users = await prisma.usuario.findUnique({
+      where: {
+        matricula,
+      },
+      select: {
+        nome: true,
+        matricula: true,
+        permission: true,
+      },
+    })
+
+    return users
   }
 }

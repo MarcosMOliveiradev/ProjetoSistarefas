@@ -6,7 +6,7 @@ interface ICreateUserRequest {
   nome: string
   matricula: number
   password: string
-  permissao: boolean
+  permission: boolean
 }
 
 interface ICreateUserRespose {
@@ -19,7 +19,7 @@ export class CreateUser {
   }
 
   async execute(request: ICreateUserRequest): Promise<ICreateUserRespose> {
-    const { nome, matricula, password, permissao } = request
+    const { nome, matricula, password, permission } = request
 
     await this.userRepository.matricula(matricula)
 
@@ -29,7 +29,7 @@ export class CreateUser {
       nome,
       matricula,
       password,
-      permissao,
+      permission,
     })
 
     await this.userRepository.create(user)

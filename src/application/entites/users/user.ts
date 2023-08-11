@@ -5,7 +5,7 @@ export interface IUser {
   nome: string
   matricula: number
   password: string
-  permissao: boolean
+  permission: boolean
   created_at: Date
   update_at?: Date | null
 }
@@ -50,12 +50,12 @@ export class User {
     return this.props.password
   }
 
-  public set permissao(permissao: boolean | false) {
-    this.props.permissao = permissao
+  public set permission(permission: boolean | false) {
+    this.props.permission = permission
   }
 
-  public get permissao() {
-    return this.props.permissao
+  public get permission() {
+    return this.props.permission
   }
 
   public set update(update: Date | null | undefined) {
