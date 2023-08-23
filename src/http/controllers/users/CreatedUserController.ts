@@ -20,7 +20,6 @@ export class CreatedUserControlle {
     const { nome, matricula, password, permission } = userSchema.parse(
       request.body,
     )
-    // const passwordHas = await hash(password, 6)
 
     const { user } = await this.createUser.execute({
       nome,

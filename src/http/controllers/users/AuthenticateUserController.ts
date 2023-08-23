@@ -26,6 +26,6 @@ export class AuthenticateUserController {
       app,
     )
 
-    return token
+    return reply.send(JSON.stringify(token))
   }
 }
