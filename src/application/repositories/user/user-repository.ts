@@ -5,6 +5,13 @@ export abstract class UserRepository {
   abstract findMany(): Promise<User>
   abstract findUnique(matricula: number): Promise<User>
   abstract authe(matricula: number): Promise<User>
-  abstract update(user: User, id: string): Promise<void>
+  abstract update(
+    nome: string | undefined,
+    matricula: number | undefined,
+    password: string | undefined,
+    permission: boolean | undefined,
+    id: string,
+  ): Promise<void>
+
   abstract matricula(verifyMatricula: number): Promise<void>
 }
