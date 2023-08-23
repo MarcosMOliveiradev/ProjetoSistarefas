@@ -56,6 +56,7 @@ export class PrismaUserRepository extends UserRepository {
         matricula: user.matricula,
         password: user.password,
         permission: user.permission,
+        created_at: user.created,
       },
     })
   }
@@ -78,6 +79,7 @@ export class PrismaUserRepository extends UserRepository {
         matricula,
       },
       select: {
+        id: true,
         nome: true,
         matricula: true,
         permission: true,

@@ -1,9 +1,14 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify'
 import { z } from 'zod'
-import { prisma } from '../../../database/prisma'
+
 import { authenticate } from '../../../middlewares/UserAuthenticate'
+import { CreateTask } from '../../../application/use-cases/tasks/create-task'
 
 export class CreatedTascksControllers {
+  constructor(private craeteTask: CreateTask) {
+    Promise<void>
+  }
+
   async createdTascks(
     request: FastifyRequest,
     reply: FastifyReply,
@@ -21,16 +26,13 @@ export class CreatedTascksControllers {
 
     authenticate(request.user.permission) // Verifica as permições do usuario
 
-    await prisma.tarefas.create({
-      data: {
-        codigo,
-        setor,
-        descricao,
+    await this.craeteTask.execute({
+      codigo,
+      setor,
+      descricao,
 
-        usuarioId: request.user.sub,
-      },
-    }) // Cria as tarefas no banco
-
+      usuario: request.user.sub,
+    })
     return reply.status(201).send('Criado com sucesso')
   }
 }
