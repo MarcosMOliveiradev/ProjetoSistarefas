@@ -9,6 +9,13 @@ export class PrismaTaskRepository extends TaskRepository {
         codigo: true,
         setor: true,
         descricao: true,
+
+        usuario: {
+          select: {
+            nome: true,
+            matricula: true,
+          },
+        },
       },
     })
     return tasks
