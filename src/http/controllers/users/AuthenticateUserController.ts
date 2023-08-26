@@ -1,7 +1,5 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify'
 import { z } from 'zod'
-// import { prisma } from '../../database/prisma'
-// import { compare } from 'bcrypt'
 import { AuthenticateUser } from '../../../application/use-cases/users/authenticate-user'
 
 export class AuthenticateUserController {
@@ -26,6 +24,6 @@ export class AuthenticateUserController {
       app,
     )
 
-    return token
+    return reply.send(JSON.stringify(token))
   }
 }

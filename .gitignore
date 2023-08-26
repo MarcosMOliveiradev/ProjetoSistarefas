@@ -1,3 +1,5 @@
 node_modules
 .env
 prisma/db/database.db
+
+.db

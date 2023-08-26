@@ -1,4 +1,6 @@
 // import { hash } from 'bcrypt'
+import { hash } from 'bcrypt'
+
 import { User } from '../../entites/users/user'
 import { UserRepository } from '../../repositories/user/user-repository'
 
@@ -23,12 +25,12 @@ export class CreateUser {
 
     await this.userRepository.matricula(matricula)
 
-    // const passwordHash = await hash(password, 6)
+    const passwordHash = await hash(password, 6)
 
     const user = new User({
       nome,
       matricula,
-      password,
+      password: passwordHash,
       permission,
     })
 

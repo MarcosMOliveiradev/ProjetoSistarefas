@@ -1,16 +1,12 @@
-import { User } from '../../entites/users/user'
+import { hash } from 'bcrypt'
 import { UserRepository } from '../../repositories/user/user-repository'
 
 interface IUpdateUserRequest {
   _id: string
-  nome: string
-  matricula: number
-  password: string
-  permission: boolean
-}
-
-interface ICreateUserRespose {
-  user: User
+  nome?: string
+  matricula?: number
+  password?: string
+  permission?: boolean
 }
 
 export class UpdateUser {
@@ -18,20 +14,29 @@ export class UpdateUser {
     Promise<void>
   }
 
-  async update(request: IUpdateUserRequest): Promise<ICreateUserRespose> {
+  async update(request: IUpdateUserRequest): Promise<void> {
     const { nome, matricula, password, permission, _id } = request
 
     const id = _id
 
-    const user = new User({
-      nome,
-      matricula,
-      permission,
-      password,
-    })
+    if (password !== undefined) {
+      const passwordHash = await hash(password, 6)
 
-    await this.userRepository.update(user, id)
-
-    return { user }
+      await this.userRepository.update(
+        nome,
+        matricula,
+        passwordHash,
+        permission,
+        id,
+      )
+    } else {
+      await this.userRepository.update(
+        nome,
+        matricula,
+        password,
+        permission,
+        id,
+      )
+    }
   }
 }

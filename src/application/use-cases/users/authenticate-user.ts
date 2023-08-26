@@ -32,7 +32,7 @@ export class AuthenticateUser {
 
     const getUser = await this.userRepository.findUnique(matricula)
 
-    const token = app.jwt.sign(
+    const token = await app.jwt.sign(
       {
         nome: getUser.nome,
         matricula: getUser.matricula,

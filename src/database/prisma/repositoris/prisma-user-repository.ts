@@ -3,16 +3,22 @@ import { UserRepository } from '../../../application/repositories/user/user-repo
 import { User } from '../../../application/entites/users/user'
 
 export class PrismaUserRepository extends UserRepository {
-  async update(user: User, id: string): Promise<void> {
+  async update(
+    nome: string | undefined,
+    matricula: number | undefined,
+    password: string | undefined,
+    permission: boolean | undefined,
+    id: string,
+  ): Promise<void> {
     await prisma.usuario.update({
       where: {
         id,
       },
       data: {
-        nome: user.nome,
-        matricula: user.matricula,
-        password: user.password,
-        permission: user.permission,
+        nome,
+        matricula,
+        password,
+        permission,
       },
     })
   }
@@ -50,6 +56,7 @@ export class PrismaUserRepository extends UserRepository {
         matricula: user.matricula,
         password: user.password,
         permission: user.permission,
+        created_at: user.created,
       },
     })
   }
@@ -72,6 +79,7 @@ export class PrismaUserRepository extends UserRepository {
         matricula,
       },
       select: {
+        id: true,
         nome: true,
         matricula: true,
         permission: true,
