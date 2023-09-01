@@ -3,6 +3,23 @@ import { TaskRepository } from '../../../application/repositories/tasks/task-rep
 import { prisma } from '../../prisma'
 
 export class PrismaTaskRepository extends TaskRepository {
+  async id(codigoTarefa: number): Promise<string> {
+    const taskId = await prisma.tarefas.findUnique({
+      where: {
+        codigo: codigoTarefa,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (taskId?.id == null) {
+      throw new Error('Codigo de tarefa invalida!')
+    }
+
+    return taskId.id
+  }
+
   async findMany(): Promise<Task> {
     const tasks = await prisma.tarefas.findMany({
       select: {
