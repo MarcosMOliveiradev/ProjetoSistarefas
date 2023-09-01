@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../../../database/prisma'
-import { checkId } from '../../../middlewares/checkedIdTasck'
+// import { checkId } from '../../../middlewares/checkedIdTasck'
 import { checkedIdActivy } from '../../../middlewares/CheckedIdActivy'
 
 export class PutActivy {
@@ -27,7 +27,7 @@ export class PutActivy {
     const codigoNum = parseInt(codigo)
 
     // Verifica o id da tarefa no banco de dados
-    const idTarefa = await checkId(codigoNum)
+    // const idTarefa = await checkId(codigoNum) *******
 
     // Verifica o id da atividade no banco de dados
     const idActivy = await checkedIdActivy(request, indexNum, idTarefa, data)
