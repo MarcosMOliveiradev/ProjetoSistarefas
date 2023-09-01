@@ -1,14 +1,21 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
-import { prisma } from '../../../database/prisma'
-import { checkId } from '../../../middlewares/checkedIdTasck'
+import { CreatedActivy } from '../../../application/use-cases/activy/Create-activy'
+import { TaskRepository } from '../../../application/repositories/tasks/task-repository'
 
 export class CreatedActivyController {
+  constructor(
+    private createdActivy: CreatedActivy,
+    private taskRepository: TaskRepository,
+  ) {
+    Promise<void>
+  }
+
   async activy(request: FastifyRequest, reply: FastifyReply) {
     const activySchema = z.object({
       index: z.number(),
-      idDocumento: z.string(),
-      quantidadeFolhas: z.string(),
+      idDocumento: z.string().optional(),
+      quantidadeFolhas: z.string().optional(),
       horaInicio: z.string(),
       horaTermino: z.string(),
       data: z.string(),
@@ -25,20 +32,18 @@ export class CreatedActivyController {
       codigoTarefa,
     } = activySchema.parse(request.body) // Resgata do corpo da requisição as informações
 
-    const idTarefa = await checkId(codigoTarefa)
+    const idTarefa = await this.taskRepository.id(codigoTarefa)
 
-    await prisma.atividade.create({
-      data: {
-        index_atividade_arefa: index,
-        id_documento: idDocumento,
-        quantidade_de_folhas: quantidadeFolhas,
-        hora_inicio: horaInicio,
-        hora_termino: horaTermino,
-        data,
+    await this.createdActivy.create({
+      index_atividade_tarefa: index,
+      id_documento: idDocumento,
+      quantidade_de_folha: quantidadeFolhas,
+      hora_inicio: horaInicio,
+      hora_termino: horaTermino,
+      data,
 
-        usuarioId: request.user.sub,
-        tarefasId: idTarefa,
-      },
+      usuario: request.user.sub,
+      task: idTarefa,
     })
 
     return reply.status(201).send('Criado com sucesso')

@@ -7,8 +7,18 @@ import { GetActivyForDateController } from './controllers/activy/GetActivyForDat
 import { GetActivyForIntervalDateControllers } from './controllers/activy/GetActivyForIntervalDateControllers'
 import { PutActivy } from './controllers/activy/PutActivyControllers'
 import { verify } from '../middlewares/jwtVerify'
+import { CreatedActivy } from '../application/use-cases/activy/Create-activy'
+import { PrismaTaskRepository } from '../database/prisma/repositoris/prisma-task-repository'
+import { PrismaActivyRepository } from '../database/prisma/repositoris/prisma-activy-repository'
 
-const createdActivi = new CreatedActivyController()
+// repository
+const taskRepository = new PrismaTaskRepository()
+const activyRepository = new PrismaActivyRepository()
+
+// aplication
+const createActivy = new CreatedActivy(activyRepository)
+// controller
+const createdActivi = new CreatedActivyController(createActivy, taskRepository)
 const getActivi = new GetActivyController()
 const getActiviId = new GetActivyIdController()
 const getActiviDate = new GetActivyForDateController()
