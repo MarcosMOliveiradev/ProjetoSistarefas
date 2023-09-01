@@ -1,8 +1,12 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { prisma } from '../../../database/prisma'
 import { z } from 'zod'
+import { ListActivyForDate } from '../../../application/use-cases/activy/List-activy-for-date'
 
 export class GetActivyForDateController {
+  constructor(private listActivyDate: ListActivyForDate) {
+    Promise<void>
+  }
+
   async getActivyForDate(request: FastifyRequest, reply: FastifyReply) {
     const dataSchema = z.object({
       data: z.string(),
@@ -14,45 +18,19 @@ export class GetActivyForDateController {
       return reply.status(400).send('O campo "data" é obrigatório')
     }
 
-    const datainfo = await prisma.atividade.findMany({
-      where: {
-        usuarioId: request.user.sub,
-        data: {
-          equals: data,
-        },
-      },
-      select: {
-        index_atividade_arefa: true,
-        id_documento: true,
-        quantidade_de_folhas: true,
-        hora_inicio: true,
-        hora_termino: true,
-        data: true,
+    const user = request.user.sub
 
-        usuario: {
-          select: {
-            nome: true,
-            matricula: true,
-          },
-        },
+    const datainfo = await this.listActivyDate.execute({ data, user })
 
-        Tarefas: {
-          select: {
-            codigo: true,
-            setor: true,
-            descricao: true,
-          },
-        },
-      },
-    })
+    // const datainfo = await prisma.atividade.findMany({})
 
-    if (datainfo.length === 0) {
-      return reply
-        .status(400)
-        .send(
-          'não foram encontradas nenhuma informação referente a esta data, verifque se a data esta correta!',
-        )
-    }
+    // if (datainfo.length === 0) {
+    //   return reply
+    //     .status(400)
+    //     .send(
+    //       'não foram encontradas nenhuma informação referente a esta data, verifque se a data esta correta!',
+    //     )
+    // }
 
     return reply.send(datainfo)
   }

@@ -25,7 +25,7 @@ export class GetActivyIdController {
         id,
       },
       select: {
-        index_atividade_arefa: true,
+        index_atividade_tarefa: true,
         id_documento: true,
         quantidade_de_folhas: true,
         hora_inicio: true,
