@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { z } from 'zod'
 import { ListActivyForDate } from '../../../application/use-cases/activy/List-activy-for-date'
+import { z } from 'zod'
 
 export class GetActivyForDateController {
   constructor(private listActivyDate: ListActivyForDate) {
@@ -19,7 +19,6 @@ export class GetActivyForDateController {
     }
 
     const user = request.user.sub
-
     const datainfo = await this.listActivyDate.execute({ data, user })
 
     // const datainfo = await prisma.atividade.findMany({})
@@ -32,6 +31,6 @@ export class GetActivyForDateController {
     //     )
     // }
 
-    return reply.send(datainfo)
+    return reply.send(JSON.stringify(datainfo))
   }
 }

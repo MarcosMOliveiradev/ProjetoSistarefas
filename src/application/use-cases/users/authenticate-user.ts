@@ -40,7 +40,7 @@ export class AuthenticateUser {
       },
       {
         sub: getUser.id,
-        expiresIn: '30 days',
+        expiresIn: '1 days',
       },
     )
     return { token }

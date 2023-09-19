@@ -34,7 +34,7 @@ export async function atividades(app: FastifyInstance) {
     return createdActivi.activy(request, reply)
   })
 
-  app.get('/', { preHandler: [verify] }, async (request, reply) => {
+  app.get('/', async () => {
     return getActivi.activyGet()
   })
 
