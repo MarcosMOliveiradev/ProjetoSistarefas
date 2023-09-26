@@ -10,7 +10,7 @@ export async function checkedIdActivy(
   const verificaId = await prisma.atividade.findFirst({
     where: {
       usuarioId: request.user.sub,
-      index_atividade_arefa: indexNum,
+      index_atividade_tarefa: indexNum,
       tarefasId: idTarefa,
       data: {
         equals: data,

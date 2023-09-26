@@ -12,6 +12,7 @@ import { PrismaTaskRepository } from '../database/prisma/repositoris/prisma-task
 import { PrismaActivyRepository } from '../database/prisma/repositoris/prisma-activy-repository'
 import { ListActivy } from '../application/use-cases/activy/List-activy'
 import { ListActivyForDate } from '../application/use-cases/activy/List-activy-for-date'
+import { ListActivyForIntervalDate } from '../application/use-cases/activy/List-activy-for-interval-date'
 
 // repository
 const taskRepository = new PrismaTaskRepository()
@@ -26,7 +27,10 @@ const getActivi = new GetActivyController(activyList)
 const getActiviId = new GetActivyIdController()
 const listActivyDate = new ListActivyForDate(activyRepository)
 const getActiviDate = new GetActivyForDateController(listActivyDate)
-const getActivyIntervalDate = new GetActivyForIntervalDateControllers()
+const listAcityForIntervalDate = new ListActivyForIntervalDate(activyRepository)
+const getActivyIntervalDate = new GetActivyForIntervalDateControllers(
+  listAcityForIntervalDate,
+)
 const putActivy = new PutActivy()
 
 export async function atividades(app: FastifyInstance) {

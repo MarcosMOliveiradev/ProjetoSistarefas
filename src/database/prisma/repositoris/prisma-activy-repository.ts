@@ -3,6 +3,51 @@ import { ActivyRepository } from '../../../application/repositories/activy/Activ
 import { prisma } from '../../prisma'
 
 export class PrismaActivyRepository extends ActivyRepository {
+  async listIntervalDate(dataConsulta: string, use: string): Promise<Activy> {
+    const datainfo = await prisma.atividade.findMany({
+      where: {
+        usuarioId: use,
+        data: {
+          contains: dataConsulta,
+        },
+      },
+
+      orderBy: {
+        data: 'asc',
+      },
+
+      select: {
+        index_atividade_tarefa: true,
+        id_documento: true,
+        quantidade_de_folhas: true,
+        hora_inicio: true,
+        hora_termino: true,
+        data: true,
+
+        usuario: {
+          select: {
+            nome: true,
+            matricula: true,
+          },
+        },
+
+        Tarefas: {
+          select: {
+            codigo: true,
+            setor: true,
+            descricao: true,
+          },
+        },
+      },
+    })
+
+    if (datainfo.length === 0) {
+      return 'não foram encontradas nenhuma informação referente a esta data, verifque se a data esta correta!'
+    }
+
+    return datainfo
+  }
+
   async listDate(data: string, user: string): Promise<Activy> {
     const activyListDate = await prisma.atividade.findMany({
       where: {
@@ -11,6 +56,11 @@ export class PrismaActivyRepository extends ActivyRepository {
           equals: data,
         },
       },
+
+      orderBy: {
+        index_atividade_tarefa: 'asc',
+      },
+
       select: {
         index_atividade_tarefa: true,
         id_documento: true,

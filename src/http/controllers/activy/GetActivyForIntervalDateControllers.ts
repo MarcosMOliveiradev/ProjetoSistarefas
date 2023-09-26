@@ -1,60 +1,36 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { prisma } from '../../../database/prisma'
 import { z } from 'zod'
+import { ListActivyForIntervalDate } from '../../../application/use-cases/activy/List-activy-for-interval-date'
 
 export class GetActivyForIntervalDateControllers {
+  constructor(private listAcityForIntervalDate: ListActivyForIntervalDate) {
+    Promise<void>
+  }
+
   async getActivyIntevalDate(request: FastifyRequest, reply: FastifyReply) {
     const dataSchema = z.object({
-      dataInicio: z.string(),
-      dataFim: z.string(),
+      dataIntervalo: z.string(),
     })
 
-    const { dataInicio, dataFim } = dataSchema.parse(request.query)
+    const { dataIntervalo } = dataSchema.parse(request.query)
+    const regex = /-(\d{2})-/
 
-    if (!dataInicio || !dataFim) {
+    const dataMes = dataIntervalo.match(regex)
+
+    if (dataMes == null) {
+      throw new Error('erro ao preencher o campo mes')
+    }
+    const dataConsulta = dataMes[0]
+
+    if (!dataIntervalo) {
       return reply.status(400).send('O campo "data" é obrigatório')
     }
-
-    const datainfo = await prisma.atividade.findMany({
-      where: {
-        data: {
-          gte: dataInicio,
-          lte: dataFim,
-        },
-      },
-      select: {
-        index_atividade_arefa: true,
-        id_documento: true,
-        quantidade_de_folhas: true,
-        hora_inicio: true,
-        hora_termino: true,
-        data: true,
-
-        usuario: {
-          select: {
-            nome: true,
-            matricula: true,
-          },
-        },
-
-        Tarefas: {
-          select: {
-            codigo: true,
-            setor: true,
-            descricao: true,
-          },
-        },
-      },
+    const user = request.user.sub
+    const datainfo = await this.listAcityForIntervalDate.execute({
+      dataConsulta,
+      user,
     })
 
-    if (datainfo.length === 0) {
-      return reply
-        .status(400)
-        .send(
-          'não foram encontradas nenhuma informação referente a esta data, verifque se a data esta correta!',
-        )
-    }
-
-    return reply.send(datainfo)
+    return reply.send(JSON.stringify(datainfo))
   }
 }

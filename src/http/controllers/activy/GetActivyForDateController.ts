@@ -21,16 +21,6 @@ export class GetActivyForDateController {
     const user = request.user.sub
     const datainfo = await this.listActivyDate.execute({ data, user })
 
-    // const datainfo = await prisma.atividade.findMany({})
-
-    // if (datainfo.length === 0) {
-    //   return reply
-    //     .status(400)
-    //     .send(
-    //       'não foram encontradas nenhuma informação referente a esta data, verifque se a data esta correta!',
-    //     )
-    // }
-
     return reply.send(JSON.stringify(datainfo))
   }
 }
