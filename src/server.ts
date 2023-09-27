@@ -31,7 +31,8 @@ app.register(tasck, {
 app
   .listen({
     port: env.PORT,
+    host: '0.0.0.0',
   })
   .then(() => {
-    console.log(`HTTP Server running in http://localhost:${env.PORT}`)
+    console.log(`HTTP Server running in http://192.168.0.64:${env.PORT}`)
   })
