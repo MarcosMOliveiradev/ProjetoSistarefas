@@ -3,6 +3,20 @@ import { TaskRepository } from '../../../application/repositories/tasks/task-rep
 import { prisma } from '../../prisma'
 
 export class PrismaTaskRepository extends TaskRepository {
+  async findForId(codigo: number): Promise<Task> {
+    const Codigo = await prisma.tarefas.findMany({
+      where: {
+        codigo,
+      },
+      select: {
+        setor: true,
+        descricao: true,
+      },
+    })
+
+    return Codigo
+  }
+
   async id(codigoTarefa: number): Promise<string> {
     const taskId = await prisma.tarefas.findUnique({
       where: {
