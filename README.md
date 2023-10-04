@@ -24,15 +24,15 @@ Foram utilizado nesse projeto as seguintes tecnologias:
 
 ## Lista de afazeres
 
-- [ x ] Criar estrutura e relacionamento do banco de dados;
-- [ x ] Criar authenticator de usuario;
-- [ x ] Deve ser possível listar as tarefas por dia;
-- [ x ] Deve ser possível gerar relatório em PDF;
-- [ x ] Usuario padrao deve ser capaz de criar listas de atividade;
-- [ x ] Usuario ADM deve ser capaz de criar novas tarefas, e adicionar novos setores;
-- [ x ] Usuario ADM deve ser capaz de criar novos usuario e permições;
-- [   ] Usuario ADM deve ser capaz de vizualizar contagem geral da atividade feitas por cada usuario padrão;
-- TODO:[  ] Controle de erros da aplicação;
-- TODO:[  ] Testes;
+- [x] Criar estrutura e relacionamento do banco de dados;
+- [x] Criar authenticator de usuario;
+- [x] Deve ser possível listar as tarefas por dia;
+- [x] Deve ser possível gerar relatório em PDF;
+- [x] Usuario padrao deve ser capaz de criar listas de atividade;
+- [x] Usuario ADM deve ser capaz de criar novas tarefas, e adicionar novos setores;
+- [x] Usuario ADM deve ser capaz de criar novos usuario e permições;
+- [ ] Usuario ADM deve ser capaz de vizualizar contagem geral da atividade feitas por cada usuario padrão;
+- TODO:[ ] Controle de erros da aplicação;
+- TODO:[ ] Testes;
 
 TODO: O usuario administrador deve ser capas de gerar uma contagem de quantas atividade cada usuario fez no mês e no geral
