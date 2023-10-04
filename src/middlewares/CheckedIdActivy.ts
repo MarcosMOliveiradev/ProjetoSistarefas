@@ -1,6 +1,7 @@
 import { FastifyRequest } from 'fastify'
 import { prisma } from '../database/prisma'
 
+// checa o ID da atividade
 export async function checkedIdActivy(
   request: FastifyRequest,
   indexNum: number,
