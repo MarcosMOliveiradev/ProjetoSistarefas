@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { AuthenticateUser } from '../../../application/use-cases/users/authenticate-user'
+import { PasswordIncorrectError } from '../../../application/use-cases/users/errors/password-incorrect-error'
 
 export class AuthenticateUserController {
   constructor(private autenticateUser: AuthenticateUser) {
@@ -19,11 +20,19 @@ export class AuthenticateUserController {
 
     const { matricula, password } = userSchema.parse(request.body) // Resgata do corpo da requisição as informações
 
-    const { token } = await this.autenticateUser.auth(
-      { matricula, password },
-      app,
-    )
+    try {
+      const { token } = await this.autenticateUser.auth(
+        { matricula, password },
+        app,
+      )
 
-    return reply.send(JSON.stringify(token))
+      return reply.send(JSON.stringify(token))
+    } catch (err) {
+      if (err instanceof PasswordIncorrectError) {
+        return reply.status(409).send({ message: err.message })
+      }
+
+      return reply.status(500)
+    }
   }
 }

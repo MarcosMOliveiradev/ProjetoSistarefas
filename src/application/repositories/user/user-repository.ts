@@ -14,4 +14,5 @@ export abstract class UserRepository {
   ): Promise<void>
 
   abstract matricula(verifyMatricula: number): Promise<void>
+  abstract verifyMatricula(verifyMatricula: number): Promise<boolean>
 }

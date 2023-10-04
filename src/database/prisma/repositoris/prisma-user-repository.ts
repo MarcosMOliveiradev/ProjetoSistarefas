@@ -3,6 +3,16 @@ import { UserRepository } from '../../../application/repositories/user/user-repo
 import { User } from '../../../application/entites/users/user'
 
 export class PrismaUserRepository extends UserRepository {
+  async verifyMatricula(verifyMatricula: number): Promise<boolean> {
+    const matricula = await prisma.usuario.findUnique({
+      where: {
+        matricula: verifyMatricula,
+      },
+    })
+
+    return matricula
+  }
+
   async update(
     nome: string | undefined,
     matricula: number | undefined,
