@@ -36,3 +36,4 @@ Foram utilizado nesse projeto as seguintes tecnologias:
 - TODO:[ ] Testes;
 
 TODO: O usuario administrador deve ser capas de gerar uma contagem de quantas atividade cada usuario fez no mês e no geral
+TODO: terminar teste de token

@@ -12,9 +12,12 @@
   "devDependencies": {
     "@rocketseat/eslint-config": "^1.2.0",
     "@types/node": "^20.3.3",
+    "@vitest/coverage-v8": "^0.34.6",
     "eslint": "^8.44.0",
     "tsx": "^3.12.7",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "vite-tsconfig-paths": "^4.2.1",
+    "vitest": "^0.34.6"
   },
   "dependencies": {
     "@fastify/cookie": "^8.3.0",
