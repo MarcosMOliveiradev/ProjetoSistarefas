@@ -1,37 +1,47 @@
-import { Prisma, Usuario } from '@prisma/client'
+import { Usuario } from '@prisma/client'
 import { UserRepository } from '../../../application/repositories/user/user-repository'
 import { User } from '../../../application/entites/users/user'
 
-export class inMemoryUserRepository extends UserRepository {
+export class InMemoryUserRepository extends UserRepository {
   public itens: Usuario[] = []
 
-  create(data: Prisma.UsuarioCreateInput): Promise<void> {
+  async create(data: User): Promise<void> {
     const created = {
-      id: 'user-1',
+      id: data.id,
       nome: data.nome,
       matricula: data.matricula,
       password: data.password,
       permission: data.permission,
       created_at: new Date(),
+      update_at: new Date(),
     }
 
     this.itens.push(created)
     return created
   }
 
-  findMany(): Promise<User> {
+  async findMany(): Promise<User> {
     throw new Error('Method not implemented.')
   }
 
-  findUnique(matricula: number): Promise<User> {
-    throw new Error('Method not implemented.')
+  async findUnique(matricula: number): Promise<User> {
+    const users = this.itens.find((item) => item.matricula === matricula)
+    if (!users) {
+      return null
+    }
+
+    return users
   }
 
-  authe(matricula: number): Promise<User> {
-    throw new Error('Method not implemented.')
+  async authe(matricula: number): Promise<User> {
+    const auth = await this.itens.find((item) => item.matricula === matricula)
+    if (!auth) {
+      return null
+    }
+    return auth
   }
 
-  update(
+  async update(
     nome: string | undefined,
     matricula: number | undefined,
     password: string | undefined,
