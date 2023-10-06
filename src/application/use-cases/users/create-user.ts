@@ -23,7 +23,11 @@ export class CreateUser {
   async execute(request: ICreateUserRequest): Promise<ICreateUserRespose> {
     const { nome, matricula, password, permission } = request
 
-    await this.userRepository.matricula(matricula)
+    const userWithSameMatricula = await this.userRepository.matricula(matricula)
+
+    if (userWithSameMatricula) {
+      throw new Error('Usuario ja existe')
+    }
 
     const passwordHash = await hash(password, 6)
 

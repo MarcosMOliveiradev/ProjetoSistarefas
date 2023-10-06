@@ -21,9 +21,21 @@ export class AuthenticateUserController {
     const { matricula, password } = userSchema.parse(request.body) // Resgata do corpo da requisição as informações
 
     try {
-      const { token } = await this.autenticateUser.auth(
-        { matricula, password },
-        app,
+      const { user } = await this.autenticateUser.auth({
+        matricula,
+        password,
+      })
+
+      const token = await app.jwt.sign(
+        {
+          nome: user.nome,
+          matricula: user.matricula,
+          permission: user.permission,
+        },
+        {
+          sub: user.id,
+          expiresIn: '1 days',
+        },
       )
 
       return reply.send(JSON.stringify(token))

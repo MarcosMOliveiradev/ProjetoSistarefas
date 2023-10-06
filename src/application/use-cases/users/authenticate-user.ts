@@ -1,7 +1,7 @@
 import { compare } from 'bcrypt'
 import { UserRepository } from '../../repositories/user/user-repository'
-import { FastifyInstance } from 'fastify'
 import { PasswordIncorrectError } from './errors/password-incorrect-error'
+import { User } from '../../entites/users/user'
 
 interface IAuthentication {
   matricula: number
@@ -9,7 +9,7 @@ interface IAuthentication {
 }
 
 interface ResponseUser {
-  token: string
+  user: User
 }
 
 export class AuthenticateUser {
@@ -17,21 +17,17 @@ export class AuthenticateUser {
     Promise<void>
   }
 
-  async auth(
-    request: IAuthentication,
-    app: FastifyInstance,
-  ): Promise<ResponseUser> {
+  async auth(request: IAuthentication): Promise<ResponseUser> {
     const { matricula, password } = request
 
     // Verifica a matricula
-    const verificaMatricula = await this.userRepository.verifyMatricula(
-      matricula,
-    )
-    if (verificaMatricula == null) {
+    const verificaMatricula = await this.userRepository.matricula(matricula)
+
+    if (!verificaMatricula) {
       throw new PasswordIncorrectError()
     }
 
-    const getUser = await this.userRepository.findUnique(matricula)
+    const user = await this.userRepository.findUnique(matricula)
 
     const authentication = await this.userRepository.authe(matricula)
 
@@ -42,17 +38,8 @@ export class AuthenticateUser {
       throw new PasswordIncorrectError()
     }
 
-    const token = await app.jwt.sign(
-      {
-        nome: getUser.nome,
-        matricula: getUser.matricula,
-        permission: getUser.permission,
-      },
-      {
-        sub: getUser.id,
-        expiresIn: '1 days',
-      },
-    )
-    return { token }
+    return {
+      user,
+    }
   }
 }

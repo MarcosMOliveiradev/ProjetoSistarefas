@@ -25,12 +25,12 @@ export class InMemoryUserRepository extends UserRepository {
   }
 
   async findUnique(matricula: number): Promise<User> {
-    const users = this.itens.find((item) => item.matricula === matricula)
-    if (!users) {
+    const user = this.itens.find((item) => item.matricula === matricula)
+    if (!user) {
       return null
     }
 
-    return users
+    return user
   }
 
   async authe(matricula: number): Promise<User> {
@@ -51,18 +51,13 @@ export class InMemoryUserRepository extends UserRepository {
     throw new Error('Method not implemented.')
   }
 
-  matricula(verifyMatricula: number): Promise<void> {
-    throw new Error('Method not implemented.')
-  }
+  async matricula(verifyMatricula: number): Promise<User | null> {
+    const user = this.itens.find((item) => item.matricula === verifyMatricula)
 
-  async verifyMatricula(verifyMatricula: number): Promise<boolean> {
-    const verificaMatricula = await this.itens.find(
-      (item) => item.matricula === verifyMatricula,
-    )
-
-    if (!verificaMatricula) {
+    if (!user) {
       return null
     }
-    return verificaMatricula
+
+    return user
   }
 }
