@@ -42,7 +42,7 @@ export class AuthenticateUser {
       throw new PasswordIncorrectError()
     }
 
-    const token = app.jwt.sign(
+    const token = await app.jwt.sign(
       {
         nome: getUser.nome,
         matricula: getUser.matricula,

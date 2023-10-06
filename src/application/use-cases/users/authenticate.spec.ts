@@ -21,7 +21,7 @@ describe('Authentication user case', () => {
       created_at: new Date(),
       update_at: new Date(),
     })
-    console.log(user)
+    // console.log(user)
     await inMemoryUserRepository.create(user)
 
     const matricula = 123
