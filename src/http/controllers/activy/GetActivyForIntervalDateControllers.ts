@@ -13,21 +13,13 @@ export class GetActivyForIntervalDateControllers {
     })
 
     const { dataIntervalo } = dataSchema.parse(request.query)
-    const regex = /-(\d{2})-/
-
-    const dataMes = dataIntervalo.match(regex)
-
-    if (dataMes == null) {
-      throw new Error('erro ao preencher o campo mes')
-    }
-    const dataConsulta = dataMes[0]
 
     if (!dataIntervalo) {
       return reply.status(400).send('O campo "data" é obrigatório')
     }
     const user = request.user.sub
     const datainfo = await this.listAcityForIntervalDate.execute({
-      dataConsulta,
+      dataIntervalo,
       user,
     })
 
