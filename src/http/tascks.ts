@@ -9,12 +9,12 @@ import { ListTasksController } from './controllers/tasks/ListTasksController'
 import { ListTaskForCodigoController } from './controllers/tasks/ListTasksForCodigoController'
 import { ListTaskForCodigo } from '../application/use-cases/tasks/List-task-for-codigo'
 
-const prismaTask = new PrismaTaskRepository()
-const createTask = new CreateTask(prismaTask)
+const prismaTaskRepository = new PrismaTaskRepository()
+const createTask = new CreateTask(prismaTaskRepository)
 const newTasck = new CreatedTascksControllers(createTask)
-const listTask = new ListTask(prismaTask)
+const listTask = new ListTask(prismaTaskRepository)
 const listTaskController = new ListTasksController(listTask)
-const listTaskCodigo = new ListTaskForCodigo(prismaTask)
+const listTaskCodigo = new ListTaskForCodigo(prismaTaskRepository)
 const ListTaskCodigoController = new ListTaskForCodigoController(listTaskCodigo)
 
 export async function tasck(app: FastifyInstance) {

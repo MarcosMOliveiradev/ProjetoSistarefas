@@ -5,4 +5,5 @@ export abstract class ActivyRepository {
   abstract findMany(): Promise<Activy>
   abstract listDate(data: string, user: string): Promise<Activy>
   abstract listIntervalDate(dataConsulta: string, use: string): Promise<Activy>
+  abstract count(matricula: number): Promise<Activy>
 }

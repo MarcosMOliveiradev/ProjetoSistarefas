@@ -3,6 +3,11 @@ import { ActivyRepository } from '../../../application/repositories/activy/Activ
 import { prisma } from '../../prisma'
 
 export class PrismaActivyRepository extends ActivyRepository {
+  async count(matricula: number): Promise<Activy> {
+    const result = await prisma.atividade.count()
+    return result
+  }
+
   async listIntervalDate(dataConsulta: string, use: string): Promise<Activy> {
     const datainfo = await prisma.atividade.findMany({
       where: {
