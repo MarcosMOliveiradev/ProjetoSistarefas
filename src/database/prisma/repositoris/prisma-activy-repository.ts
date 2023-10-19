@@ -4,7 +4,28 @@ import { prisma } from '../../prisma'
 
 export class PrismaActivyRepository extends ActivyRepository {
   async count(matricula: number): Promise<Activy> {
-    const result = await prisma.atividade.count()
+    const result = await prisma.atividade.findMany({
+      where: {
+        usuario: {
+          matricula,
+        },
+      },
+      select: {
+        usuario: {
+          select: {
+            nome: true,
+            matricula: true,
+          },
+        },
+        Tarefas: {
+          select: {
+            codigo: true,
+            setor: true,
+            descricao: true,
+          },
+        },
+      },
+    })
     return result
   }
 

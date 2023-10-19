@@ -18,10 +18,8 @@ export class CoutActivyController {
       throw new Error('matricula não pode estar em branco')
     }
     const matricula = await parseInt(matriculaQuery)
-    console.log(matricula)
-    console.log(typeof matricula)
 
-    const value = this.coutActivy.exec({ matricula })
+    const value = await this.coutActivy.exec({ matricula })
     return reply.status(201).send(JSON.stringify(value))
   }
 }
