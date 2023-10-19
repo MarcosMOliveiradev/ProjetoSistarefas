@@ -13,12 +13,17 @@ export class Cout {
     Promise<void>
   }
 
-  async exec(request: IMatriculaRequest): Promise<Iresponse> {
+  async exec(request: IMatriculaRequest) {
     const { matricula } = request
 
     // TODO: lidar com erros.
 
     const activy = await this.activyRepository.count(matricula)
+
+    activy.forEach((objeto: any) => {
+      const respose = objeto.Tarefas.codigo
+    })
+
     return { activy }
   }
 }
