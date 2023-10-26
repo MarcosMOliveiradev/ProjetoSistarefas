@@ -21,7 +21,7 @@ const authenticate = new AuthenticateUserController(authenticateUser)
 const updateUserControler = new UpdateUserControler(updateUser)
 
 export async function usuario(app: FastifyInstance) {
-  app.post('/created', async (request, reply) => {
+  app.post('/created', { preHandler: [verify] }, async (request, reply) => {
     return createdUser.user(request)
   }) // criar
 
