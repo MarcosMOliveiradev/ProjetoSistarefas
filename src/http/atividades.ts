@@ -13,6 +13,8 @@ import { PrismaActivyRepository } from '../database/prisma/repositoris/prisma-ac
 import { ListActivy } from '../application/use-cases/activy/List-activy'
 import { ListActivyForDate } from '../application/use-cases/activy/List-activy-for-date'
 import { ListActivyForIntervalDate } from '../application/use-cases/activy/List-activy-for-interval-date'
+import { Cout } from '../application/use-cases/activy/Cout-activy'
+import { CoutActivyController } from './controllers/activy/CoutActivyController'
 
 // repository
 const taskRepository = new PrismaTaskRepository()
@@ -31,6 +33,8 @@ const listAcityForIntervalDate = new ListActivyForIntervalDate(activyRepository)
 const getActivyIntervalDate = new GetActivyForIntervalDateControllers(
   listAcityForIntervalDate,
 )
+const coutActivy = new Cout(activyRepository)
+const coutActivyController = new CoutActivyController(coutActivy)
 const putActivy = new PutActivy()
 
 export async function atividades(app: FastifyInstance) {
@@ -56,5 +60,9 @@ export async function atividades(app: FastifyInstance) {
 
   app.put('/put', { preHandler: [verify] }, async (request, reply) => {
     return putActivy.putActivy(request, reply)
+  })
+
+  app.get('/cout', async (request, reply) => {
+    return coutActivyController.execute(request, reply)
   })
 }
