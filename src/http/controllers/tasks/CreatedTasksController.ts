@@ -33,6 +33,6 @@ export class CreatedTascksControllers {
 
       usuario: request.user.sub,
     })
-    return reply.status(201).send('Criado com sucesso')
+    return reply.status(201).send(JSON.stringify('Criado com sucesso'))
   }
 }
