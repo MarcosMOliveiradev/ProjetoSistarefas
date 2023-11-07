@@ -1,13 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 import { CreatedActivy } from '../../../application/use-cases/activy/Create-activy'
-import { TaskRepository } from '../../../application/repositories/tasks/task-repository'
 
 export class CreatedActivyController {
-  constructor(
-    private createdActivy: CreatedActivy,
-    private taskRepository: TaskRepository,
-  ) {
+  constructor(private createdActivy: CreatedActivy) {
     Promise<void>
   }
 
@@ -32,8 +28,6 @@ export class CreatedActivyController {
       codigoTarefa,
     } = activySchema.parse(request.body) // Resgata do corpo da requisição as informações
 
-    const idTarefa = await this.taskRepository.id(codigoTarefa)
-
     await this.createdActivy.create({
       index_atividade_tarefa: index,
       id_documento: idDocumento,
@@ -43,7 +37,7 @@ export class CreatedActivyController {
       data,
 
       usuario: request.user.sub,
-      task: idTarefa,
+      codigo: codigoTarefa,
     })
 
     return reply.status(201).send('Criado com sucesso')

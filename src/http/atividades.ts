@@ -21,9 +21,9 @@ const taskRepository = new PrismaTaskRepository()
 const activyRepository = new PrismaActivyRepository()
 
 // aplication
-const createActivy = new CreatedActivy(activyRepository)
+const createActivy = new CreatedActivy(activyRepository, taskRepository)
 // controller
-const createdActivi = new CreatedActivyController(createActivy, taskRepository)
+const createdActivi = new CreatedActivyController(createActivy)
 const activyList = new ListActivy(activyRepository)
 const getActivi = new GetActivyController(activyList)
 const getActiviId = new GetActivyIdController()

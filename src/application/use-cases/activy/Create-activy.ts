@@ -1,5 +1,6 @@
 import { Activy } from '../../entites/activy/activy'
 import { ActivyRepository } from '../../repositories/activy/Activy-repository'
+import { TaskRepository } from '../../repositories/tasks/task-repository'
 
 interface IActivyRequest {
   index_atividade_tarefa: number
@@ -10,7 +11,7 @@ interface IActivyRequest {
   data: string
 
   usuario: string
-  task: string
+  codigo: number
 }
 
 interface iActivyReturn {
@@ -18,7 +19,10 @@ interface iActivyReturn {
 }
 
 export class CreatedActivy {
-  constructor(private activyRepository: ActivyRepository) {
+  constructor(
+    private activyRepository: ActivyRepository,
+    private taskRepository: TaskRepository,
+  ) {
     Promise<void>
   }
 
@@ -31,8 +35,10 @@ export class CreatedActivy {
       hora_termino,
       data,
       usuario,
-      task,
+      codigo,
     } = request
+
+    const task = await this.taskRepository.id(codigo)
 
     const activy = new Activy({
       index_atividade_tarefa,
