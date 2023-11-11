@@ -1,11 +1,8 @@
-import { Activy } from '../../entites/activy/activy'
 import { ActivyRepository } from '../../repositories/activy/Activy-repository'
 
 interface IMatriculaRequest {
   matricula: number
-}
-interface Iresponse {
-  activy: Activy
+  permission: boolean
 }
 
 export class Cout {
@@ -14,9 +11,12 @@ export class Cout {
   }
 
   async exec(request: IMatriculaRequest) {
-    const { matricula } = request
+    const { matricula, permission } = request
 
     // TODO: lidar com erros.
+    if (permission !== true) {
+      throw new Error('Você não tem permissão!')
+    }
 
     const activy = await this.activyRepository.count(matricula)
 

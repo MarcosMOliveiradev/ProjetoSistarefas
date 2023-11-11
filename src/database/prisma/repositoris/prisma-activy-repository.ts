@@ -15,6 +15,7 @@ export class PrismaActivyRepository extends ActivyRepository {
           select: {
             nome: true,
             matricula: true,
+            permission: true,
           },
         },
         Tarefas: {

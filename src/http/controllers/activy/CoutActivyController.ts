@@ -1,4 +1,4 @@
-import { string, z } from 'zod'
+import { z } from 'zod'
 import { Cout } from '../../../application/use-cases/activy/Cout-activy'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
@@ -9,7 +9,7 @@ export class CoutActivyController {
 
   async execute(request: FastifyRequest, reply: FastifyReply) {
     const coutSchema = z.object({
-      matriculaQuery: string(),
+      matriculaQuery: z.string(),
     })
 
     const { matriculaQuery } = coutSchema.parse(request.query)
@@ -18,8 +18,9 @@ export class CoutActivyController {
       throw new Error('matricula não pode estar em branco')
     }
     const matricula = await parseInt(matriculaQuery)
+    const permission = request.user.permission
 
-    const value = await this.coutActivy.exec({ matricula })
+    const value = await this.coutActivy.exec({ matricula, permission })
     return reply.status(201).send(JSON.stringify(value))
   }
 }

@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "lint": "eslint ./ --ext .ts .js --fix",
+    "lint": "eslint ./ --ext .ts --fix",
     "test": "vitest run",
     "build": "tsup src --out-dir build",
     "start": "node ./build/server.cjs"

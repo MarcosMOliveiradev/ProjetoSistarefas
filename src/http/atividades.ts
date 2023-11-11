@@ -62,7 +62,7 @@ export async function atividades(app: FastifyInstance) {
     return putActivy.putActivy(request, reply)
   })
 
-  app.get('/cout', async (request, reply) => {
+  app.get('/cout', { preHandler: [verify] }, async (request, reply) => {
     return coutActivyController.execute(request, reply)
   })
 }
