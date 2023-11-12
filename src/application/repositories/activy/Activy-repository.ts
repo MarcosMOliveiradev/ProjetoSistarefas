@@ -7,4 +7,16 @@ export abstract class ActivyRepository {
   abstract listUserActivy(data: string, matricula: number): Promise<Activy>
   abstract listIntervalDate(dataConsulta: string, use: string): Promise<Activy>
   abstract count(matricula: number): Promise<Activy>
+  abstract put(
+    id: string,
+    user: string,
+
+    index: number | undefined,
+    quantidadeFolhas: string | undefined,
+    idDocumento: string | undefined,
+    horaInicio: string | undefined,
+    horaTermino: string | undefined,
+    data: string | undefined,
+    task: string | undefined,
+  ): Promise<void>
 }

@@ -21,9 +21,10 @@ import { CreatedActivyController } from './controllers/activy/CreatedActivyContr
 import { GetActivyController } from './controllers/activy/GetActivyControllers'
 import { GetActivyForDateController } from './controllers/activy/GetActivyForDateController'
 import { GetActivyForIntervalDateControllers } from './controllers/activy/GetActivyForIntervalDateControllers'
-import { PutActivy } from './controllers/activy/PutActivyControllers'
+import { PutActivyControllers } from './controllers/activy/PutActivyControllers'
 import { CoutActivyController } from './controllers/activy/CoutActivyController'
 import { GetActivyForDateEndUserController } from './controllers/activy/GetActivyForDateEndUserController'
+import { PutActivy } from '../application/use-cases/activy/Put-activy'
 
 // repository
 const taskRepository = new PrismaTaskRepository()
@@ -36,6 +37,7 @@ const activyList = new ListActivy(activyRepository)
 const listActivyDate = new ListActivyForDate(activyRepository)
 const listAcityForIntervalDate = new ListActivyForIntervalDate(activyRepository)
 const listActivyForDateEndUser = new ListActivyForDateEndUser(activyRepository)
+const putActivy = new PutActivy(activyRepository, taskRepository)
 // controller
 const createdActivi = new CreatedActivyController(createActivy)
 const getActivi = new GetActivyController(activyList)
@@ -44,7 +46,7 @@ const getActiviDate = new GetActivyForDateController(listActivyDate)
 const getActivyIntervalDate = new GetActivyForIntervalDateControllers(
   listAcityForIntervalDate,
 )
-const putActivy = new PutActivy()
+const putActivyController = new PutActivyControllers(putActivy)
 const coutActivyController = new CoutActivyController(coutActivy)
 const getActivyForDateEndUser = new GetActivyForDateEndUserController(
   listActivyForDateEndUser,
@@ -75,8 +77,8 @@ export async function atividades(app: FastifyInstance) {
     return getActivyForDateEndUser.getActivyForDate(request, reply)
   })
 
-  app.put('/put', { preHandler: [verify] }, async (request, reply) => {
-    return putActivy.putActivy(request, reply)
+  app.put('/put/:id', { preHandler: [verify] }, async (request, reply) => {
+    return putActivyController.exec(request, reply)
   })
 
   app.get('/cout', { preHandler: [verify] }, async (request, reply) => {

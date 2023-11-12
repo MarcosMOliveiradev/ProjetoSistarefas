@@ -1,62 +1,53 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
-import { prisma } from '../../../database/prisma'
-import { checkedIdActivy } from '../../../middlewares/CheckedIdActivy'
+import { PutActivy } from '../../../application/use-cases/activy/Put-activy'
 
-export class PutActivy {
-  async putActivy(request: FastifyRequest, reply: FastifyReply) {
+export class PutActivyControllers {
+  constructor(private putActivy: PutActivy) {
+    Promise<void>
+  }
+
+  async exec(request: FastifyRequest, reply: FastifyReply) {
     const activySchema = z.object({
-      indexBody: z.number(),
-      idDocumento: z.string(),
-      quantidadeFolhas: z.string(),
-      horaInicio: z.string(),
-      horaTermino: z.string(),
-      codigoTarefa: z.number(),
-      newData: z.string(),
+      index: z.number().optional(),
+      idDocumento: z.string().optional(),
+      quantidadeFolhas: z.string().optional(),
+      horaInicio: z.string().optional(),
+      horaTermino: z.string().optional(),
+      codigoTarefa: z.number().optional(),
+      data: z.string().optional(),
     })
 
     const querySchema = z.object({
-      codigo: z.string(),
-      index: z.string(),
-      data: z.string(),
+      id: z.string().uuid(),
     })
 
-    const { data, index, codigo } = querySchema.parse(request.query)
-    const indexNum = parseInt(index)
-    const codigoNum = parseInt(codigo)
-
-    // Verifica o id da tarefa no banco de dados
-    // const idTarefa = await checkId(codigoNum) *******
-
-    // Verifica o id da atividade no banco de dados
-    const idActivy = await checkedIdActivy(request, indexNum, idTarefa, data)
+    const { id } = querySchema.parse(request.params)
 
     const {
-      indexBody,
+      index,
+      quantidadeFolhas,
+      idDocumento,
+      horaInicio,
+      horaTermino,
+      data,
+      codigoTarefa,
+    } = activySchema.parse(request.body)
+
+    const user = request.user.sub
+    await this.putActivy.exec({
+      _id: id,
+      user,
+
+      index,
       idDocumento,
       quantidadeFolhas,
       horaInicio,
       horaTermino,
-      newData,
+      data,
       codigoTarefa,
-    } = activySchema.parse(request.body)
-
-    const codigoId = await checkId(codigoTarefa)
-
-    await prisma.atividade.update({
-      where: {
-        id: idActivy,
-      },
-      data: {
-        index_atividade_arefa: indexBody,
-        id_documento: idDocumento,
-        quantidade_de_folhas: quantidadeFolhas,
-        hora_inicio: horaInicio,
-        hora_termino: horaTermino,
-        data: newData,
-        tarefasId: codigoId,
-      },
     })
+
     return reply.status(201).send('Atualizado com sucesso')
   }
 }

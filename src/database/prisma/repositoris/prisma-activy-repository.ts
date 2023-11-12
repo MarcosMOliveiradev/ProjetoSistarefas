@@ -3,6 +3,35 @@ import { ActivyRepository } from '../../../application/repositories/activy/Activ
 import { prisma } from '../../prisma'
 
 export class PrismaActivyRepository extends ActivyRepository {
+  async put(
+    id: string,
+    user: string,
+
+    index: number | undefined,
+    quantidadeFolhas: string | undefined,
+    idDocumento: string | undefined,
+    horaInicio: string | undefined,
+    horaTermino: string | undefined,
+    data: string | undefined,
+    task: string | undefined,
+  ): Promise<void> {
+    await prisma.atividade.update({
+      where: {
+        id,
+      },
+
+      data: {
+        index_atividade_tarefa: index,
+        quantidade_de_folhas: quantidadeFolhas,
+        id_documento: idDocumento,
+        hora_inicio: horaInicio,
+        hora_termino: horaTermino,
+        tarefasId: task,
+        data,
+      },
+    })
+  }
+
   async listUserActivy(data: string, matricula: number): Promise<Activy> {
     const result = await prisma.atividade.findMany({
       where: {
@@ -132,6 +161,7 @@ export class PrismaActivyRepository extends ActivyRepository {
       },
 
       select: {
+        id: true,
         index_atividade_tarefa: true,
         id_documento: true,
         quantidade_de_folhas: true,
