@@ -48,6 +48,6 @@ export class PutActivyControllers {
       codigoTarefa,
     })
 
-    return reply.status(201).send('Atualizado com sucesso')
+    return reply.status(201).send(JSON.stringify('atualizado com sucesso'))
   }
 }

@@ -42,19 +42,6 @@ export class PutActivy {
 
     const id = _id
 
-    console.log(
-      id,
-      user,
-
-      index,
-      quantidadeFolhas,
-      idDocumento,
-      horaInicio,
-      horaTermino,
-      data,
-      task,
-    )
-
     await this.actvyRepository.put(
       id,
       user,
