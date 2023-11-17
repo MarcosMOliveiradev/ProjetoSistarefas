@@ -83,6 +83,8 @@ export class PrismaActivyRepository extends ActivyRepository {
         },
       },
       select: {
+        hora_inicio: true,
+        hora_termino: true,
         usuario: {
           select: {
             nome: true,
