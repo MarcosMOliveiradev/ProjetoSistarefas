@@ -25,7 +25,7 @@ import { PutActivyControllers } from './controllers/activy/PutActivyControllers'
 import { CoutActivyController } from './controllers/activy/CoutActivyController'
 import { GetActivyForDateEndUserController } from './controllers/activy/GetActivyForDateEndUserController'
 import { PutActivy } from '../application/use-cases/activy/Put-activy'
-import { TimeActivy } from '../application/use-cases/activy/time-activy'
+import { TimeActivy } from '../application/use-cases/activy/Time-activy'
 import { TimeActivyController } from './controllers/activy/TimeActivyController'
 
 // repository

@@ -22,6 +22,7 @@ export class Cout {
 
     const count: any = {}
     activy.forEach((objeto: any) => {
+      const descricao = objeto.Tarefas.descricao
       const codigo = objeto.Tarefas.codigo
       const nome = objeto.usuario.nome
       const matricula = objeto.usuario.matricula
@@ -29,16 +30,14 @@ export class Cout {
       const matriculas = 'matricula'
       const nomes = 'nomes'
 
-      if (count[codigo]) {
+      if (count[descricao]) {
         count[nomes] = nome
         count[matriculas] = matricula
-        count[codigo]++
-        count[setor]++
+        count[descricao]++
       } else {
         count[nomes] = nome
         count[matriculas] = matricula
-        count[codigo] = 1
-        count[setor] = 1
+        count[descricao] = 1
       }
     })
 

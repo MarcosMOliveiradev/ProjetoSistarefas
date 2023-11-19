@@ -83,6 +83,7 @@ export class PrismaActivyRepository extends ActivyRepository {
         },
       },
       select: {
+        id: true,
         hora_inicio: true,
         hora_termino: true,
         usuario: {
@@ -118,6 +119,7 @@ export class PrismaActivyRepository extends ActivyRepository {
       },
 
       select: {
+        id: true,
         index_atividade_tarefa: true,
         id_documento: true,
         quantidade_de_folhas: true,
