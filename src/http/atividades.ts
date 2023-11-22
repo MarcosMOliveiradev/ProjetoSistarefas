@@ -27,6 +27,8 @@ import { GetActivyForDateEndUserController } from './controllers/activy/GetActiv
 import { PutActivy } from '../application/use-cases/activy/Put-activy'
 import { TimeActivy } from '../application/use-cases/activy/Time-activy'
 import { TimeActivyController } from './controllers/activy/TimeActivyController'
+import { AverageTimeActivy } from '../application/use-cases/activy/average-time-activy'
+import { AverageActivyController } from './controllers/activy/AverageTimeActivy'
 
 // repository
 const taskRepository = new PrismaTaskRepository()
@@ -41,6 +43,7 @@ const listAcityForIntervalDate = new ListActivyForIntervalDate(activyRepository)
 const listActivyForDateEndUser = new ListActivyForDateEndUser(activyRepository)
 const putActivy = new PutActivy(activyRepository, taskRepository)
 const timeActivy = new TimeActivy(activyRepository)
+const averageTimeActivy = new AverageTimeActivy(activyRepository)
 // controller
 const createdActivi = new CreatedActivyController(createActivy)
 const getActivi = new GetActivyController(activyList)
@@ -55,6 +58,9 @@ const getActivyForDateEndUser = new GetActivyForDateEndUserController(
   listActivyForDateEndUser,
 )
 const timeActivyController = new TimeActivyController(timeActivy)
+const averageTimeActivyController = new AverageActivyController(
+  averageTimeActivy,
+)
 
 export async function atividades(app: FastifyInstance) {
   app.post('/', { preHandler: [verify] }, async (request, reply) => {
@@ -91,5 +97,9 @@ export async function atividades(app: FastifyInstance) {
 
   app.get('/timeCout', { preHandler: [verify] }, async (request, reply) => {
     return timeActivyController.coutTime(request, reply)
+  })
+
+  app.get('/averagetime', { preHandler: [verify] }, async (request, reply) => {
+    return averageTimeActivyController.execute(request, reply)
   })
 }
