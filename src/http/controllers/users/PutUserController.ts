@@ -15,13 +15,13 @@ export class UpdateUserControler {
       matricula: z.number().optional(),
       password: z.string().optional(),
       permission: z.boolean().optional(),
+      userAvata: z.string().optional(),
     })
 
     await authenticate(request.user.permission)
 
-    const { nome, matricula, password, permission } = userSchema.parse(
-      request.body,
-    )
+    const { nome, matricula, password, permission, userAvata } =
+      userSchema.parse(request.body)
 
     const idSchema = z.object({
       id: z.string().uuid(),
@@ -35,6 +35,7 @@ export class UpdateUserControler {
       matricula,
       password,
       permission,
+      userAvata,
     })
   }
 }

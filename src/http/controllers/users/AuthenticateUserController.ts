@@ -31,6 +31,7 @@ export class AuthenticateUserController {
           nome: user.nome,
           matricula: user.matricula,
           permission: user.permission,
+          userAvata: user.userAvata,
         },
         {
           sub: user.id,

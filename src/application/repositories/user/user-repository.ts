@@ -11,6 +11,7 @@ export abstract class UserRepository {
     password: string | undefined,
     permission: boolean | undefined,
     id: string,
+    userAvata: string | undefined,
   ): Promise<void>
 
   abstract matricula(verifyMatricula: number): Promise<User | null>

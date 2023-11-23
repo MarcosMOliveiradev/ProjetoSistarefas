@@ -2,6 +2,11 @@ node_modules
 .env
 prisma/database.db
 
+*.jpg
+*.png
+*.mp4
+*jpeg
+*.gif
 .db
 
 build

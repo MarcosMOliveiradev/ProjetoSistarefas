@@ -9,6 +9,7 @@ import { PrismaUserRepository } from '../database/prisma/repositoris/prisma-user
 import { AuthenticateUserController } from './controllers/users/AuthenticateUserController'
 import { AuthenticateUser } from '../application/use-cases/users/authenticate-user'
 import { UpdateUser } from '../application/use-cases/users/update-user'
+import { UserAvata } from './controllers/users/userAvata'
 
 const prismaUser = new PrismaUserRepository()
 const createUserInstance = new CreateUser(prismaUser)
@@ -16,6 +17,7 @@ const createdUser = new CreatedUserControlle(createUserInstance)
 const getUser = new GetUserController(prismaUser)
 const updateUser = new UpdateUser(prismaUser)
 const authenticateUser = new AuthenticateUser(prismaUser)
+const userAvata = new UserAvata()
 
 const authenticate = new AuthenticateUserController(authenticateUser)
 const updateUserControler = new UpdateUserControler(updateUser)
@@ -35,5 +37,9 @@ export async function usuario(app: FastifyInstance) {
 
   app.put('/update/:id', { preHandler: [verify] }, async (request, reply) => {
     return updateUserControler.put(request)
+  })
+
+  app.post('/upload', async (request, reply) => {
+    return userAvata.upload(request, reply)
   })
 }

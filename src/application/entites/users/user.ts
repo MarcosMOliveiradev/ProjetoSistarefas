@@ -7,6 +7,7 @@ export interface IUser {
   password: string
   permission: boolean
   created_at: Date
+  userAvata?: string | null
   update_at?: Date | null
 }
 
@@ -56,6 +57,14 @@ export class User {
 
   public get permission() {
     return this.props.permission
+  }
+
+  public set userAvata(userAvata: string | null) {
+    this.props.userAvata = userAvata
+  }
+
+  public get userAvata(): string | null | undefined {
+    return this.props.userAvata
   }
 
   public set update(update: Date | null | undefined) {

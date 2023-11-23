@@ -9,6 +9,7 @@ export class PrismaUserRepository extends UserRepository {
     password: string | undefined,
     permission: boolean | undefined,
     id: string,
+    userAvata: string | undefined,
   ): Promise<void> {
     await prisma.usuario.update({
       where: {
@@ -19,6 +20,7 @@ export class PrismaUserRepository extends UserRepository {
         matricula,
         password,
         permission,
+        userAvata,
       },
     })
   }
@@ -62,9 +64,11 @@ export class PrismaUserRepository extends UserRepository {
   async findMany(): Promise<User> {
     const users = await prisma.usuario.findMany({
       select: {
+        id: true,
         nome: true,
         matricula: true,
         permission: true,
+        userAvata: true,
       },
     })
 
@@ -81,6 +85,7 @@ export class PrismaUserRepository extends UserRepository {
         nome: true,
         matricula: true,
         permission: true,
+        userAvata: true,
       },
     })
 

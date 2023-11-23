@@ -7,6 +7,7 @@ interface IUpdateUserRequest {
   matricula?: number
   password?: string
   permission?: boolean
+  userAvata?: string
 }
 
 export class UpdateUser {
@@ -15,7 +16,7 @@ export class UpdateUser {
   }
 
   async update(request: IUpdateUserRequest): Promise<void> {
-    const { nome, matricula, password, permission, _id } = request
+    const { nome, matricula, password, permission, _id, userAvata } = request
 
     const id = _id
 
@@ -28,6 +29,7 @@ export class UpdateUser {
         passwordHash,
         permission,
         id,
+        userAvata,
       )
     } else {
       await this.userRepository.update(
@@ -36,6 +38,7 @@ export class UpdateUser {
         password,
         permission,
         id,
+        userAvata,
       )
     }
   }

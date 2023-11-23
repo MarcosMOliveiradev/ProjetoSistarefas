@@ -15,7 +15,7 @@ model Usuario {
   permission Boolean
   created_at DateTime
   update_at  DateTime @updatedAt
-  userAvata  String
+  userAvata  String?
 
   atividade Atividade[]
   Tarefas   Tarefas[]
