@@ -39,19 +39,55 @@ export class CreatedActivy {
     } = request
 
     const task = await this.taskRepository.id(codigo)
+    let activy: any = {}
 
-    const activy = new Activy({
-      index_atividade_tarefa,
-      id_documento,
-      quantidade_de_folha,
-      hora_inicio,
-      hora_termino,
-      data,
-      usuario,
-      task,
-    })
+    if (id_documento === undefined) {
+      activy = new Activy({
+        index_atividade_tarefa,
+        id_documento,
+        quantidade_de_folha,
+        hora_inicio,
+        hora_termino,
+        data,
+        usuario,
+        task,
+      })
+      await this.activyRepository.create(activy)
+    }
 
-    await this.activyRepository.create(activy)
+    if (id_documento !== undefined) {
+      const codigoLista = id_documento.split(' ')
+
+      if (codigoLista.length > 1) {
+        for (let i = 0; i < codigoLista.length; i++) {
+          activy = new Activy({
+            index_atividade_tarefa,
+            id_documento: codigoLista[i],
+            quantidade_de_folha,
+            hora_inicio,
+            hora_termino,
+            data,
+            usuario,
+            task,
+          })
+          await this.activyRepository.create(activy)
+        }
+        return { activy }
+      } else {
+        activy = new Activy({
+          index_atividade_tarefa,
+          id_documento: codigoLista[0],
+          quantidade_de_folha,
+          hora_inicio,
+          hora_termino,
+          data,
+          usuario,
+          task,
+        })
+
+        await this.activyRepository.create(activy)
+      }
+    }
 
     return { activy }
   }
