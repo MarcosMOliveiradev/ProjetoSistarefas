@@ -19,4 +19,6 @@ export abstract class ActivyRepository {
     data: string | undefined,
     task: string | undefined,
   ): Promise<void>
+
+  abstract findForMatricula(matricula: number): Promise<Activy>
 }

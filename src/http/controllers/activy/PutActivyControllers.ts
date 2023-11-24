@@ -35,6 +35,7 @@ export class PutActivyControllers {
     } = activySchema.parse(request.body)
 
     const user = request.user.sub
+
     await this.putActivy.exec({
       _id: id,
       user,

@@ -17,7 +17,7 @@ export class PrismaTaskRepository extends TaskRepository {
     return Codigo
   }
 
-  async id(codigoTarefa: number): Promise<string> {
+  async id(codigoTarefa: number | undefined): Promise<string | undefined> {
     const taskId = await prisma.tarefas.findUnique({
       where: {
         codigo: codigoTarefa,
@@ -27,11 +27,7 @@ export class PrismaTaskRepository extends TaskRepository {
       },
     })
 
-    if (taskId?.id == null) {
-      throw new Error('Codigo de tarefa invalida!')
-    }
-
-    return taskId.id
+    return taskId?.id || ''
   }
 
   async findMany(): Promise<Task> {

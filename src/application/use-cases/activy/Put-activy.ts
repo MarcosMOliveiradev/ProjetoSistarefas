@@ -33,25 +33,41 @@ export class PutActivy {
       _id,
       user,
     } = request
+    let task: string | undefined = ''
 
     if (codigoTarefa === undefined) {
-      throw new Error('Erro no codigo de atividade')
+      task = undefined
+      const id = _id
+      await this.actvyRepository.put(
+        id,
+        user,
+        index,
+        quantidadeFolhas,
+        idDocumento,
+        horaInicio,
+        horaTermino,
+        data,
+        task,
+      )
     }
 
-    const task = await this.taskRepository.id(codigoTarefa)
+    if (codigoTarefa !== undefined) {
+      task = await this.taskRepository.id(codigoTarefa)
+      if (task !== undefined) {
+        const id = _id
 
-    const id = _id
-
-    await this.actvyRepository.put(
-      id,
-      user,
-      index,
-      quantidadeFolhas,
-      idDocumento,
-      horaInicio,
-      horaTermino,
-      data,
-      task,
-    )
+        await this.actvyRepository.put(
+          id,
+          user,
+          index,
+          quantidadeFolhas,
+          idDocumento,
+          horaInicio,
+          horaTermino,
+          data,
+          task,
+        )
+      }
+    }
   }
 }

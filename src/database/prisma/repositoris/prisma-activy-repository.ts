@@ -3,6 +3,45 @@ import { ActivyRepository } from '../../../application/repositories/activy/Activ
 import { prisma } from '../../prisma'
 
 export class PrismaActivyRepository extends ActivyRepository {
+  async findForMatricula(matricula: number): Promise<Activy> {
+    const activy = await prisma.atividade.findMany({
+      where: {
+        usuario: {
+          matricula,
+        },
+      },
+      orderBy: {
+        data: 'asc',
+      },
+      select: {
+        id: true,
+        index_atividade_tarefa: true,
+        id_documento: true,
+        quantidade_de_folhas: true,
+        hora_inicio: true,
+        hora_termino: true,
+        data: true,
+
+        usuario: {
+          select: {
+            nome: true,
+            matricula: true,
+          },
+        },
+
+        Tarefas: {
+          select: {
+            codigo: true,
+            setor: true,
+            descricao: true,
+          },
+        },
+      },
+    })
+
+    return activy
+  }
+
   async put(
     id: string,
     user: string,
@@ -195,6 +234,9 @@ export class PrismaActivyRepository extends ActivyRepository {
 
   async findMany(): Promise<Activy> {
     const activyList = await prisma.atividade.findMany({
+      orderBy: {
+        created_at: 'asc',
+      },
       select: {
         index_atividade_tarefa: true,
         id_documento: true,
