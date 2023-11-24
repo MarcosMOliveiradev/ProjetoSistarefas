@@ -1,14 +1,19 @@
+import { PrismaActivyRepository } from '../../../database/prisma/repositoris/prisma-activy-repository'
 import { Activy } from '../../entites/activy/activy'
 import { ActivyRepository } from '../../repositories/activy/Activy-repository'
 import { TaskRepository } from '../../repositories/tasks/task-repository'
+import { IncrementaIndex } from '../config/incrementaIndex'
+
+const activyRepository = new PrismaActivyRepository()
+const incrementaIndex = new IncrementaIndex(activyRepository)
 
 interface IActivyRequest {
-  index_atividade_tarefa: number
   id_documento?: string
   quantidade_de_folha?: string
   hora_inicio: string
   hora_termino: string
   data: string
+  matricula: number
 
   usuario: string
   codigo: number
@@ -28,7 +33,6 @@ export class CreatedActivy {
 
   async create(request: IActivyRequest): Promise<iActivyReturn> {
     const {
-      index_atividade_tarefa,
       id_documento,
       quantidade_de_folha,
       hora_inicio,
@@ -36,14 +40,19 @@ export class CreatedActivy {
       data,
       usuario,
       codigo,
+      matricula,
     } = request
 
     const task = await this.taskRepository.id(codigo)
     let activy: any = {}
 
+    const lista = await incrementaIndex.execut({ matricula })
+
+    const newIndex = lista + 1
+
     if (id_documento === undefined) {
       activy = new Activy({
-        index_atividade_tarefa,
+        index_atividade_tarefa: newIndex,
         id_documento,
         quantidade_de_folha,
         hora_inicio,
@@ -61,7 +70,7 @@ export class CreatedActivy {
       if (codigoLista.length > 1) {
         for (let i = 0; i < codigoLista.length; i++) {
           activy = new Activy({
-            index_atividade_tarefa,
+            index_atividade_tarefa: newIndex,
             id_documento: codigoLista[i],
             quantidade_de_folha,
             hora_inicio,
@@ -75,7 +84,7 @@ export class CreatedActivy {
         return { activy }
       } else {
         activy = new Activy({
-          index_atividade_tarefa,
+          index_atividade_tarefa: newIndex,
           id_documento: codigoLista[0],
           quantidade_de_folha,
           hora_inicio,
@@ -88,6 +97,7 @@ export class CreatedActivy {
         await this.activyRepository.create(activy)
       }
     }
+    console.log(activy)
 
     return { activy }
   }

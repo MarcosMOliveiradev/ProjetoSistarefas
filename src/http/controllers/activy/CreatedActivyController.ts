@@ -9,7 +9,6 @@ export class CreatedActivyController {
 
   async activy(request: FastifyRequest, reply: FastifyReply) {
     const activySchema = z.object({
-      index: z.number(),
       idDocumento: z.string().optional(),
       quantidadeFolhas: z.string().optional(),
       horaInicio: z.string(),
@@ -19,7 +18,6 @@ export class CreatedActivyController {
     }) // Define o tipo das entradas
 
     const {
-      index,
       idDocumento,
       quantidadeFolhas,
       horaInicio,
@@ -29,7 +27,6 @@ export class CreatedActivyController {
     } = activySchema.parse(request.body) // Resgata do corpo da requisição as informações
 
     await this.createdActivy.create({
-      index_atividade_tarefa: index,
       id_documento: idDocumento,
       quantidade_de_folha: quantidadeFolhas,
       hora_inicio: horaInicio,
@@ -37,6 +34,7 @@ export class CreatedActivyController {
       data,
 
       usuario: request.user.sub,
+      matricula: request.user.matricula,
       codigo: codigoTarefa,
     })
 
