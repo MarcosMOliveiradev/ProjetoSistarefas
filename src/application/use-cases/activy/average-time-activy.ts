@@ -22,6 +22,7 @@ export class AverageTimeActivy {
     const arrayTempo: any = []
     const coutTime: any = {} // cria o objeto para receber os valores
     const medias: any = {}
+    const Total = 'Total'
 
     activyTime.forEach((objeto: any) => {
       // pega do objeto as informações vindas do baco separadamente
@@ -61,6 +62,34 @@ export class AverageTimeActivy {
       medias[registro] = matricula
     })
 
+    let soma = 0
+    for (let i = 0; i < arrayTempo.length; i++) {
+      soma += arrayTempo[i]
+    }
+
+    if (soma > 60) {
+      const tempo = soma / 60
+      const hora = parseInt(tempo)
+      const tempoDia = hora / 24
+      const dia = parseInt(tempoDia)
+      const horaTotal = hora % 24
+      const Hora = parseInt(horaTotal)
+      const tempoMin = soma % 60
+      const min = parseInt(tempoMin)
+      medias[Total] = `${dia}:${Hora}:${min}`
+
+      if (dia < 10) {
+        medias[Total] = `0${dia}:${Hora}:${min}`
+      }
+
+      if (Hora < 10) {
+        medias[Total] = `0${dia}:0${Hora}:${min}`
+      }
+
+      if (min < 10) {
+        medias[Total] = `00:00:0${min}`
+      }
+    }
     for (let x = 0; x < arrayDescicao.length; x++) {
       const descricaoAtual = arrayDescicao[x]
       const tempoAtual = arrayTempo[x]
