@@ -97,7 +97,6 @@ export class CreatedActivy {
         await this.activyRepository.create(activy)
       }
     }
-    console.log(activy)
 
     return { activy }
   }

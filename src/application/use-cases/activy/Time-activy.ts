@@ -29,6 +29,10 @@ export class TimeActivy {
       const _id = objeto.id
       const termino = objeto.hora_termino
       const descricao = objeto.Tarefas.descricao
+      const nome = objeto.usuario.nome
+      const matricula = objeto.usuario.matricula
+      const pessoa = 'Nome'
+      const registro = 'Matricula'
 
       // divide a hora inicial em duas partes
       const partesInicial = inicio.split(':')
@@ -52,6 +56,8 @@ export class TimeActivy {
 
       const tempoTotal = terminoTotal - inicialTotal // diminuir a hora final pela hora inicial
 
+      coutTime[pessoa] = nome
+      coutTime[registro] = matricula
       // caso o tempo total retorne horas
       if (tempoTotal > -60) {
         const tellTime = tempoTotal / 60

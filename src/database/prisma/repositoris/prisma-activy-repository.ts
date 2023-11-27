@@ -11,7 +11,7 @@ export class PrismaActivyRepository extends ActivyRepository {
         },
       },
       orderBy: {
-        data: 'asc',
+        index_atividade_tarefa: 'asc',
       },
       select: {
         id: true,

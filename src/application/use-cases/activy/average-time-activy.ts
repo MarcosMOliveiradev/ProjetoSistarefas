@@ -28,6 +28,10 @@ export class AverageTimeActivy {
       const inicio = objeto.hora_inicio
       const termino = objeto.hora_termino
       const descricao = objeto.Tarefas.descricao
+      const nome = objeto.usuario.nome
+      const matricula = objeto.usuario.matricula
+      const pessoa = 'Nome'
+      const registro = 'Matricula'
 
       // divide a hora inicial em duas partes
       const partesInicial = inicio.split(':')
@@ -53,6 +57,8 @@ export class AverageTimeActivy {
 
       arrayDescicao.push(descricao)
       arrayTempo.push(tempoTotal)
+      medias[pessoa] = nome
+      medias[registro] = matricula
     })
 
     for (let x = 0; x < arrayDescicao.length; x++) {
