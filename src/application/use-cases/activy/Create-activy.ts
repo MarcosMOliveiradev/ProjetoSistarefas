@@ -48,9 +48,9 @@ export class CreatedActivy {
 
     const lista = await incrementaIndex.execut({ matricula })
 
-    const newIndex = lista + 1
-
     if (id_documento === undefined) {
+      const newIndex = lista + 1
+
       activy = new Activy({
         index_atividade_tarefa: newIndex,
         id_documento,
@@ -68,6 +68,7 @@ export class CreatedActivy {
       const codigoLista = id_documento.split(' ')
 
       if (codigoLista.length > 1) {
+        let newIndex = lista + 1
         for (let i = 0; i < codigoLista.length; i++) {
           activy = new Activy({
             index_atividade_tarefa: newIndex,
@@ -80,9 +81,12 @@ export class CreatedActivy {
             task,
           })
           await this.activyRepository.create(activy)
+          newIndex++
         }
         return { activy }
       } else {
+        const newIndex = lista + 1
+
         activy = new Activy({
           index_atividade_tarefa: newIndex,
           id_documento: codigoLista[0],
