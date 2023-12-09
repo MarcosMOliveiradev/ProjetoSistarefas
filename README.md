@@ -1,8 +1,12 @@
 <h1 align="center">Projeto SisTarefas</h1>
 
-<p align="center">O projeto SisTarefas é um projeto de desenvolveimento de um sistemas de tarefas para o programa de jovem aprendiz.
-Com o sistemas os jovens vão poder colocar suas atividades do dia, ser capazes de filtrar por dia e gerar PDFs do dia, a gestão do programa
-vai poder saber todas as tividades que os jovens fazem, quantidade por dia, quais setores cada jovem mais atende entre outras funções.
+<p>O Projeto SisTarefas é um empreendimento dedicado ao desenvolvimento de um sistema de gerenciamento de tarefas destinado ao Programa de Jovem Aprendiz. Este sistema oferece aos jovens a capacidade de registrar suas atividades diárias, facilitando a filtragem por dia e a geração de relatórios em formato PDF. Além disso, proporciona à gestão do programa uma visão abrangente das atividades realizadas pelos jovens aprendizes, incluindo a quantidade de tarefas realizadas diariamente e as áreas específicas em que cada jovem atua com mais frequência.
+
+Com o SisTarefas, os jovens aprendizes têm uma plataforma intuitiva para inserir suas atividades diárias, proporcionando uma gestão eficiente do seu tempo. A funcionalidade de filtragem por dia permite uma análise detalhada das tarefas realizadas em datas específicas. Além disso, a capacidade de gerar relatórios em PDF oferece uma forma fácil de compartilhar e documentar suas realizações.
+
+Para a equipe de gestão do programa, o SisTarefas se torna uma ferramenta valiosa. A plataforma fornece uma visão consolidada das atividades realizadas por todos os participantes, permitindo uma análise aprofundada da produtividade e engajamento dos jovens aprendizes. Essa análise abrange dados como a quantidade diária de tarefas concluídas e a distribuição de esforços em diferentes setores.
+
+Em resumo, o SisTarefas não apenas simplifica o registro e acompanhamento das atividades diárias dos jovens aprendizes, mas também oferece insights valiosos para aprimorar a eficiência e eficácia do Programa de Jovem Aprendiz. Este sistema contribui significativamente para o monitoramento e avaliação contínuos, possibilitando uma gestão mais informada e assertiva do programa.
 </p>
 
 </br>
