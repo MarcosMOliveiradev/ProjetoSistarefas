@@ -17,7 +17,7 @@ export class AverageTimeActivy {
       throw new Error('Você não tem permissão')
     }
 
-    const activyTime = await this.activyResponse.count(matricula)
+    const activyTime: any = await this.activyResponse.count(matricula)
     const arrayDescicao: any = []
     const arrayTempo: any = []
     const coutTime: any = {} // cria o objeto para receber os valores
@@ -36,11 +36,11 @@ export class AverageTimeActivy {
 
       // divide a hora inicial em duas partes
       const partesInicial = inicio.split(':')
-      const intTimeInicio = partesInicial.map((str) => Number(str)) // passa para um inteiro as duas partes divididas
+      const intTimeInicio = partesInicial.map((str: any) => Number(str)) // passa para um inteiro as duas partes divididas
 
       // divide a hora final em duas partes
       const partesTermino = termino.split(':')
-      const intTimeTermino = partesTermino.map((str) => Number(str)) // passa para um inteiro as duas partes divididas
+      const intTimeTermino = partesTermino.map((str: any) => Number(str)) // passa para um inteiro as duas partes divididas
 
       // cria uma variavel para receber a hora inicial multiplicada por 60
       const horaInicial = intTimeInicio[0] * 60
@@ -69,13 +69,13 @@ export class AverageTimeActivy {
 
     if (soma > 60) {
       const tempo = soma / 60
-      const hora = parseInt(tempo)
+      const hora = parseInt(tempo.toString())
       const tempoDia = hora / 24
-      const dia = parseInt(tempoDia)
+      const dia = parseInt(tempoDia.toString())
       const horaTotal = hora % 24
-      const Hora = parseInt(horaTotal)
+      const Hora = parseInt(horaTotal.toString())
       const tempoMin = soma % 60
-      const min = parseInt(tempoMin)
+      const min = parseInt(tempoMin.toString())
       medias[Total] = `${dia}:${Hora}:${min}`
 
       if (dia < 10) {
@@ -110,7 +110,7 @@ export class AverageTimeActivy {
       const media = soma / quantidade
       if (media < 60) {
         const time = media
-        const min = parseInt(time)
+        const min = parseInt(time.toString())
         medias[string] = `00:${min}`
 
         if (min < 10) {
@@ -119,9 +119,9 @@ export class AverageTimeActivy {
       }
       if (media > 60) {
         const time = media / 60
-        const hora = parseInt(time)
+        const hora = parseInt(time.toString())
         const tellMin = media % 60
-        const min = parseInt(tellMin)
+        const min = parseInt(tellMin.toString())
         medias[string] = `${hora}:${min}`
 
         if (min < 10) {
