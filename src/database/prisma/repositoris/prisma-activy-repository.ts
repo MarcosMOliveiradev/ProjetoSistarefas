@@ -3,6 +3,44 @@ import { ActivyRepository } from '../../../application/repositories/activy/Activ
 import { prisma } from '../../prisma'
 
 export class PrismaActivyRepository extends ActivyRepository {
+  async countForMonth(matricula: number, month: string): Promise<Activy> {
+    const result = await prisma.atividade.findMany({
+      where: {
+        usuario: {
+          matricula,
+        },
+        data: {
+          equals: month,
+        },
+      },
+
+      orderBy: {
+        data: 'asc',
+      },
+      select: {
+        id: true,
+        hora_inicio: true,
+        hora_termino: true,
+        data: true,
+        usuario: {
+          select: {
+            nome: true,
+            matricula: true,
+            permission: true,
+          },
+        },
+        Tarefas: {
+          select: {
+            codigo: true,
+            setor: true,
+            descricao: true,
+          },
+        },
+      },
+    })
+    return result
+  }
+
   async findForMatricula(matricula: number): Promise<Activy> {
     const activy = await prisma.atividade.findMany({
       where: {
@@ -125,6 +163,7 @@ export class PrismaActivyRepository extends ActivyRepository {
         id: true,
         hora_inicio: true,
         hora_termino: true,
+        data: true,
         usuario: {
           select: {
             nome: true,

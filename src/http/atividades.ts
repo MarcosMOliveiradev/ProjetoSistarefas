@@ -31,6 +31,8 @@ import { AverageTimeActivy } from '../application/use-cases/activy/average-time-
 import { AverageActivyController } from './controllers/activy/AverageTimeActivy'
 import { ListActivyForUser } from '../application/use-cases/activy/List-activy-for-user'
 import { ListActivyForUserControlle } from './controllers/activy/ListActivyForUserController'
+import { AverageTimeActivyForMonth } from '../application/use-cases/activy/Average-time-activy-for-month'
+import { AverageActivyForMonthController } from './controllers/activy/AverageTimeActivyForMonth'
 
 // repository
 const taskRepository = new PrismaTaskRepository()
@@ -47,7 +49,9 @@ const putActivy = new PutActivy(activyRepository, taskRepository)
 const timeActivy = new TimeActivy(activyRepository)
 const averageTimeActivy = new AverageTimeActivy(activyRepository)
 const listActivyForUser = new ListActivyForUser(activyRepository)
-
+const averageTimeActivyForMonth = new AverageTimeActivyForMonth(
+  activyRepository,
+)
 // controller
 const createdActivi = new CreatedActivyController(createActivy)
 const getActivi = new GetActivyController(activyList)
@@ -67,6 +71,9 @@ const averageTimeActivyController = new AverageActivyController(
 )
 const listActivyForUserController = new ListActivyForUserControlle(
   listActivyForUser,
+)
+const averageActivyForMonth = new AverageActivyForMonthController(
+  averageTimeActivyForMonth,
 )
 
 export async function atividades(app: FastifyInstance) {
@@ -113,4 +120,12 @@ export async function atividades(app: FastifyInstance) {
   app.get('/activyuser', { preHandler: [verify] }, async (request, reply) => {
     return listActivyForUserController.response(request, reply)
   })
+
+  app.get(
+    '/averagetimemonth',
+    { preHandler: [verify] },
+    async (request, reply) => {
+      return averageActivyForMonth.execute(request, reply)
+    },
+  )
 }
