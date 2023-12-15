@@ -10,7 +10,7 @@ export class PrismaActivyRepository extends ActivyRepository {
           matricula,
         },
         data: {
-          equals: month,
+          contains: month,
         },
       },
 

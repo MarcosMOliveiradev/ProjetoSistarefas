@@ -33,8 +33,6 @@ export class AverageTimeActivyForMonth {
       intervalo,
     )
 
-    console.log(activyTime)
-
     const arrayDescicao: any = []
     const arrayTempo: any = []
     const coutTime: any = {} // cria o objeto para receber os valores
