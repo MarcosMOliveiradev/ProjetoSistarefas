@@ -36,11 +36,11 @@ export class TimeActivy {
 
       // divide a hora inicial em duas partes
       const partesInicial = inicio.split(':')
-      const intTimeInicio = partesInicial.map((str) => Number(str)) // passa para um inteiro as duas partes divididas
+      const intTimeInicio = partesInicial.map((str: any) => Number(str)) // passa para um inteiro as duas partes divididas
 
       // divide a hora final em duas partes
       const partesTermino = termino.split(':')
-      const intTimeTermino = partesTermino.map((str) => Number(str)) // passa para um inteiro as duas partes divididas
+      const intTimeTermino = partesTermino.map((str: any) => Number(str)) // passa para um inteiro as duas partes divididas
 
       // cria uma variavel para receber a hora inicial multiplicada por 60
       const horaInicial = intTimeInicio[0] * 60

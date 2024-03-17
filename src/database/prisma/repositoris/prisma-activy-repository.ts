@@ -41,7 +41,7 @@ export class PrismaActivyRepository extends ActivyRepository {
     return result
   }
 
-  async findForMatricula(matricula: number): Promise<Activy> {
+  async findForMatricula(matricula: number): Promise<Activy[]> {
     const activy = await prisma.atividade.findMany({
       where: {
         usuario: {
@@ -152,7 +152,7 @@ export class PrismaActivyRepository extends ActivyRepository {
     return result
   }
 
-  async count(matricula: number): Promise<Activy> {
+  async count(matricula: number): Promise<Activy[]> {
     const result = await prisma.atividade.findMany({
       where: {
         usuario: {

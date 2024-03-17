@@ -44,6 +44,10 @@ export class CreatedActivy {
     } = request
 
     const task = await this.taskRepository.id(codigo)
+
+    if (task === undefined) {
+      throw new Error('Task invalida')
+    }
     let activy: any = {}
 
     const lista = await incrementaIndex.execut({ matricula })
