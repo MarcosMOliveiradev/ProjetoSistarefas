@@ -7,7 +7,7 @@ export abstract class ActivyRepository {
   abstract listUserActivy(data: string, matricula: number): Promise<Activy>
   abstract listIntervalDate(dataConsulta: string, use: string): Promise<Activy>
   abstract count(matricula: number): Promise<Activy[]>
-  abstract countForMonth(matricula: number, month: string): Promise<Activy>
+  abstract countForMonth(matricula: number, month: string): Promise<Activy[]>
   abstract put(
     id: string,
     user: string,

@@ -28,7 +28,7 @@ export class AverageTimeActivyForMonth {
 
     const intervalo = await dataMes[0]
 
-    const activyTime: any = await this.activyResponse.countForMonth(
+    const activyTime = await this.activyResponse.countForMonth(
       matricula,
       intervalo,
     )

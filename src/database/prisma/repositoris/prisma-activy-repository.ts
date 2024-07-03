@@ -3,7 +3,7 @@ import { ActivyRepository } from '../../../application/repositories/activy/Activ
 import { prisma } from '../../prisma'
 
 export class PrismaActivyRepository extends ActivyRepository {
-  async countForMonth(matricula: number, month: string): Promise<Activy> {
+  async countForMonth(matricula: number, month: string): Promise<Activy[]> {
     const result = await prisma.atividade.findMany({
       where: {
         usuario: {

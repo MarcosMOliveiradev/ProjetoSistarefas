@@ -1,1 +1,1 @@
-npm rum dev
+npm rum migrate

@@ -49,5 +49,5 @@ app
     host: '0.0.0.0',
   })
   .then(() => {
-    console.log(`HTTP Server running in ${'ip local'}:${env.PORT}`)
+    console.log(`HTTP Server running in http://localhost:${env.PORT}`)
   })

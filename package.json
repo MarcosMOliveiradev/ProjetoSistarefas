@@ -9,7 +9,8 @@
     "lint": "eslint ./ --ext .ts --fix",
     "test": "vitest run",
     "build": "tsup src --out-dir build",
-    "start": "node ./build/server.cjs"
+    "start": "node ./build/server.cjs",
+    "migrate": "npx prisma generate && npx prisma migrate dev"
   },
   "author": "",
   "license": "ISC",
