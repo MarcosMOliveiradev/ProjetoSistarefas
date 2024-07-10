@@ -6,7 +6,8 @@ COPY package.json prisma tsconfig.json .env ./
 
 COPY . .
 
-RUN npm i 
+RUN npm ci
+RUN npm install bcrypt
 
 RUN npm run build
 

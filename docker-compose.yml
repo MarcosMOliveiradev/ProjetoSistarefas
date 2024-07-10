@@ -10,7 +10,7 @@ services:
           - api-solid-pg
         environment:
           DATABASE_CLIENT: 'postgresql'
-          DATABASE_URL: 'postgres://postgres:abc.123@pi_mobile:5432/find-a-friend'
+          DATABASE_URL: 'postgres://postgres:Leer2025@locapi-solid-pg:5432/PjaSistarefas'
           ACCESS_TOKEN: 'e65f48ed7cc165fbd26b8d4caa08303b'
         ulimits:
           nproc: 1000000
@@ -30,7 +30,7 @@ services:
     api-solid-pg:
       image: postgres:14-alpine
       ports:
-        - 5432:5432
+        - 3339:5432
       environment:
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: Leer2025
@@ -40,6 +40,7 @@ services:
           limits:
             cpus: '0.4'
             memory: '1.5GB'
+            
     nginx:
       image: nginx:latest
       volumes:
