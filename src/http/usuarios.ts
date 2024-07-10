@@ -27,7 +27,7 @@ export async function usuario(app: FastifyInstance) {
     return createdUser.user(request)
   }) // criar
 
-  app.post('/', async (request, reply) => {
+  app.post('/', { preHandler: [verify] }, async (request, reply) => {
     return authenticate.authentication(request, reply, app) // login
   }) // autenticar
 

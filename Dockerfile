@@ -20,6 +20,4 @@ COPY --from=build /usr/src/build ./build
 COPY --from=build /usr/src/node_modules ./node_modules
 COPY --from=build /usr/src/prisma ./prisma
 
-EXPOSE 3333
-
 CMD [ "npm run start" ]

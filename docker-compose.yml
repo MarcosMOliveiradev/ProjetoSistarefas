@@ -6,11 +6,13 @@ services:
         hostname: app1
         expose:
           - "8082"
+        ports:
+          - 8082
         depends_on:
-          - api-solid-pg
+          - sistarefas
         environment:
           DATABASE_CLIENT: 'postgresql'
-          DATABASE_URL: 'postgres://postgres:Leer2025@locapi-solid-pg:5432/PjaSistarefas'
+          DATABASE_URL: 'postgres://postgres:Leer2025@sistarefas:5432/PJASisTarefas'
           ACCESS_TOKEN: 'e65f48ed7cc165fbd26b8d4caa08303b'
         ulimits:
           nproc: 1000000
@@ -27,14 +29,15 @@ services:
       <<: *app
       hostname: app2
   
-    api-solid-pg:
+    sistarefas:
+      container_name: sistarefas
       image: postgres:14-alpine
       ports:
         - 3339:5432
       environment:
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: Leer2025
-        POSTGRES_DB: PjaSistarefas
+        POSTGRES_DB: PJASisTarefas
       deploy:
         resources:
           limits:
