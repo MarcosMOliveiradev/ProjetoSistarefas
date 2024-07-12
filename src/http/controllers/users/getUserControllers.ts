@@ -1,17 +1,17 @@
-import { FastifyRequest } from 'fastify'
+import { FastifyReply, FastifyRequest } from 'fastify'
 import { authenticate } from '../../../middlewares/UserAuthenticate'
-import { UserRepository } from '../../../application/repositories/user/user-repository'
+import { makeListUser } from 'src/application/use-cases/users/factory/makeListUser'
 
-export class GetUserController {
-  constructor(private userRepository: UserRepository) {
-    Promise<void>
-  }
+export function listUser(request: FastifyRequest, reply: FastifyReply) {
+  authenticate(request.user.permission)
 
-  async getUser(request: FastifyRequest) {
-    authenticate(request.user.permission) // verifica se é adm
+  try {
+    const makeUser = makeListUser()
 
-    const users = this.userRepository.findMany()
+    const user = makeUser.execute()
 
-    return users
+    return reply.status(201).send(user)
+  } catch (err) {
+    return reply.status(400).send({ message: err })
   }
 }

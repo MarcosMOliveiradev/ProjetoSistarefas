@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { InMemoryUserRepository } from '../../../database/prisma/in-memory/in-memory-user-repository'
-import { AuthenticateUser } from './authenticate-user'
 import { FastifyInstance } from 'fastify'
 import { hash } from 'bcrypt'
+
+import { InMemoryUserRepository } from '../../../database/prisma/in-memory/in-memory-user-repository'
+import { AuthenticateUser } from './authenticate-user'
 import { User } from '../../entites/users/user'
 
 describe('Authentication user case', () => {
