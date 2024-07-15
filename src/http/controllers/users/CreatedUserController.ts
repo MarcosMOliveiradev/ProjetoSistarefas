@@ -1,35 +1,37 @@
-import { FastifyRequest } from 'fastify'
+import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-import { CreateUser } from '../../../application/use-cases/users/create-user'
 import { UserView } from '../../view-models/user-view-modul'
+import { makeCreateUser } from 'src/application/use-cases/users/factory/makeCreate'
 
-export class CreatedUserControlle {
-  constructor(private createUser: CreateUser) {
-    Promise<void>
-  }
+export async function CreatedUserController(
+  request: FastifyRequest,
+  reply: FastifyReply,
+) {
+  const userSchema = z.object({
+    nome: z.string(),
+    matricula: z.number(),
+    password: z.string(),
+    permission: z.boolean().default(false),
+  })
 
-  async user(request: FastifyRequest) {
-    const userSchema = z.object({
-      nome: z.string(),
-      matricula: z.number(),
-      password: z.string(),
-      permission: z.boolean().default(false),
-    }) // Define o tipo das entradas
+  const { nome, matricula, password, permission } = userSchema.parse(
+    request.body,
+  )
 
-    const { nome, matricula, password, permission } = userSchema.parse(
-      request.body,
-    )
-
-    const { user } = await this.createUser.execute({
+  try {
+    const makeCreate = makeCreateUser()
+    const { user } = await makeCreate.execute({
       nome,
       matricula,
       password,
       permission,
     })
 
-    return {
+    return reply.status(201).send({
       user: UserView.toHTTP(user),
-    }
+    })
+  } catch (err) {
+    throw new Error(`${{ message: err }}`)
   }
 }

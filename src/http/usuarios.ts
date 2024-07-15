@@ -1,33 +1,28 @@
 import { FastifyInstance } from 'fastify'
 
-import { CreatedUserControlle } from './controllers/users/CreatedUserController'
-import { listUser } from './controllers/users/getUserControllers'
+import { CreatedUserController } from './controllers/users/CreatedUserController'
+import { listUser } from './controllers/users/ListUserControllers'
 import { UpdateUserControler } from './controllers/users/PutUserController'
-import { verify } from '../middlewares/jwtVerify'
-import { CreateUser } from '../application/use-cases/users/create-user'
-import { PrismaUserRepository } from '../database/prisma/repositoris/prisma-user-repository'
+import { UserAvata } from './controllers/users/UserAvata'
 import { AuthenticateUserController } from './controllers/users/AuthenticateUserController'
-import { AuthenticateUser } from '../application/use-cases/users/authenticate-user'
+
+import { verify } from '../middlewares/jwtVerify'
+import { PrismaUserRepository } from '../database/prisma/repositoris/prisma-user-repository'
 import { UpdateUser } from '../application/use-cases/users/update-user'
-import { UserAvata } from './controllers/users/userAvata'
 
 const prismaUser = new PrismaUserRepository()
-const createUserInstance = new CreateUser(prismaUser)
-const createdUser = new CreatedUserControlle(createUserInstance)
 const updateUser = new UpdateUser(prismaUser)
-const authenticateUser = new AuthenticateUser(prismaUser)
 const userAvata = new UserAvata()
 
-const authenticate = new AuthenticateUserController(authenticateUser)
 const updateUserControler = new UpdateUserControler(updateUser)
 
 export async function usuario(app: FastifyInstance) {
   app.post('/created', async (request, reply) => {
-    return createdUser.user(request)
+    return CreatedUserController(request, reply)
   }) // criar
 
   app.post('/', { preHandler: [verify] }, async (request, reply) => {
-    return authenticate.authentication(request, reply, app) // login
+    return AuthenticateUserController(request, reply, app) // login
   }) // autenticar
 
   app.get('/', { preHandler: [verify] }, async (request, reply) => {
