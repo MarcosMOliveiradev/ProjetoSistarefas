@@ -1,35 +1,32 @@
-import { FastifyRequest } from 'fastify'
+import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
 import { authenticate } from '../../../middlewares/UserAuthenticate'
-import { UpdateUser } from '../../../application/use-cases/users/update-user'
+import { makeUpdateUser } from 'src/application/use-cases/users/factory/makeUpdateUser'
 
-export class UpdateUserControler {
-  constructor(private updateUser: UpdateUser) {
-    Promise<void>
-  }
+export async function UpdateUserControler(
+  request: FastifyRequest,
+  reply: FastifyReply,
+) {
+  await authenticate(request.user.permission)
 
-  async put(request: FastifyRequest) {
-    const userSchema = z.object({
-      nome: z.string().optional(),
-      matricula: z.number().optional(),
-      password: z.string().optional(),
-      permission: z.boolean().optional(),
-      userAvata: z.string().optional(),
-    })
+  const userSchema = z.object({
+    nome: z.string().optional(),
+    matricula: z.number().optional(),
+    password: z.string().optional(),
+    permission: z.boolean().optional(),
+    userAvata: z.string().optional(),
+  })
 
-    await authenticate(request.user.permission)
+  const id = request.user.sub
 
-    const { nome, matricula, password, permission, userAvata } =
-      userSchema.parse(request.body)
+  const { nome, matricula, password, permission, userAvata } = userSchema.parse(
+    request.body,
+  )
 
-    const idSchema = z.object({
-      id: z.string().uuid(),
-    })
-
-    const { id } = idSchema.parse(request.params)
-
-    await this.updateUser.update({
+  try {
+    const makeUpdate = makeUpdateUser()
+    await makeUpdate.update({
       _id: id,
       nome,
       matricula,
@@ -37,5 +34,9 @@ export class UpdateUserControler {
       permission,
       userAvata,
     })
+
+    return reply.status(200).send({ message: 'Atualizado com sucesso' })
+  } catch (err) {
+    throw new Error(`message: ${err}`)
   }
 }

@@ -7,14 +7,8 @@ import { UserAvata } from './controllers/users/UserAvata'
 import { AuthenticateUserController } from './controllers/users/AuthenticateUserController'
 
 import { verify } from '../middlewares/jwtVerify'
-import { PrismaUserRepository } from '../database/prisma/repositoris/prisma-user-repository'
-import { UpdateUser } from '../application/use-cases/users/update-user'
 
-const prismaUser = new PrismaUserRepository()
-const updateUser = new UpdateUser(prismaUser)
 const userAvata = new UserAvata()
-
-const updateUserControler = new UpdateUserControler(updateUser)
 
 export async function usuario(app: FastifyInstance) {
   app.post('/created', async (request, reply) => {
@@ -30,7 +24,7 @@ export async function usuario(app: FastifyInstance) {
   }) // listar
 
   app.put('/update/:id', { preHandler: [verify] }, async (request, reply) => {
-    return updateUserControler.put(request)
+    return UpdateUserControler(request, reply)
   })
 
   app.post('/upload', async (request, reply) => {
