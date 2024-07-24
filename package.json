@@ -10,7 +10,8 @@
     "test": "vitest run",
     "build": "tsup src --out-dir build",
     "start": "node ./build/server.cjs",
-    "migrate": "npx prisma generate && npx prisma migrate dev"
+    "migrate": "npx prisma generate && npx prisma migrate dev",
+    "seed": "npx tsx ./src/database/seed.ts"
   },
   "author": "",
   "license": "ISC",
