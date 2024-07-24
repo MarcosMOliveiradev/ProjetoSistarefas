@@ -11,7 +11,7 @@ import { verify } from '../middlewares/jwtVerify'
 const userAvata = new UserAvata()
 
 export async function usuario(app: FastifyInstance) {
-  app.post('/created', async (request, reply) => {
+  app.post('/created', { preHandler: [verify] }, async (request, reply) => {
     return CreatedUserController(request, reply)
   }) // criar
 
@@ -19,7 +19,7 @@ export async function usuario(app: FastifyInstance) {
     return AuthenticateUserController(request, reply, app) // login
   }) // autenticar
 
-  app.get('/', { preHandler: [verify] }, async (request, reply) => {
+  app.get('/', async (request, reply) => {
     return listUser(request, reply) // lista
   }) // listar
 
