@@ -7,7 +7,6 @@ import { PrismaActivyRepository } from '../database/prisma/repositoris/prisma-ac
 // application
 import { GetActivyIdController } from './controllers/activy/GetActivyIdControllers'
 import { CreatedActivy } from '../application/use-cases/activy/Create-activy'
-import { ListActivy } from '../application/use-cases/activy/List-activy'
 import { ListActivyForDate } from '../application/use-cases/activy/List-activy-for-date'
 import { ListActivyForIntervalDate } from '../application/use-cases/activy/List-activy-for-interval-date'
 import { ListActivyForDateEndUser } from '../application/use-cases/activy/List-activy-for-date-end-user'
@@ -18,7 +17,7 @@ import { verify } from '../middlewares/jwtVerify'
 
 // controller
 import { CreatedActivyController } from './controllers/activy/CreatedActivyController'
-import { GetActivyController } from './controllers/activy/GetActivyControllers'
+import { listActivyController } from './controllers/activy/GetActivyControllers'
 import { GetActivyForDateController } from './controllers/activy/GetActivyForDateController'
 import { GetActivyForIntervalDateControllers } from './controllers/activy/GetActivyForIntervalDateControllers'
 import { PutActivyControllers } from './controllers/activy/PutActivyControllers'
@@ -41,7 +40,6 @@ const activyRepository = new PrismaActivyRepository()
 // aplication
 const createActivy = new CreatedActivy(activyRepository, taskRepository)
 const coutActivy = new Cout(activyRepository)
-const activyList = new ListActivy(activyRepository)
 const listActivyDate = new ListActivyForDate(activyRepository)
 const listAcityForIntervalDate = new ListActivyForIntervalDate(activyRepository)
 const listActivyForDateEndUser = new ListActivyForDateEndUser(activyRepository)
@@ -54,7 +52,6 @@ const averageTimeActivyForMonth = new AverageTimeActivyForMonth(
 )
 // controller
 const createdActivi = new CreatedActivyController(createActivy)
-const getActivi = new GetActivyController(activyList)
 const getActiviId = new GetActivyIdController()
 const getActiviDate = new GetActivyForDateController(listActivyDate)
 const getActivyIntervalDate = new GetActivyForIntervalDateControllers(
@@ -81,8 +78,8 @@ export async function atividades(app: FastifyInstance) {
     return createdActivi.activy(request, reply)
   })
 
-  app.get('/', async () => {
-    return getActivi.activyGet()
+  app.get('/', async (request, reply) => {
+    return listActivyController(request, reply)
   })
 
   app.get('/:id', { preHandler: [verify] }, async (request, reply) => {

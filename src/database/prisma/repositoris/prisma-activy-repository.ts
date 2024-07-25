@@ -1,3 +1,4 @@
+import { create } from 'domain'
 import { Activy } from '../../../application/entites/activy/activy'
 import { ActivyRepository } from '../../../application/repositories/activy/Activy-repository'
 import { prisma } from '../../prisma'
@@ -271,7 +272,7 @@ export class PrismaActivyRepository extends ActivyRepository {
     return activyListDate
   }
 
-  async findMany(): Promise<Activy> {
+  async findMany(page: number): Promise<Activy> {
     const activyList = await prisma.atividade.findMany({
       orderBy: {
         created_at: 'asc',
@@ -299,6 +300,8 @@ export class PrismaActivyRepository extends ActivyRepository {
           },
         },
       },
+      skip: (page - 1) * 10,
+      take: 20,
     })
 
     return activyList

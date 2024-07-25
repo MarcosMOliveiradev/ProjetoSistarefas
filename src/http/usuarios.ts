@@ -15,11 +15,11 @@ export async function usuario(app: FastifyInstance) {
     return CreatedUserController(request, reply)
   }) // criar
 
-  app.post('/', { preHandler: [verify] }, async (request, reply) => {
+  app.post('/', async (request, reply) => {
     return AuthenticateUserController(request, reply, app) // login
   }) // autenticar
 
-  app.get('/', async (request, reply) => {
+  app.get('/', { preHandler: [verify] }, async (request, reply) => {
     return listUser(request, reply) // lista
   }) // listar
 

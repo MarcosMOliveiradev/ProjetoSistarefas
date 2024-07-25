@@ -9,6 +9,7 @@ export class IncrementaIndex {
   }
 
   async execut(request: IMatriculaRequest): Promise<number> {
+    let ultimoIndex: number
     const { matricula } = request
 
     const indexActivy = await this.activyRepository.findForMatricula(matricula)
@@ -21,7 +22,11 @@ export class IncrementaIndex {
       listaIndex.push(index)
     })
 
-    const ultimoIndex = listaIndex[listaIndex.length - 1]
+    if (listaIndex.length === 0) {
+      return (ultimoIndex = 0)
+    }
+
+    ultimoIndex = listaIndex[listaIndex.length - 1]
 
     return ultimoIndex
   }
