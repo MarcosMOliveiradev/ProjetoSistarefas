@@ -22,11 +22,11 @@ export class AverageTimeActivyForMonth {
       throw new Error('Você não tem permissão')
     }
 
-    if (dataMes === null) {
+    if (!dataMes) {
       throw new Error('O mes esta nulo')
     }
 
-    const intervalo = await dataMes[0]
+    const intervalo = dataMes[0]
 
     const activyTime = await this.activyResponse.countForMonth(
       matricula,

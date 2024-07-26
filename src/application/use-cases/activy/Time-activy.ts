@@ -62,13 +62,13 @@ export class TimeActivy {
       if (tempoTotal > -60) {
         const tellTime = tempoTotal / 60
         const min = tempoTotal % 60
-        const hora = parseInt(tellTime)
+        const hora = tellTime
         coutTime[descricao] = `${hora}:${min}`
         coutTime[id] = _id
 
         // se as horas tiverem minutus abaixo de 10
         if (min < 10) {
-          const hora = parseInt(tellTime)
+          const hora = tellTime
           coutTime[descricao] = `${hora}:0${min}`
           coutTime[id] = _id
         }
