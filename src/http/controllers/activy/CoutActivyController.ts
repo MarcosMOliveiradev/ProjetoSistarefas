@@ -21,6 +21,6 @@ export class CoutActivyController {
     const permission = request.user.permission
 
     const value = await this.coutActivy.exec({ matricula, permission })
-    return reply.status(201).send(JSON.stringify(value))
+    return reply.status(201).send(value)
   }
 }

@@ -39,6 +39,7 @@
     "fastify": "^4.19.2",
     "fastify-jwt": "^4.2.0",
     "prisma": "^4.16.2",
+    "projetosistarefas": "file:",
     "sqlite3": "^5.1.6",
     "tsup": "^7.2.0",
     "zod": "^3.21.4"
