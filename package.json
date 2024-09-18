@@ -36,7 +36,7 @@
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "dotenv": "^16.3.1",
-    "fastify": "^4.19.2",
+    "fastify": "^4.28.1",
     "fastify-jwt": "^4.2.0",
     "prisma": "^4.16.2",
     "projetosistarefas": "file:",
