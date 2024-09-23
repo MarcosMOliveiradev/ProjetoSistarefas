@@ -7,6 +7,7 @@ import { UserAvata } from './controllers/users/UserAvata'
 import { AuthenticateUserController } from './controllers/users/AuthenticateUserController'
 
 import { verify } from '../middlewares/jwtVerify'
+import { profileControlle } from './controllers/users/ProfileController'
 
 const userAvata = new UserAvata()
 
@@ -25,6 +26,10 @@ export async function usuario(app: FastifyInstance) {
 
   app.put('/update/:id', { preHandler: [verify] }, async (request, reply) => {
     return UpdateUserControler(request, reply)
+  })
+
+  app.get('/profile', { preHandler: [verify]}, async (request, reply) => {
+    return profileControlle(request, reply)
   })
 
   app.post('/upload', async (request, reply) => {
