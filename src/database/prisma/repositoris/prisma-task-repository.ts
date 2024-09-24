@@ -33,6 +33,7 @@ export class PrismaTaskRepository extends TaskRepository {
   async findMany(): Promise<Task> {
     const tasks = await prisma.tarefas.findMany({
       select: {
+        id: true,
         codigo: true,
         setor: true,
         descricao: true,

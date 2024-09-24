@@ -21,6 +21,6 @@ export class GetActivyForDateController {
     const user = request.user.sub
     const datainfo = await this.listActivyDate.execute({ data, user })
 
-    return reply.send(JSON.stringify(datainfo))
+    return reply.send(datainfo)
   }
 }

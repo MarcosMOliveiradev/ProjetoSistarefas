@@ -278,6 +278,7 @@ export class PrismaActivyRepository extends ActivyRepository {
         created_at: 'asc',
       },
       select: {
+        id: true,
         index_atividade_tarefa: true,
         id_documento: true,
         quantidade_de_folhas: true,
