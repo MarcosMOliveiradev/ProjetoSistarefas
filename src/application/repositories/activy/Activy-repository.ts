@@ -22,4 +22,5 @@ export abstract class ActivyRepository {
   ): Promise<void>
 
   abstract findForMatricula(matricula: number): Promise<Activy[]>
+  abstract delet(id: string): Promise<void>
 }

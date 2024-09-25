@@ -1,9 +1,11 @@
-import { create } from 'domain'
 import { Activy } from '../../../application/entites/activy/activy'
 import { ActivyRepository } from '../../../application/repositories/activy/Activy-repository'
 import { prisma } from '../../prisma'
 
 export class PrismaActivyRepository extends ActivyRepository {
+  async delet(id: string): Promise<void> {
+    await prisma.atividade.delete({ where: {id} })
+  }
   async countForMonth(matricula: number, month: string): Promise<Activy[]> {
     const result = await prisma.atividade.findMany({
       where: {

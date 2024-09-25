@@ -32,6 +32,7 @@ import { ListActivyForUser } from '../application/use-cases/activy/List-activy-f
 import { ListActivyForUserControlle } from './controllers/activy/ListActivyForUserController'
 import { AverageTimeActivyForMonth } from '../application/use-cases/activy/Average-time-activy-for-month'
 import { AverageActivyForMonthController } from './controllers/activy/AverageTimeActivyForMonth'
+import { DeletActivityController } from './controllers/activy/DeletActivityController'
 
 // repository
 const taskRepository = new PrismaTaskRepository()
@@ -125,4 +126,8 @@ export async function atividades(app: FastifyInstance) {
       return averageActivyForMonth.execute(request, reply)
     },
   )
+
+  app.delete('/delet/:id', {preHandler: [verify]}, async (request, reply) => {
+    return DeletActivityController(request, reply)
+  })
 }
