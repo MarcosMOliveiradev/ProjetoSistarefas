@@ -1,7 +1,7 @@
 {
   "name": "Back",
-  "version": "1.0.0",
-  "description": "",
+  "version": "2.0.0",
+  "description": "Novo modelo de sistarefas",
   "main": "index.js",
   "type": "module",
   "scripts": {
