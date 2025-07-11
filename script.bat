@@ -1,1 +1,0 @@
-npm rum migrate
