@@ -1,0 +1,36 @@
+{
+  "name": "Back",
+  "version": "2.0.0",
+  "description": "Novo modelo de sistarefas",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file .env --experimental-strip-types --no-warnings src/server.ts",
+    "dev": "node --env-file .env --experimental-strip-types --no-warnings --watch src/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/fastify-cors": "^2.1.2",
+    "@types/node": "^24.0.13",
+    "drizzle-kit": "^0.31.4",
+    "pg": "^8.16.3",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/cors": "^11.0.1",
+    "@fastify/jwt": "^9.1.0",
+    "@fastify/multipart": "^9.0.3",
+    "@fastify/static": "^8.2.0",
+    "axios": "^1.10.0",
+    "bcrypt": "^6.0.0",
+    "drizzle-orm": "^0.44.2",
+    "fastify": "^5.4.0",
+    "fastify-type-provider-zod": "^5.0.2",
+    "postgres": "^3.4.7",
+    "zod": "^4.0.5"
+  }
+}
