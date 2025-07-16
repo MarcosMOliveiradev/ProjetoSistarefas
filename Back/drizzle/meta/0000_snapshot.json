@@ -1,77 +1,69 @@
 {
-  "id": "31f88d0e-caff-4665-9ade-c5796c41545b",
+  "id": "777dd488-3ded-4669-b292-57ad34ad6a33",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.user": {
-      "name": "user",
+    "public.media_roles": {
+      "name": "media_roles",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
+        "media_id": {
+          "name": "media_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "matricula": {
-          "name": "matricula",
-          "type": "numeric",
+        "role": {
+          "name": "role",
+          "type": "roles",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "password": {
-          "name": "password",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "user_matricula_unique": {
-          "name": "user_matricula_unique",
-          "nullsNotDistinct": false,
+      "indexes": {
+        "media_roles_role_idx": {
+          "name": "media_roles_role_idx",
           "columns": [
-            "matricula"
-          ]
-        },
-        "user_email_unique": {
-          "name": "user_email_unique",
-          "nullsNotDistinct": false,
+            {
+              "expression": "role",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "media_roles_media_id_media_id_fk": {
+          "name": "media_roles_media_id_media_id_fk",
+          "tableFrom": "media_roles",
+          "tableTo": "media",
+          "columnsFrom": [
+            "media_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "media_roles_media_id_role_pk": {
+          "name": "media_roles_media_id_role_pk",
           "columns": [
-            "email"
+            "media_id",
+            "role"
           ]
         }
       },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -148,70 +140,6 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.media_roles": {
-      "name": "media_roles",
-      "schema": "",
-      "columns": {
-        "media_id": {
-          "name": "media_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "role": {
-          "name": "role",
-          "type": "roles",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {
-        "media_roles_role_idx": {
-          "name": "media_roles_role_idx",
-          "columns": [
-            {
-              "expression": "role",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "media_roles_media_id_media_id_fk": {
-          "name": "media_roles_media_id_media_id_fk",
-          "tableFrom": "media_roles",
-          "tableTo": "media",
-          "columnsFrom": [
-            "media_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "media_roles_media_id_role_pk": {
-          "name": "media_roles_media_id_role_pk",
-          "columns": [
-            "media_id",
-            "role"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.user_roles": {
       "name": "user_roles",
       "schema": "",
@@ -274,6 +202,78 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "public.user": {
+      "name": "user",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "matricula": {
+          "name": "matricula",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_matricula_unique": {
+          "name": "user_matricula_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "matricula"
+          ]
+        },
+        "user_email_unique": {
+          "name": "user_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {
@@ -285,12 +285,13 @@
         "ALMOXARIFADO",
         "SECRETARIA",
         "FINANCEIRO",
-        "RH",
-        "TI",
+        "DP",
+        "INFORMATICA",
         "PONTO",
         "SEMAC",
         "SEMAL",
         "PCM",
+        "PJA",
         "OUTROS"
       ]
     },
@@ -303,8 +304,8 @@
         "COMPRAS",
         "SECRETARIA",
         "FINANCEIRO",
-        "RH",
-        "TI",
+        "DP",
+        "INFORMATICA",
         "PONTO",
         "SEMAC",
         "SEMAL",

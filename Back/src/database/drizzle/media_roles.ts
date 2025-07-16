@@ -1,6 +1,6 @@
 import { index, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
-import { media } from "./media";
-import { RolesEnum } from "./roles";
+import { media } from "./media.ts";
+import { RolesEnum } from "./roles.ts";
 
 
 export const mediaRoles = pgTable("media_roles", {

@@ -1,4 +1,4 @@
-import { Media } from "../entities/media";
+import { Media } from "../entities/Media.ts";
 
 export abstract class MediaRepository {
     abstract create(media: Media): Promise<Media>;

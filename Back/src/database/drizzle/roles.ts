@@ -10,7 +10,7 @@ export const RolesEnum = pgEnum(
         'SECRETARIA', 
         'FINANCEIRO', 
         'DP', 
-        'TI', 
+        'INFORMATICA', 
         'PONTO', 
         'SEMAC', 
         'SEMAL', 

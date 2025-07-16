@@ -1,7 +1,6 @@
 import { createId } from "@paralleldrive/cuid2"
 
-import { Replace } from "../../lib/Replace";
-import { Roles } from "./Roles";
+import { Replace } from "../../lib/Replace.ts";
 
 export interface IUser {
     name: string;

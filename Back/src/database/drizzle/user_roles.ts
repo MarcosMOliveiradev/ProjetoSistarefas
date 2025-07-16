@@ -1,5 +1,5 @@
 import { index, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
-import { user } from "./user";
+import { user } from "./user.ts";
 
 
 export const userRoles = pgTable("user_roles", {

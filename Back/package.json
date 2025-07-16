@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node --env-file .env --experimental-strip-types --no-warnings src/server.ts",
-    "dev": "node --env-file .env --experimental-strip-types --no-warnings --watch src/server.ts",
+    "dev": "tsx watch src/server.ts",
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate"
   },
@@ -15,7 +15,6 @@
   "license": "ISC",
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
-    "@types/fastify-cors": "^2.1.2",
     "@types/node": "^24.0.13",
     "drizzle-kit": "^0.31.4",
     "pg": "^8.16.3",
@@ -30,6 +29,7 @@
     "@paralleldrive/cuid2": "^2.2.2",
     "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.0",
     "drizzle-orm": "^0.44.2",
     "fastify": "^5.4.0",
     "fastify-type-provider-zod": "^5.0.2",

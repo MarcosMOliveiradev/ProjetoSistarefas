@@ -1,7 +1,6 @@
 import { createId } from "@paralleldrive/cuid2"
 
-import { Replace } from '../../lib/Replace'
-import { Roles } from './Roles'
+import { Replace } from '../../lib/Replace.ts'
 
 export enum CategoryEnum {
     COMPRAS = 'COMPRAS',
@@ -9,11 +8,12 @@ export enum CategoryEnum {
     SECRETARIA = 'SECRETARIA',
     FINANCEIRO = 'FINANCEIRO',
     DP = 'DP',
-    TI = 'TI',
+    INFORMATICA = 'INFORMATICA',
     PONTO = 'PONTO',
     SEMAC = 'SEMAC',
     SEMAL = 'SEMAL',
     PCM = 'PCM',
+    PJA = 'PJA',
     OUTROS = 'OUTROS',
 }
 
@@ -78,7 +78,7 @@ export class Media {
     public get updatedAt(): Date | null | undefined {
         return this.props.updatedAt;
     }
-    public set update(update: Date | null | undefined) {
+    public set updatedAt(update: Date | null | undefined) {
         this.props.updatedAt = update;
     }
 }

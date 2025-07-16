@@ -1,8 +1,7 @@
-import { User } from "../../application/entities/user";
-import { UserRepository } from "../../application/repositories/userRepository";
-import { db } from "../connection";
-import { user } from "../drizzle";
-
+import { User } from "../../application/entities/User.ts";
+import { UserRepository } from "../../application/repositories/UserRepository.ts";
+import { db } from "../connection.ts";
+import {  user } from "../drizzle/user.ts";
 
 export class UserDrizzleRepository extends UserRepository {
     async create(data: User): Promise<User> {
@@ -16,7 +15,7 @@ export class UserDrizzleRepository extends UserRepository {
             createdAt: data.createdAt
         }).returning();
 
-    return createdUser
+    return createdUser;
     }
     async findById(id: string): Promise<User | null> {
         throw new Error("Method not implemented.");

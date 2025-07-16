@@ -1,7 +1,7 @@
 import { pgTable, timestamp, text, pgEnum } from 'drizzle-orm/pg-core';
 import { createId } from '@paralleldrive/cuid2'
 import { relations } from 'drizzle-orm';
-import { user } from './user';
+import { user } from './user.ts';
 
 // Categoria ou setor a qual o arquivo pertence
 export const categoryEnum = pgEnum("category_enum", [
@@ -10,11 +10,12 @@ export const categoryEnum = pgEnum("category_enum", [
   "SECRETARIA",
   "FINANCEIRO",
   "DP",
-  "TI",
+  "INFORMATICA",
   "PONTO",
   "SEMAC",
   "SEMAL",
   "PCM",
+  "PJA",
   "OUTROS",
 ]);
 
