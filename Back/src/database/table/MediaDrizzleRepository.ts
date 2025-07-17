@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { Media } from "../../application/entities/Media.ts";
 import { MediaRepository } from "../../application/repositories/MediaRepository.ts";
 import { db } from "../connection.ts";
@@ -19,6 +20,8 @@ export class MediaDrizzleRepository extends MediaRepository {
         return createMedia
     }
     async find(): Promise<Media[]> {
-        throw new Error("Method not implemented.");
+        const findMedia = await db.select().from(schema.media).innerJoin(schema.mediaRoles, eq(schema.media.id, schema.mediaRoles.mediaId));
+
+        return findMedia
     }
 }
