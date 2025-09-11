@@ -1,6 +1,8 @@
 import { Button } from "./ui/button";
 import { Menu } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { Dialog, DialogTrigger } from "./ui/dialog";
+import { UpLoadVideos } from "./uoploadVideos";
 
 export function MenuButton() {
     return (
@@ -10,8 +12,13 @@ export function MenuButton() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-gray-800 text-gray-200 w-[15rem]" align="end">
                 <DropdownMenuGroup className="gap-4">
-                    <DropdownMenuItem>
-                        UPLOAD DE VIDEOS
+                    <DropdownMenuItem asChild>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button variant={"ghost"}>UPLOAD DE VIDEOS</Button>
+                            </DialogTrigger>
+                            <UpLoadVideos />
+                        </Dialog>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                         LISTA DE VIDEOS

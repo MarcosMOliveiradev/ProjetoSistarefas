@@ -1,4 +1,4 @@
-import { MenuVideos } from "@/components/menuVidoes"
+import { MenuVideos } from "@/components/menuVideos"
 import { VideoPlayer } from "@/components/videoPlayer"
 import { Helmet } from "react-helmet-async"
 
