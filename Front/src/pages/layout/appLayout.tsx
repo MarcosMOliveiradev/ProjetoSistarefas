@@ -7,7 +7,7 @@ export function AppLayout() {
             <div className=" flex gap-4 min-w-screen h-[5rem] items-center">
                 <div className="w-1/4"></div>
                 <div className="flex flex-row w-full justify-between ">
-                    <div>serch</div>
+                    <div></div>
                     <div className="mr-[4rem]"> <MenuButton /></div>
                 </div>
             </div>
