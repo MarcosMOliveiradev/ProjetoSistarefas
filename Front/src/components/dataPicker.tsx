@@ -31,7 +31,11 @@ const dataPickerSchema = z.object({
 
 export function DataPicker() {
     const form = useForm<z.infer<typeof dataPickerSchema>>({
-        resolver: zodResolver(dataPickerSchema)
+        resolver: zodResolver(dataPickerSchema),
+        defaultValues: {
+            dataInicial: new Date(),
+            dataFinal: new Date(),
+        }
     })
 
     function onSubmit(data: z.infer<typeof dataPickerSchema>) {
@@ -59,11 +63,7 @@ export function DataPicker() {
                                                     !field.value && "text-muted-foreground"
                                                 )}
                                                 >
-                                                { field.value ? (
-                                                    format(field.value, "dd/MM/yyyy")
-                                                ) : (
-                                                    new Date().toLocaleDateString()
-                                                    )}
+                                                { format(field.value, "dd/MM/yyyy") }
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>
@@ -101,11 +101,7 @@ export function DataPicker() {
                                                     !field.value && "text-muted-foreground"
                                                 )}
                                                 >
-                                                { field.value ? (
-                                                    format(field.value, "dd/MM/yyyy")
-                                                ) : (
-                                                    new Date().toLocaleDateString()
-                                                    )}
+                                                { format(field.value, "dd/MM/yyyy")}
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>

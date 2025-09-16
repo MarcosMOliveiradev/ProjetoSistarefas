@@ -23,21 +23,21 @@ export function MenuButton() {
                     </DropdownMenuItem>
 
                     {/* Lista de videos */}
-                    <DropdownMenuItem asChild>
+                    {/* <DropdownMenuItem asChild>
                         <Button className="w-[100%]" variant={"ghost"}>
                             <Link to={"/videos"}>LISTA DE VIDEOS</Link>
                         </Button>
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
 
                     {/* Criar novo video */}
-                    <DropdownMenuItem asChild>
+                    {/* <DropdownMenuItem asChild>
                         <Dialog>
                             <DialogTrigger asChild>
                                 <Button className="w-[100%]" variant={"ghost"}>UPLOAD DE VIDEOS</Button>
                             </DialogTrigger>
                             <UpLoadVideos />
                         </Dialog>
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                 </DropdownMenuGroup>
             </DropdownMenuContent>
         </DropdownMenu>

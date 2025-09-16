@@ -2,7 +2,15 @@ import { Button } from "./ui/button";
 import { DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select";
+import { 
+    Select, 
+    SelectContent, 
+    SelectGroup, 
+    SelectItem, 
+    SelectLabel, 
+    SelectTrigger, 
+    SelectValue 
+} from "./ui/select";
 import { Textarea } from "./ui/textarea";
 
 export function UpLoadVideos() {
