@@ -9,6 +9,7 @@ import {
 
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from './ui/button'
+import { Trash2 } from 'lucide-react'
 
 const atividades = [
     {
@@ -41,22 +42,22 @@ const atividades = [
 
 export function TabelaAtividades() {
     return (
-        <div className='w-screen p-8 text-amber-50'>
+        <div className='w-screen p-8 text-muted-foreground'>
             <ScrollArea>
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-[80px] text-center text-amber-50">DATA</TableHead>
-                            <TableHead className="w-[80px] text-center text-amber-50">ITEM</TableHead>
-                            <TableHead className="w-[80px] text-center text-amber-50">CÓD. ATIVIDADE</TableHead>
-                            <TableHead className="text-center text-amber-50">SETOR</TableHead>
-                            <TableHead className="text-center text-amber-50">DESCRIÇÃO</TableHead>
-                            <TableHead className="w-[80px] text-center text-amber-50">ID DOCUMENTO</TableHead>
-                            <TableHead className="w-[80px] text-center text-amber-50">QTD FOLHAS</TableHead>
-                            <TableHead className="w-[80px] text-center text-amber-50">INICIO</TableHead>
-                            <TableHead className="w-[80px] text-center text-amber-50">TERMINO</TableHead>
-                            <TableHead className="w-[80px] text-center text-amber-50">Nº ATENTIMENTO</TableHead>
-                            <TableHead className="w-[80px] text-center text-amber-50">APAGAR</TableHead>
+                            <TableHead className="w-[80px] text-center text-muted-foreground">DATA</TableHead>
+                            <TableHead className="w-[80px] text-center text-muted-foreground">ITEM</TableHead>
+                            <TableHead className="w-[80px] text-center text-muted-foreground">CÓD. ATIVIDADE</TableHead>
+                            <TableHead className="text-center text-muted-foreground">SETOR</TableHead>
+                            <TableHead className="text-center text-muted-foreground">DESCRIÇÃO</TableHead>
+                            <TableHead className="w-[80px] text-center text-muted-foreground">ID DOCUMENTO</TableHead>
+                            <TableHead className="w-[80px] text-center text-muted-foreground">QTD FOLHAS</TableHead>
+                            <TableHead className="w-[80px] text-center text-muted-foreground">INICIO</TableHead>
+                            <TableHead className="w-[80px] text-center text-muted-foreground">TERMINO</TableHead>
+                            <TableHead className="w-[80px] text-center text-muted-foreground">Nº ATENTIMENTO</TableHead>
+                            <TableHead className="w-[80px] text-center text-muted-foreground">APAGAR</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -74,7 +75,7 @@ export function TabelaAtividades() {
                                     <TableCell>{atividades.termino}</TableCell>
                                     <TableCell>{atividades.numAtendimento}</TableCell>
                                     <TableCell>
-                                        <Button variant={'ghost'}>Deletar</Button>
+                                        <Button variant={'ghost'}><Trash2 className='w-8'/></Button>
                                     </TableCell>
                                 </TableRow>
                             ))

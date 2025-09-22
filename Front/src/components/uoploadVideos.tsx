@@ -15,7 +15,7 @@ import { Textarea } from "./ui/textarea";
 
 export function UpLoadVideos() {
     return (
-        <DialogContent className="flex flex-col bg-gray-900 text-gray-300">
+        <DialogContent className="flex flex-col bg-muted text-muted-foreground">
             <DialogHeader className="flex flex-col justify-center items-center">
                 <DialogTitle>Upload de videos</DialogTitle>
             </DialogHeader>
@@ -84,11 +84,11 @@ export function UpLoadVideos() {
 
                 <div className="col-span-2">
                     <label htmlFor="video">Videos</label>
-                    <Input className="text-gray-100" id="video" name="video"  type="file"/>
+                    <Input className="text-muted-foreground" id="video" name="video"  type="file"/>
                 </div>
 
-                <Button className="bg-blue-950">ENVIAR</Button>
-                <Button className="border-red-500 text-gray-900" variant={"outline"}>CANCELAR</Button>
+                <Button className="bg-gray-800">ENVIAR</Button>
+                <Button className="border-red-500 text-muted-foreground" variant={"outline"}>CANCELAR</Button>
             </form>
         </DialogContent>
     )

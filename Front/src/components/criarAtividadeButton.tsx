@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
 
 import { 
     DialogContent,
@@ -17,11 +16,8 @@ import {
     FormLabel,
 } from "@/components/ui/form"
 import { Input } from "./ui/input";
-import { cn } from "@/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Calendar } from "./ui/calendar";
 const criarAtividadeSchema = z.object({
-    data: z.date(),
+    data: z.string(),
     item: z.string(),
     codAtividade: z.string(),
     idDocumento: z.string(),
@@ -36,17 +32,16 @@ export function CriarAtividadeButton() {
     const form = useForm<z.infer<typeof criarAtividadeSchema>>({
         resolver: zodResolver(criarAtividadeSchema),
         defaultValues: {
-            data: new Date()
+            data: new Date().toLocaleDateString('pt-BR')
         }
     })
 
     function onSubmit(dados: z.infer<typeof criarAtividadeSchema>) {
-        const data = dados.data.toLocaleDateString('pt-BR')
-        console.log({data})
+        console.log({dados})
     }
 
     return (
-        <DialogContent className="flex flex-col bg-gray-900 min-w-[50rem] content-center text-gray-300">
+        <DialogContent className="flex flex-col bg-muted min-w-[50rem] content-center text-muted-foreground">
             <DialogHeader>
                 <DialogTitle>Criar Nova Atividade</DialogTitle>
             </DialogHeader>
@@ -54,35 +49,14 @@ export function CriarAtividadeButton() {
                 <form className="grid grid-cols-4 gap-4" onSubmit={form.handleSubmit(onSubmit)}>
                     
                     <FormField
-                        control={form.control}
                         name="data"
-                        render={({ field }) => (
+                        control={form.control}
+                        render={({ field}) => (
                             <FormItem>
-                                <FormLabel>Data Inicial</FormLabel>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <FormControl className="bg-gray-900 hover:bg-gray-800 hover:text-amber-50">
-                                            <Button
-                                                variant={"outline"}
-                                                className={cn(
-                                                    "pl-3 text-left font-normal",
-                                                    !field.value && "text-muted-foreground"
-                                                )}
-                                                >
-                                                { format(field.value, "dd/MM/yyyy") }
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0 bg-gray-900 text-amber-50" align="start">
-                                        <Calendar
-                                            mode="single"
-                                            selected={field.value}
-                                            onSelect={field.onChange}
-                                            disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-                                            captionLayout="dropdown"
-                                        />
-                                    </PopoverContent>
-                                </Popover>
+                                <FormLabel>Item</FormLabel>
+                                <FormControl>
+                                    <Input id="data" placeholder="EX: 01/01/2025" {...field} />
+                                </FormControl>
                             </FormItem>
                         )}
                     />
@@ -176,7 +150,7 @@ export function CriarAtividadeButton() {
                         )}
                     />
 
-                    <Button className="grid col-start-2 col-span-2 bg-gray-600" type="submit">SALVAR</Button>
+                    <Button className="grid col-start-2 col-span-2 bg-emerald-900 hover:bg-emerald-700" type="submit">SALVAR</Button>
                 </form>
             </Form>
         </DialogContent>

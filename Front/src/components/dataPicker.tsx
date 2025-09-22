@@ -55,7 +55,7 @@ export function DataPicker() {
                                 <FormLabel>Data Inicial</FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
-                                        <FormControl className="bg-gray-900 hover:bg-gray-800 hover:text-amber-50">
+                                        <FormControl className="bg-muted hover:bg-gray-800 hover:text-amber-50">
                                             <Button
                                                 variant={"outline"}
                                                 className={cn(
@@ -67,7 +67,7 @@ export function DataPicker() {
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0 bg-gray-900 text-amber-50" align="start">
+                                    <PopoverContent className="w-auto p-0 bg-muted text-muted-foreground" align="start">
                                         <Calendar
                                             mode="single"
                                             selected={field.value}
@@ -93,7 +93,7 @@ export function DataPicker() {
                                 <FormLabel>Data Final</FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
-                                        <FormControl className="bg-gray-900 hover:bg-gray-800 hover:text-amber-50">
+                                        <FormControl className="bg-muted hover:bg-gray-800 hover:text-amber-50">
                                             <Button
                                                 variant={"outline"}
                                                 className={cn(
@@ -105,7 +105,7 @@ export function DataPicker() {
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0 bg-gray-900 text-amber-50" align="start">
+                                    <PopoverContent className="w-auto p-0 bg-muted text-muted-foreground" align="start">
                                         <Calendar
                                             mode="single"
                                             selected={field.value}
@@ -122,7 +122,7 @@ export function DataPicker() {
                             </FormItem>
                         )}
                     />
-                    <Button variant={"outline"} type="submit">Filtrar</Button>
+                    <Button className="hover:bg-muted hover:text-muted-foreground hover:border-muted-foreground hover:border-2" type="submit">Filtrar</Button>
                 </form>
             </Form>
         </div>
