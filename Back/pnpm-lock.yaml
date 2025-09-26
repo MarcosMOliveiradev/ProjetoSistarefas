@@ -37,7 +37,7 @@ importers:
         version: 17.2.0
       drizzle-orm:
         specifier: ^0.44.2
-        version: 0.44.2(pg@8.16.3)(postgres@3.4.7)
+        version: 0.44.2(@types/pg@8.15.5)(pg@8.16.3)(postgres@3.4.7)
       fastify:
         specifier: ^5.4.0
         version: 5.4.0
@@ -47,9 +47,6 @@ importers:
       postgres:
         specifier: ^3.4.7
         version: 3.4.7
-      tsx:
-        specifier: ^4.20.3
-        version: 4.20.3
       zod:
         specifier: ^4.0.5
         version: 4.0.5
@@ -57,18 +54,21 @@ importers:
       '@types/bcrypt':
         specifier: ^5.0.2
         version: 5.0.2
-      '@types/fastify-cors':
-        specifier: ^2.1.2
-        version: 2.1.2
       '@types/node':
         specifier: ^24.0.13
         version: 24.0.13
+      '@types/pg':
+        specifier: ^8.15.5
+        version: 8.15.5
       drizzle-kit:
-        specifier: ^0.31.4
-        version: 0.31.4
+        specifier: ^0.31.5
+        version: 0.31.5
       pg:
         specifier: ^8.16.3
         version: 8.16.3
+      tsx:
+        specifier: ^4.20.3
+        version: 4.20.3
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -448,12 +448,11 @@ packages:
   '@types/bcrypt@5.0.2':
     resolution: {integrity: sha512-6atioO8Y75fNcbmj0G7UjI9lXN2pQ/IGJ2FWT4a/btd0Lk9lQalHLKhkgKVZ3r+spnmWUKfbMi1GEe9wyHQfNQ==}
 
-  '@types/fastify-cors@2.1.2':
-    resolution: {integrity: sha512-fH+ZjoLcV6DXs/C7OMsveS9dePt8qnrhW27NOqPtzjGKNln+ocJ5Mhdne22JOHh955RLu6NUY/EHoHlgOOZkLQ==}
-    deprecated: This is a stub types definition. fastify-cors provides its own type definitions, so you do not need this installed.
-
   '@types/node@24.0.13':
     resolution: {integrity: sha512-Qm9OYVOFHFYg3wJoTSrz80hoec5Lia/dPp84do3X7dZvLikQvM1YpmvTBEdIr/e+U8HTkFjLHLnl78K/qjf+jQ==}
+
+  '@types/pg@8.15.5':
+    resolution: {integrity: sha512-LF7lF6zWEKxuT3/OR8wAZGzkg4ENGXFNyiV/JeOt9z5B+0ZVwbql9McqX5c/WStFq1GaGso7H1AzP/qSzmlCKQ==}
 
   abstract-logging@2.0.1:
     resolution: {integrity: sha512-2BjRTZxTPvheOvGbBslFSYOUkr+SjPtOnrLP33f+VIWLzezQpZcqVg7ja3L4dBXmzzgwT+a029jRx5PCi3JuiA==}
@@ -563,8 +562,8 @@ packages:
     resolution: {integrity: sha512-Q4sgBT60gzd0BB0lSyYD3xM4YxrXA9y4uBDof1JNYGzOXrQdQ6yX+7XIAqoFOGQFOTK1D3Hts5OllpxMDZFONQ==}
     engines: {node: '>=12'}
 
-  drizzle-kit@0.31.4:
-    resolution: {integrity: sha512-tCPWVZWZqWVx2XUsVpJRnH9Mx0ClVOf5YUHerZ5so1OKSlqww4zy1R5ksEdGRcO3tM3zj0PYN6V48TbQCL1RfA==}
+  drizzle-kit@0.31.5:
+    resolution: {integrity: sha512-+CHgPFzuoTQTt7cOYCV6MOw2w8vqEn/ap1yv4bpZOWL03u7rlVRQhUY0WYT3rHsgVTXwYQDZaSUJSQrMBUKuWg==}
     hasBin: true
 
   drizzle-orm@0.44.2:
@@ -735,16 +734,6 @@ packages:
   fastfall@1.5.1:
     resolution: {integrity: sha512-KH6p+Z8AKPXnmA7+Iz2Lh8ARCMr+8WNPVludm1LGkZoD2MjY6LVnRMtTKhkdzI+jr0RzQWXKzKyBJm1zoHEL4Q==}
     engines: {node: '>=0.10.0'}
-
-  fastify-cors@6.0.3:
-    resolution: {integrity: sha512-fMbXubKKyBHHCfSBtsCi3+7VyVRdhJQmGes5gM+eGKkRErCdm0NaYO0ozd31BQBL1ycoTIjbqOZhJo4RTF/Vlg==}
-
-  fastify-cors@6.1.0:
-    resolution: {integrity: sha512-QBKz32IoY/iuT74CunRY1XOSpjSTIOh9E3FxulXIBhd0D2vdgG0kDvy0eG6HA/88sRfWHeba43LkGEXPz0Rh8g==}
-    deprecated: Please use @fastify/cors@7.0.0 instead
-
-  fastify-plugin@3.0.1:
-    resolution: {integrity: sha512-qKcDXmuZadJqdTm6vlCqioEbyewF60b/0LOFCcYN1B6BIZGlYJumWWOYs70SFYLDAH4YqdE1cxH/RKMG7rFxgA==}
 
   fastify-plugin@5.0.1:
     resolution: {integrity: sha512-HCxs+YnRaWzCl+cWRYFnHmeRFyR5GVnJTAaCJQiYzQSDwK9MgJdyAsuL3nh0EWRCYMgQ5MeziymvmAhUHYHDUQ==}
@@ -995,9 +984,6 @@ packages:
     resolution: {integrity: sha512-Jtc2612XINuBjIl/QTWsV5UvE8UHuNblcO3vVADSrKsrc6RqGX6lOW1cEo3CM2v0XG4Nat8nI+YM7/f26VxXLw==}
     engines: {node: '>=12'}
 
-  process-warning@1.0.0:
-    resolution: {integrity: sha512-du4wfLyj4yCZq1VupnVSZmRsPJsNuxoDQFdCFHLaYiEbFBD7QE0a+I4D7hOxrVnh78QE/YipFAj9lXHiXocV+Q==}
-
   process-warning@4.0.1:
     resolution: {integrity: sha512-3c2LzQ3rY9d0hc1emcsHhfT9Jwz0cChib/QN89oME2R451w5fy3f0afAhERFZAwrbDU43wk12d0ORBpDVME50Q==}
 
@@ -1134,10 +1120,6 @@ packages:
 
   undici-types@7.8.0:
     resolution: {integrity: sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw==}
-
-  vary@1.1.2:
-    resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
-    engines: {node: '>= 0.8'}
 
   which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
@@ -1431,13 +1413,15 @@ snapshots:
     dependencies:
       '@types/node': 24.0.13
 
-  '@types/fastify-cors@2.1.2':
-    dependencies:
-      fastify-cors: 6.1.0
-
   '@types/node@24.0.13':
     dependencies:
       undici-types: 7.8.0
+
+  '@types/pg@8.15.5':
+    dependencies:
+      '@types/node': 24.0.13
+      pg-protocol: 1.10.3
+      pg-types: 2.2.0
 
   abstract-logging@2.0.1: {}
 
@@ -1534,7 +1518,7 @@ snapshots:
 
   dotenv@17.2.0: {}
 
-  drizzle-kit@0.31.4:
+  drizzle-kit@0.31.5:
     dependencies:
       '@drizzle-team/brocli': 0.10.2
       '@esbuild-kit/esm-loader': 2.6.5
@@ -1543,8 +1527,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.44.2(pg@8.16.3)(postgres@3.4.7):
+  drizzle-orm@0.44.2(@types/pg@8.15.5)(pg@8.16.3)(postgres@3.4.7):
     optionalDependencies:
+      '@types/pg': 8.15.5
       pg: 8.16.3
       postgres: 3.4.7
 
@@ -1673,18 +1658,6 @@ snapshots:
   fastfall@1.5.1:
     dependencies:
       reusify: 1.1.0
-
-  fastify-cors@6.0.3:
-    dependencies:
-      fastify-plugin: 3.0.1
-      vary: 1.1.2
-
-  fastify-cors@6.1.0:
-    dependencies:
-      fastify-cors-deprecated: fastify-cors@6.0.3
-      process-warning: 1.0.0
-
-  fastify-plugin@3.0.1: {}
 
   fastify-plugin@5.0.1: {}
 
@@ -1948,8 +1921,6 @@ snapshots:
 
   postgres@3.4.7: {}
 
-  process-warning@1.0.0: {}
-
   process-warning@4.0.1: {}
 
   process-warning@5.0.0: {}
@@ -2059,8 +2030,6 @@ snapshots:
   typescript@5.8.3: {}
 
   undici-types@7.8.0: {}
-
-  vary@1.1.2: {}
 
   which@2.0.2:
     dependencies:
