@@ -1,8 +1,7 @@
 {
-  "name": "Back",
+  "name": "@sistearefas/back",
   "version": "2.0.0",
   "description": "Novo modelo de sistarefas",
-  "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node --env-file .env --experimental-strip-types --no-warnings src/server.ts",
@@ -20,8 +19,7 @@
     "drizzle-kit": "^0.31.5",
     "pg": "^8.16.3",
     "tsx": "^4.20.3",
-    "typescript": "^5.8.3",
-    "@sistearefas/prettier": "workspace:*"
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",

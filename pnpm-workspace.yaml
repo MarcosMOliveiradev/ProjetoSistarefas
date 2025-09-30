@@ -1,4 +1,0 @@
-packages: 
-  - "Back/*"
-  - "Front/*"
-  - "config/*"
