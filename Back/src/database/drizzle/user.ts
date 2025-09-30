@@ -1,14 +1,19 @@
-import { numeric, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
 import { media } from "./media.ts";
+import { RolesEnum } from "./roles.ts";
+import { tarefas } from "./tarefas.ts";
+import { atividade } from "./atividades.ts";
 
 export const user = pgTable("user", {
     id: text("id").$defaultFn(() => createId()).primaryKey(),
     name: text("name").notNull(),
-    matricula: numeric("matricula").notNull().unique(),
-    email: text("email").notNull().unique(),
+    matricula: integer("matricula").notNull().unique(),
+    role: RolesEnum("role").notNull().default('PJA'),
     password: text("password").notNull(),
+    avatarUrl: text("avatar_url"),
+    ativado: boolean("ativado").notNull().default(true),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
 })
@@ -17,6 +22,12 @@ export const userRelations = relations(user, ({ many}) => {
     return {
         media: many(media, {
             relationName: 'mediaUser',
+        }),
+        tarefas: many(tarefas, {
+            relationName: 'tarefasUser',
+        }),
+        atividade: many(atividade, {
+            relationName: 'atividadesUser',
         })
     }
 })

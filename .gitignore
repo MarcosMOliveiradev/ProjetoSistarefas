@@ -1,4 +1,16 @@
-# Logs
+node_modules
+.env
+prisma/database.db
+
+*.jpg
+*.png
+*.mp4
+*jpeg
+*.gif
+.db
+
+build
+
 logs
 *.log
 npm-debug.log*
@@ -12,7 +24,6 @@ dist
 dist-ssr
 *.local
 
-# Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
