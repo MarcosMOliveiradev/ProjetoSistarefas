@@ -1,12 +1,14 @@
 import { createId } from "@paralleldrive/cuid2"
 
 import { Replace } from "../../lib/Replace.ts";
+import { Roles } from "./Roles.ts";
 
 export interface IUser {
     name: string;
-    matricula: string;
-    email: string;
+    matricula: number;
     password: string;
+    avatarUrl: string | null;
+    ativado: boolean;
     createdAt: Date;
     updatedAt?: Date | null;
 }
@@ -34,20 +36,27 @@ export class User {
         return this.props.name;
     }
 
-    public set matricula(matricula: string) {
+    public set matricula(matricula: number) {
         this.props.matricula = matricula;
     }
-    public get matricula(): string {
+    public get matricula(): number {
         return this.props.matricula;
     }
 
-    public set email(email: string) {
-        this.props.email = email;
+    public set ativado(ativado: boolean) {
+        this.props.ativado = ativado
     }
-    public get email(): string {
-        return this.props.email;
+    public get ativado() {
+        return this.props.ativado
     }
 
+    public set avata(avata: string | null) {
+        this.props.avatarUrl = avata
+    }
+    public get avata(): string | null {
+        return this.props.avatarUrl
+    }
+    
     public set password(password: string) {
         this.props.password = password;
     }

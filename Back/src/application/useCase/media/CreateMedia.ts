@@ -30,6 +30,7 @@ export class CreateMedia {
 
         const media = await this.mediaRepository.create(created);
 
+        // responsavel por criar a relação de role e usuario
         await this.mediaRoleRepository.create(
             listFor,
             media.id

@@ -2,7 +2,6 @@ import { boolean, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
 import { media } from "./media.ts";
-import { RolesEnum } from "./roles.ts";
 import { tarefas } from "./tarefas.ts";
 import { atividade } from "./atividades.ts";
 
@@ -10,7 +9,6 @@ export const user = pgTable("user", {
     id: text("id").$defaultFn(() => createId()).primaryKey(),
     name: text("name").notNull(),
     matricula: integer("matricula").notNull().unique(),
-    role: RolesEnum("role").notNull().default('PJA'),
     password: text("password").notNull(),
     avatarUrl: text("avatar_url"),
     ativado: boolean("ativado").notNull().default(true),

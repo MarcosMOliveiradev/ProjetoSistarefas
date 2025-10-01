@@ -10,7 +10,8 @@ export class UserDrizzleRepository extends UserRepository {
             id: data.id,
             name: data.name,
             matricula: data.matricula,
-            email: data.email,
+            ativado: data.ativado,
+            avatarUrl: data.avata,
             password: data.password,
             createdAt: data.createdAt
         }).returning();

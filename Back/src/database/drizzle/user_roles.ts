@@ -1,5 +1,6 @@
 import { index, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
 import { user } from "./user.ts";
+import { RolesEnum } from "./roles.ts";
 
 
 export const userRoles = pgTable("user_roles", {
@@ -7,7 +8,7 @@ export const userRoles = pgTable("user_roles", {
         onDelete: "cascade",
     }).notNull(),
 
-    role: text("role").notNull(),
+    role: RolesEnum("role").notNull(),
 },
 (t) => ({
     pk: primaryKey(t.userId, t.role),
