@@ -1,14 +1,15 @@
-import { hash } from "bcrypt";
+import { hash } from "bcryptjs";
 import type { Roles } from "../../entities/Roles.ts";
 import { User } from "../../entities/User.ts";
 import type { UserRepository } from "../../repositories/UserRepository.ts";
 import type { UserRoleRepository } from "../../repositories/UserRoleRepository.ts";
+import { UserAlreadyExistError } from "./error/userAlreadyExistsError.ts";
 
 export interface UserI {
   name: string
   matricula: number
   passwordBody: string
-  avatarUrl: string
+  avatarUrl: string | null | undefined
 
   role: Roles
 }
@@ -22,10 +23,10 @@ export class CreateUser {
   async exec( data: UserI ) {
     const { name, avatarUrl, matricula, passwordBody, role } = data
 
+    // Verifica se o usuario ja existe
     const userAlreadyExist = await this.userRepository.findByMatricula(matricula)
-
     if(userAlreadyExist) {
-      return new Error()
+      throw new UserAlreadyExistError()
     }
 
     const password = await hash(passwordBody, 6)
@@ -39,7 +40,6 @@ export class CreateUser {
     })
 
     const user = await this.userRepository.create(createUser)
-
     await this.userRoleRepository.create(
       role,
       user.id

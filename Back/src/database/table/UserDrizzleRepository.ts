@@ -8,7 +8,7 @@ export class UserDrizzleRepository extends UserRepository {
 
     async create(data: User): Promise<User> {
         const [createdUser] = await db.insert(schema.user).values(
-        {
+        [{
             id: data.id,
             name: data.name,
             matricula: data.matricula,
@@ -16,7 +16,7 @@ export class UserDrizzleRepository extends UserRepository {
             avatarUrl: data.avata,
             password: data.password,
             createdAt: data.createdAt
-        }).returning();
+        }]).returning();
 
     return createdUser;
     }
@@ -29,7 +29,7 @@ export class UserDrizzleRepository extends UserRepository {
         throw new Error("Method not implemented.");
     }
     async findByMatricula(matricula: number): Promise<User> {
-        const [user] = await db.select().from(schema.user).where(eq(schema.user.matricula, matricula))
+        const [user] = await db.select().from(schema.user).where(eq(schema.user.matricula, matricula)).innerJoin(schema.userRoles, eq(schema.user.id, schema.userRoles.userId))
 
         return user
     }

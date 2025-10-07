@@ -1,6 +1,7 @@
 import fastify from 'fastify';
 import multipart from '@fastify/multipart'
 import {
+    jsonSchemaTransform,
     serializerCompiler,
     validatorCompiler,
     type ZodTypeProvider,
@@ -13,11 +14,18 @@ import { env } from './lib/env.ts';
 import { mediaRoutes } from './controller/media/routes.ts';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { userRoutes } from './controller/user/routes.ts';
+import fastifySwagger from '@fastify/swagger';
+import fastifySwaggerUi from '@fastify/swagger-ui';
+import fastifyCookie from '@fastify/cookie';
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = resolve(__filename)
+
+app.setSerializerCompiler(serializerCompiler)
+app.setValidatorCompiler(validatorCompiler)
 
 app.register(fastifyJwt, {
     secret: env.JWT_SECRET,
@@ -26,9 +34,11 @@ app.register(fastifyJwt, {
         signed: false
     },
     sign: {
-        expiresIn: '60m'
+        expiresIn: '5d'
     },
 })
+
+app.register(fastifyCookie)
 
 app.register(fastifyCors, {
     origin:'*'
@@ -41,9 +51,35 @@ app.register(fastifyStatic, {
     prefix: '/uploads/'
 })
 
+app.register(fastifySwagger, {
+    openapi: {
+        info: {
+            title: 'SisTarefas',
+            description: 'Projeto full-stack SisTarefas',
+             version: '2.0.0'
+        },
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT'
+                }
+            }
+        }
+    },
+    transform: jsonSchemaTransform
+})
+
+app.register(fastifySwaggerUi, {
+    routePrefix: '/docs'
+})
+
+app.register(userRoutes, {
+    prefix: '/user'
+})
+
 app.register(mediaRoutes, {
     prefix: '/media',
 })
 
-app.setSerializerCompiler(serializerCompiler)
-app.setValidatorCompiler(validatorCompiler)

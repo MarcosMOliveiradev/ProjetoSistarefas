@@ -7,7 +7,7 @@ export interface IUser {
     name: string;
     matricula: number;
     password: string;
-    avatarUrl: string | null;
+    avatarUrl: string | null | undefined;
     ativado: boolean;
     createdAt: Date;
     updatedAt?: Date | null;
@@ -50,10 +50,10 @@ export class User {
         return this.props.ativado
     }
 
-    public set avata(avata: string | null) {
+    public set avata(avata: string | null | undefined) {
         this.props.avatarUrl = avata
     }
-    public get avata(): string | null {
+    public get avata(): string | null | undefined {
         return this.props.avatarUrl
     }
     

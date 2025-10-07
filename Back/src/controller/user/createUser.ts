@@ -1,13 +1,46 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 import { Roles } from "../../application/entities/Roles.ts";
+import { makeCreateUser } from "../../application/useCase/user/factories/make-create-user.ts";
+import { UserAlreadyExistError } from "../../application/useCase/user/error/userAlreadyExistsError.ts";
+import type { User } from "../../application/entities/User.ts";
 
-export async function createUserController(request: FastifyRequest , reply: FastifyReply ) {
+export async function createUserController(
+  request: FastifyRequest,
+  reply: FastifyReply 
+): Promise<User | any > {
   const createUserSchema = z.object({
     name: z.string(),
     matricula: z.number(),
-    password: z.string(),
-    avataUrl: z.string(),
+    passwordBody: z.string(),
+    avatarUrl: z.string().optional(),
     role: z.enum(Roles)
   })
+
+  const { name, matricula, passwordBody, avatarUrl, role } = createUserSchema.parse(request.body)
+
+  try {
+    const createUser = makeCreateUser()
+
+    const { user } = await createUser.exec({
+      name,
+      passwordBody,
+      matricula,
+      avatarUrl,
+      role
+    })
+
+    return reply.status(201).send({ 
+      user: {
+        ...user,
+        password: undefined,
+      } })
+  } catch (err: any) {
+
+    if(err instanceof UserAlreadyExistError) {
+      return reply.status(409).send({ message: err.message })
+    }
+    return err
+
+  }
 }
