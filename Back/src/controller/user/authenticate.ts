@@ -26,7 +26,7 @@ export async function authenticateController(
       role: user.user_roles.role
     },
     {
-      sub: user.id,
+      sub: user.user.id,
     })
 
     return reply.setCookie('refreshToken', token, {

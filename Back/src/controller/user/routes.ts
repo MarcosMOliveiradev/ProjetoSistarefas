@@ -4,20 +4,23 @@ import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod"
 import { Roles } from "../../application/entities/Roles.ts";
 import { authenticateController } from "./authenticate.ts";
+import { verifyJwt } from "../../lib/verify-jwt.ts";
 
 export async function userRoutes(app: FastifyInstance) {
 
+  // Cadastro de usuario
   app.withTypeProvider<ZodTypeProvider>().post('/created', 
     {
+      onRequest: [verifyJwt],
       schema: {
         tags: ['User'],
         summary: 'Criar uma nova conta',
         body: z.object({
           name: z.string(),
-            matricula: z.number(),
-            passwordBody: z.string(),
-            avatarUrl: z.string().optional(),
-            role: z.enum(Roles)
+          matricula: z.number(),
+          passwordBody: z.string(),
+          avatarUrl: z.string().optional(),
+          role: z.enum(Roles)
         }),
         response: {
           201: z.object({
@@ -37,7 +40,23 @@ export async function userRoutes(app: FastifyInstance) {
     return createUserController(request, reply)
   })
 
-  app.withTypeProvider<ZodTypeProvider>().post('/auth', {}, async (request, reply) => {
+  // Login
+  app.withTypeProvider<ZodTypeProvider>().post('/auth', 
+    {
+      schema: {
+        tags: ['User'],
+        summary: 'Autenticação do usuario',
+        body: z.object({
+          matricula: z.number(),
+          passwordBody: z.string()
+        }),
+        response: {
+          200: z.object({
+            token: z.string()
+          })
+        }
+      }
+    }, async (request, reply) => {
     return authenticateController(request, reply)
   })
 }

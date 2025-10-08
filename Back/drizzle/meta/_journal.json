@@ -8,6 +8,13 @@
       "when": 1759499624958,
       "tag": "0000_useful_jackpot",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1759944789876,
+      "tag": "0001_nosy_frog_thor",
+      "breakpoints": true
     }
   ]
 }
