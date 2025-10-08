@@ -1,4 +1,5 @@
 import { hash } from "bcryptjs";
+
 import type { Roles } from "../../entities/Roles.ts";
 import { User } from "../../entities/User.ts";
 import type { UserRepository } from "../../repositories/UserRepository.ts";

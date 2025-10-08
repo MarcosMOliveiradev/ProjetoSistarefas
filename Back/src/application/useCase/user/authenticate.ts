@@ -2,7 +2,7 @@ import type { UserRepository } from "../../repositories/UserRepository.ts";
 
 import { UnexistUser } from "./error/unexistUser.ts";
 import { IncorrectUserPassword } from "./error/incorrectUserPassword.ts";
-import { compare, compareSync } from "bcryptjs";
+import { compare } from "bcryptjs";
 
 interface IUser {
   matricula: number,
@@ -22,14 +22,13 @@ export class Authenticate {
       throw new UnexistUser()
     }
 
-    const comparePass = await compareSync(passwordBody, user.password)
-    console.log(comparePass)
+    const hash = user.user.password
 
-    // if(!comparePass) {
-    //   throw new IncorrectUserPassword()
-    // }
+    const comparePass = await compare(passwordBody, hash)
 
-    console.log(user)
+    if(!comparePass) {
+      throw new IncorrectUserPassword()
+    }
 
     return user
 

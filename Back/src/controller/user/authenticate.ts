@@ -20,10 +20,9 @@ export async function authenticateController(
     
     const authenticateUser = makeAutheticate()
     const user = await authenticateUser.expec({matricula, passwordBody})
-
     const token = await reply.jwtSign({
-      name: user.name,
-      matricula: user.matricula,
+      name: user.user.name,
+      matricula: user.user.matricula,
       role: user.user_roles.role
     },
     {
@@ -35,7 +34,7 @@ export async function authenticateController(
       secure: true,
       sameSite: true,
       httpOnly: true,
-    }).status(200).send({token})
+    }).status(200).send(token)
   
   } catch (err) {
 
