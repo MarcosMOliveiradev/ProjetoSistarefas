@@ -5,6 +5,8 @@ import './index.css'
 
 import { queryClient } from './lib/react-query'
 import { routes } from './pages/rotes'
+import { AuthContextProvider } from './context/authContext'
+import { Toaster } from 'sonner'
 
 export function App() {
 
@@ -12,7 +14,10 @@ export function App() {
    <HelmetProvider>
     <Helmet titleTemplate='%s | SisTarefas' />
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={routes}/>
+      <AuthContextProvider>
+        <Toaster duration={100} closeButton richColors position='top-center'/>
+        <RouterProvider router={routes}/>
+      </AuthContextProvider>
     </QueryClientProvider>
    </HelmetProvider>
   )

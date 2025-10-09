@@ -4,6 +4,7 @@ import { AppLayout } from "./layout/AppLayout";
 
 import { Video } from './app/videos'
 import { Atividades } from "./app/Atividades";
+import { SignIn } from "./auth/sign-in";
 
 export const routes = createBrowserRouter([
     {
@@ -14,4 +15,8 @@ export const routes = createBrowserRouter([
             { path: 'videos', element: <Video />}
         ]
     },
+    {
+        path: '/',
+        element: <SignIn/>
+    }
 ])
