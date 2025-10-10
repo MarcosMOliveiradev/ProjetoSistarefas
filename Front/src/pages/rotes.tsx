@@ -1,22 +1,41 @@
-import { createBrowserRouter } from "react-router";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 
-import { AppLayout } from "./layout/AppLayout";
+import { useAuth } from "@/hooks/useAuth";
 
-import { Video } from './app/videos'
-import { Atividades } from "./app/Atividades";
 import { SignIn } from "./auth/sign-in";
 
-export const routes = createBrowserRouter([
-    {
-        path: '/',
-        element: <AppLayout />,
-        children: [
-            { path: '/', element: <Atividades />},
-            { path: 'videos', element: <Video />}
-        ]
-    },
-    {
-        path: '/',
-        element: <SignIn/>
-    }
-])
+import { AppLayout } from "./layout/AppLayout";
+import { Atividades } from "./app/Atividades";
+import { Video } from "./app/videos";
+
+export function AppRoutes() {
+    const { user, isLoadingUserStorageData } = useAuth()
+
+    // if(isLoadingUserStorageData) {
+    //     return 
+    // }
+
+   return (
+    <BrowserRouter>
+        <Routes>
+            {
+                !user.id ? (
+                    <>
+                        <Route path="/auth" element={<SignIn/>} />
+                        <Route path="*" element={<Navigate to="/auth" replace />} />
+                    </>
+                ) : (
+                    <>
+                        {/* Rotas privadas */}
+                        <Route path="/" element={<AppLayout/>} >
+                            <Route path="/" index element={<Atividades/>} />
+                            <Route path="/video" element={<Video/>} />
+                        </Route>
+                         <Route path="*" element={<Navigate to="/" replace />} />
+                    </>
+                )
+            }
+        </Routes>
+    </BrowserRouter>
+  )
+}
