@@ -19,7 +19,7 @@ export function AppRoutes() {
     <BrowserRouter>
         <Routes>
             {
-                !user.id ? (
+                !user.user ? (
                     <>
                         <Route path="/auth" element={<SignIn/>} />
                         <Route path="*" element={<Navigate to="/auth" replace />} />

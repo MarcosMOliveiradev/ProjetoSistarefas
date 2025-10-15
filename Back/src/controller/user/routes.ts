@@ -5,6 +5,7 @@ import { z } from "zod"
 import { Roles } from "../../application/entities/Roles.ts";
 import { authenticateController } from "./authenticate.ts";
 import { verifyJwt } from "../../lib/verify-jwt.ts";
+import { profileController } from "./profileController.ts";
 
 export async function userRoutes(app: FastifyInstance) {
 
@@ -58,5 +59,11 @@ export async function userRoutes(app: FastifyInstance) {
       }
     }, async (request, reply) => {
     return authenticateController(request, reply)
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().get('/profile', {
+    onRequest: [verifyJwt]
+  }, async (request, reply) => {
+    return profileController(request, reply)
   })
 }

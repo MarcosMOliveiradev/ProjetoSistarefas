@@ -22,7 +22,9 @@ export class UserDrizzleRepository extends UserRepository {
     }
 
     async findById(id: string): Promise<User | null> {
-        throw new Error("Method not implemented.");
+        const [user] = await db.select().from(schema.user).where(eq(schema.user.id, id)).innerJoin(schema.userRoles, eq(schema.user.id, schema.userRoles.userId))
+
+        return user
     }
 
     async find(): Promise<User[]> {

@@ -9,7 +9,7 @@ type ApiInstaceProps = AxiosInstance & {
 }
 
 export const api = axios.create({
-  baseURL: env.VITE_API_URl
+  baseURL: env.VITE_API_URL
 }) as ApiInstaceProps
 
 if ( env.VITE_ENABLE_API_DELAY ) {
