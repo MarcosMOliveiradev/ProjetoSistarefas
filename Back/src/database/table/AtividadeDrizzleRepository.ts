@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { Atividade } from "../../application/entities/Atividade.ts";
 import { AtividadeRepository } from "../../application/repositories/AtividadeRepository.ts"
 
@@ -26,7 +27,9 @@ export class AtividadeDrizzleRepository extends AtividadeRepository {
     return atividades
   }
 
-  findForCod(cod: number): Promise<Atividade[]> {
-    throw new Error("Method not implemented.");
+  async findForCod(cod: number): Promise<Atividade> {
+    const [atividade] = await db.select().from(schema.atividade).where(eq(schema.atividade.cod_atividade, cod))
+
+    return atividade
   }
 }

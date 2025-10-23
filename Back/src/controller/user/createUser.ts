@@ -19,6 +19,11 @@ export async function createUserController(
 
   const { name, matricula, passwordBody, avatarUrl, role } = createUserSchema.parse(request.body)
 
+  const userRole = request.user.role
+
+  if(userRole != Roles.INFORMATICA) {
+    return reply.send(401).send('Você não pode criar um usuario')
+  }
   try {
     const createUser = makeCreateUser()
 

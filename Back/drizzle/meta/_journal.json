@@ -15,6 +15,13 @@
       "when": 1759944789876,
       "tag": "0001_nosy_frog_thor",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1761159372054,
+      "tag": "0002_medical_darwin",
+      "breakpoints": true
     }
   ]
 }

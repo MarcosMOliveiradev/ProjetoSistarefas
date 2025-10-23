@@ -19,6 +19,7 @@ import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import fastifyCookie from '@fastify/cookie';
 import { atividadeRouter } from './controller/atividade/routes.ts';
+import { tarefasRoutes } from './controller/tarefas/routes.ts';
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -82,6 +83,10 @@ app.register(userRoutes, {
 
 app.register(atividadeRouter, {
     prefix: '/atividade'
+})
+
+app.register(tarefasRoutes, {
+    prefix: '/tarefas'
 })
 
 app.register(mediaRoutes, {
