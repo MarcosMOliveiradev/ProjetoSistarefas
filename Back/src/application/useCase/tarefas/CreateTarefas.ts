@@ -2,7 +2,7 @@ import { Tarefas } from "../../entities/tarefa.ts";
 import type { AtividadeRepository } from "../../repositories/AtividadeRepository.ts";
 import type { TarefasRepository } from "../../repositories/TarefasRepository.ts";
 import { UnexistAtividade } from "../atividade/error/unexistAtividade.ts";
-import { converterDataInNumber } from "./functions/converterDataInNumber.ts";
+import { converterTimerInNumber } from "./functions/converterTimerInNumber.ts";
 
 export interface ITarefas {
   data: string;
@@ -30,8 +30,8 @@ export class CreateTarefas {
     }
 
     // Converter as horas em em minutos
-    const hInicio = await converterDataInNumber(hInicioController)
-    const hTermino = await converterDataInNumber(hTerminoController)
+    const hInicio = await converterTimerInNumber(hInicioController)
+    const hTermino = await converterTimerInNumber(hTerminoController)
 
     const tarefas = new Tarefas({
       data,
