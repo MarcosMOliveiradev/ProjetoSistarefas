@@ -10,6 +10,7 @@ export const tarefas = pgTable("tarefas", {
     item: integer("item").notNull(),
     cod_atividade: integer("cod_atividade").references(() => atividade.cod_atividade),
     qtd_folha: integer("qtd_folha").notNull(),
+    id_documento: text("id_documento").notNull().default("0"),
     h_inicio: integer("h_inicio").notNull(),
     h_termino: integer("h_termino").notNull(),
     n_atendimento: integer("n_atendimento").notNull(),

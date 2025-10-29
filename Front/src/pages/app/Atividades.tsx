@@ -4,14 +4,20 @@ import { TabelaAtividades } from "@/components/tabelaAtividades";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { CriarAtividadeButton } from "@/components/criarAtividadeButton";
+import { useState } from "react";
+import type { tarefasDTO } from "@/dtos/tarefasDTO";
 
 export function Atividades() {
+    const [tarefas, setTarefas] = useState<tarefasDTO[]>([])
     return (
-        <div className="flex gap-4 min-w-screen">
+        <div >
             <Helmet title="Atividades"/>
             <div>
                 <div className="flex justify-between items-center mr-8">
-                    <DataPicker />
+                    {/* Componente que filtra data */}
+                    <DataPicker onDadosTarefas={setTarefas} />
+
+                    {/* Componente pra criar atividade */}
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button variant={"outline"}>Criar</Button>
@@ -21,9 +27,9 @@ export function Atividades() {
                         </DialogContent>
                     </Dialog>
                 </div>
-
                 
-                <TabelaAtividades />
+                {/* Componente de renderização de tarefas  */}
+                <TabelaAtividades dados={tarefas} />
             </div>
         </div>
     )

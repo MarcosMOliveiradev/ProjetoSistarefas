@@ -11,6 +11,7 @@ export async function createTarefasController(
     data: z.string(),
     item: z.number(),
     codAtividade: z.number(),
+    idDocumento: z.string(),
     qtdFolha: z.number(),
     hInicioController: z.string(),
     hTerminoController: z.string(),
@@ -19,7 +20,7 @@ export async function createTarefasController(
 
   const userId = request.user.sub
 
-  const { data, item, codAtividade, hInicioController, hTerminoController, qtdFolha, nAtendimento } = tarefasSchema.parse(request.body)
+  const { data, item, codAtividade, idDocumento, hInicioController, hTerminoController, qtdFolha, nAtendimento } = tarefasSchema.parse(request.body)
 
   try {
     const createTarefas = makeCreateTarefas()
@@ -27,6 +28,7 @@ export async function createTarefasController(
       data,
       item,
       codAtividade,
+      idDocumento,
       hInicioController,
       hTerminoController,
       nAtendimento,

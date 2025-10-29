@@ -71,8 +71,9 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     try {
       setIsLoadingUserStorageData(true)
       setUser({} as userDTO)
-      await storageUserRemove()
-      await storageAuthTokenRemove()
+      storageUserRemove()
+      storageAuthTokenRemove()
+
     } catch (err) {
       const isApiError = err instanceof AppErrors
       const title = isApiError ? err.message : "Erro inesperado"

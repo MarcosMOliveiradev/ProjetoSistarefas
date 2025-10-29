@@ -8,6 +8,7 @@ export interface ITarefas {
   data: string;
   item: number;
   codAtividade: number;
+  idDocumento: string;
   qtdFolha: number | null | undefined;
   hInicioController: string;
   hTerminoController: string;
@@ -22,7 +23,7 @@ export class CreateTarefas {
     private atividadeRepository: AtividadeRepository
   ) {}
 
-  async exec({data, codAtividade, hInicioController, hTerminoController, item, nAtendimento, qtdFolha, userId }: ITarefas) {
+  async exec({data, codAtividade, idDocumento, hInicioController, hTerminoController, item, nAtendimento, qtdFolha, userId }: ITarefas) {
     const atividade = this.atividadeRepository.findForCod(codAtividade)
 
     if(!atividade) {
@@ -37,6 +38,7 @@ export class CreateTarefas {
       data,
       item,
       codAtividade,
+      idDocumento,
       qtdFolha,
       hInicio,
       hTermino,

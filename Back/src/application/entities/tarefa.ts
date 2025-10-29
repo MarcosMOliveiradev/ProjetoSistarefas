@@ -6,6 +6,7 @@ export interface ITarefas {
   item: number;
   codAtividade: number;
   qtdFolha: number | null | undefined;
+  idDocumento: string;
   hInicio: number;
   hTermino: number;
   nAtendimento: number;
@@ -62,6 +63,13 @@ export class Tarefas {
     } else {
       this.props.qtdFolha = qtdFolha
     }
+  }
+
+  public get idDocumento() {
+    return this.props.idDocumento
+  }
+  public set idDocumento(idDocumento: string) {
+    this.props.idDocumento = idDocumento
   }
 
   public get hInicio() {

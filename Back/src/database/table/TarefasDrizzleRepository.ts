@@ -18,6 +18,7 @@ export class TarefasDrizzleRepository extends TarefasRepository {
       data: data.data,
       item: data.item,
       cod_atividade: data.codAtividade,
+      id_documento: data.idDocumento,
       qtd_folha: data.qtdFolha ? data.qtdFolha : 0,
       h_inicio: data.hInicio,
       h_termino: data.hTermino,
