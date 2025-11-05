@@ -14,6 +14,7 @@ export async function tarefasRoutes(app: FastifyInstance) {
         data: z.string(),
         item: z.number(),
         codAtividade: z.number(),
+        idDocumento: z.string(),
         qtdFolha: z.number(),
         hInicioController: z.string(),
         hTerminoController: z.string(),

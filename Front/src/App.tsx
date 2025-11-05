@@ -14,7 +14,7 @@ export function App() {
     <Helmet titleTemplate='%s | SisTarefas' />
     <QueryClientProvider client={queryClient}>
       <AuthContextProvider>
-        <Toaster duration={1000} closeButton richColors position='top-center'/>
+        <Toaster duration={10000} closeButton richColors position='top-center'/>
         <AppRoutes/>
       </AuthContextProvider>
     </QueryClientProvider>
