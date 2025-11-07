@@ -3,8 +3,11 @@ import { Menu } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 
 import { Link } from "react-router"
+import { useAuth } from "@/hooks/useAuth";
 
 export function MenuButton() {
+    const { signOut } = useAuth()
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -15,8 +18,14 @@ export function MenuButton() {
 
                     {/* Lista de atividades */}
                     <DropdownMenuItem asChild>
-                        <Button className="w-[100%] hover:bg-muted" variant={"ghost"}>
+                        <Button className="w-[100%] hover:bg-muted border-2" variant={"ghost"}>
                             <Link to={"/"}>ATIVIDADES</Link>
+                        </Button>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem asChild>
+                        <Button onClick={signOut} className="w-[100%] hover:bg-muted mt-4" variant={"destructive"}>
+                            <Link to={"/"}>SAIR</Link>
                         </Button>
                     </DropdownMenuItem>
 

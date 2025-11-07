@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils"
 import { AppErrors } from "@/lib/appErrors"
 import { toast } from "sonner"
 import { api } from "@/lib/axios"
+import { useEffect } from "react"
 
 
 const dataPickerSchema = z.object({
@@ -52,6 +53,13 @@ export function DataPicker({ onDadosTarefas }: any) {
            toast.error(title)
         }
     }
+
+    useEffect(() => {
+        const hoje = {
+            dataInicial: new Date()
+        }
+        onSubmit(hoje)
+    }, []);
 
     return (
         <div className="pl-8">
