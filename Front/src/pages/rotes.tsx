@@ -7,6 +7,7 @@ import { SignIn } from "./auth/sign-in";
 import { AppLayout } from "./layout/AppLayout";
 import { Atividades } from "./app/Atividades";
 import { Video } from "./app/videos";
+import { Profile } from "./app/Profille";
 
 export function AppRoutes() {
     const { user, isLoadingUserStorageData } = useAuth()
@@ -30,6 +31,7 @@ export function AppRoutes() {
                         <Route path="/" element={<AppLayout/>} >
                             <Route path="/" index element={<Atividades/>} />
                             <Route path="/video" element={<Video/>} />
+                            <Route path="/profile" element={<Profile/>} />
                         </Route>
                          <Route path="*" element={<Navigate to="/" replace />} />
                     </>

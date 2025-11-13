@@ -8,7 +8,7 @@ export type userDTO = {
         createdAt: Date;
         updatedAt?: Date | null;
     },
-    user_role: {
+    user_roles: {
         role: string,
         userId: string
     }
