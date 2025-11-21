@@ -1,0 +1,15 @@
+export enum Roles {
+        TODOS = 'TODOS',
+        COMPRAS = 'COMPRAS',
+        ALMOXARIFADO = 'ALMOXARIFADO',
+        SECRETARIA = 'SECRETARIA',
+        FINANCEIRO = 'FINANCEIRO',
+        DP = 'DP',
+        INFORMATICA = 'INFORMATICA',
+        PONTO = 'PONTO',
+        SEMAC = 'SEMAC',
+        SEMAL = 'SEMAL',
+        PCM = 'PCM',
+        PJA = 'PJA',
+        OUTROS = 'OUTROS',
+}

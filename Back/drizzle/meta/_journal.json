@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1759499624958,
+      "tag": "0000_useful_jackpot",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1759944789876,
+      "tag": "0001_nosy_frog_thor",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1761159372054,
+      "tag": "0002_medical_darwin",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1761589244259,
+      "tag": "0003_puzzling_veda",
+      "breakpoints": true
+    }
+  ]
+}
