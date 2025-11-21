@@ -24,8 +24,8 @@ if ( env.VITE_ENABLE_API_DELAY ) {
 api.registerInterceptTokenMeneger = signOut => {
   const InterceptTokenMeneger = api.interceptors.response.use(response => response, requestError => {
     console.log(requestError.response.data.message)
-    if( requestError?.response?.status === 401 ) {
-      if( requestError.response.data.message === 'Unauthorized' || requestError.response.data.message === 'invalid') {
+    if( requestError?.response?.status === 404 || requestError?.response?.status === 401) {
+      if( requestError.response.data.message === 'Unauthorized.' || requestError.response.data.message === 'invalid') {
         signOut()
       }
     }

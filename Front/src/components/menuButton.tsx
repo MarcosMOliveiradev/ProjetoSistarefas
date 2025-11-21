@@ -18,7 +18,7 @@ export function MenuButton() {
 
                     {/* Lista de atividades */}
                     <DropdownMenuItem asChild>
-                        <Button className="w-[100%] hover:bg-muted border-2" variant={"ghost"}>
+                        <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
                             <Link to={"/"}>ATIVIDADES</Link>
                         </Button>
                     </DropdownMenuItem>

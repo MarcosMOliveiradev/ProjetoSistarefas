@@ -26,6 +26,7 @@ import { AppErrors } from "@/lib/appErrors"
 import { toast } from "sonner"
 import { api } from "@/lib/axios"
 import { useEffect } from "react"
+import { useAuth } from "@/hooks/useAuth"
 
 
 const dataPickerSchema = z.object({
@@ -33,6 +34,7 @@ const dataPickerSchema = z.object({
 })
 
 export function DataPicker({ onDadosTarefas }: any) {
+    const { user } = useAuth()
     const form = useForm<z.infer<typeof dataPickerSchema>>({
         resolver: zodResolver(dataPickerSchema),
         defaultValues: {
@@ -51,6 +53,31 @@ export function DataPicker({ onDadosTarefas }: any) {
            const title = isAppError ? err.message : "Não foi possivel carregar as informações, por favor informe ao administrador!" 
 
            toast.error(title)
+        }
+    }
+
+    async function geraPDF(data: z.infer<typeof dataPickerSchema>) {
+        const dataB = new Date(data.dataInicial).toLocaleDateString("pt-BR");
+        
+        try {
+            const response = await api.post(
+            "/tarefas/gerarPdf",
+            { dataB },
+            { responseType: "blob" }
+            );
+            
+            const pdfBlob = new Blob([response.data], { type: "application/pdf" });
+
+            const fileURL = URL.createObjectURL(pdfBlob);
+
+            const link = document.createElement("a");
+            link.href = fileURL;
+            link.download = `${user.user.name}-${dataB}.pdf`;
+            link.click();
+
+            URL.revokeObjectURL(fileURL);
+        } catch (err) {
+            console.error("Erro ao gerar PDF:", err);
         }
     }
 
@@ -104,6 +131,7 @@ export function DataPicker({ onDadosTarefas }: any) {
                         )}
                     />
                     <Button className="hover:bg-muted hover:text-muted-foreground hover:border-muted-foreground hover:border-2" type="submit">Filtrar</Button>
+                    <Button className="cursor-pointer bg-slate-700 hover:bg-slate-400" onClick={() => geraPDF({dataInicial: form.getValues("dataInicial")})}>GERAR PDF</Button>
                 </form>
             </Form>
         </div>

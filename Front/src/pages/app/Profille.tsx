@@ -29,8 +29,6 @@ export function Profile() {
   const avata = user.user.avatarUrl
   const profileUser = user.user
 
-  console.log(user.user_roles.role)
-
   async function updateUser(data: z.infer<typeof updateSchema>) {
     console.log(data)
   }
@@ -38,9 +36,17 @@ export function Profile() {
 
     <div className="grid grid-cols-[20%_1fr] h-[90vh]">
       <div className="flex flex-col items-center col-[20rem] border-r-2 border-muted-foreground">
-        <div className="w-[17rem] h-[19rem] bg-white rounded-lg shadow-xl/30 flex justify-center items-center">
-          <img src={avata ?? profile} className="w-[10rem] h-[10rem] rounded-[50%]" />
+        <div className="w-[17rem] h-[19rem] bg-white rounded-lg shadow-xl/30 flex justify-center items-center flex-col gap-4">
+          <img src={avata ?? profile} className="w-[10rem] h-[10rem] rounded-[50%] shadow-xl/20" />
+          <p className="text-[20px]">{user.user.name}</p>
+          <p className="text-[20px]">{user.user.matricula}</p>
         </div>
+        {
+          user.user_roles.role === "INFORMATICA" ? 
+            <Button className="w-[17rem] h-[3rem] mt-4 text-[20px] bg-slate-700 hover:bg-slate-400 cursor-pointer ">Criar Novo Usuario</Button> 
+            : <></>
+        }
+        
       </div>
 
       <div className="flex flex-col justify-center items-center">
@@ -97,7 +103,7 @@ export function Profile() {
               />
             </div>
 
-            <Button className="col-span-2 mx-[30%] bg-green-800 hover:bg-green-400" >Salvar</Button>
+            <Button className="col-span-2 mx-[30%] bg-green-800 hover:bg-green-400 h-[3rem] text-[20px]" >Salvar</Button>
           </form>
         </Form>
       </div>

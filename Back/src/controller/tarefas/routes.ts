@@ -3,6 +3,7 @@ import { createTarefasController } from "./createTarefasController.ts";
 import { verifyJwt } from "../../lib/verify-jwt.ts";
 import z from "zod";
 import { listaTarefasController } from "./listaTarefasController.ts";
+import { geraPdf } from "./gerarPDF.ts";
 
 export async function tarefasRoutes(app: FastifyInstance) {
   app.post('/create', {
@@ -37,5 +38,21 @@ export async function tarefasRoutes(app: FastifyInstance) {
     }
   }, async (reques, reply) => {
     return listaTarefasController(reques, reply)
+  })
+
+  app.post('/gerarPdf', {
+    onRequest: [verifyJwt]
+  }, async (request, reply) => {
+    try {
+      const buffer = await geraPdf(request, reply);
+
+      reply
+        .header("Content-Type", "application/pdf")
+        .header("Content-Disposition", "attachment; filename=relatorio.pdf")
+        .send(buffer);
+
+    } catch (err) {
+      reply.status(500).send({ error: "Erro ao gerar PDF" });
+    }
   })
 }

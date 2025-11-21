@@ -36,7 +36,7 @@ app.register(fastifyJwt, {
         signed: false
     },
     sign: {
-        expiresIn: '5d'
+        expiresIn: '4h'
     },
 })
 

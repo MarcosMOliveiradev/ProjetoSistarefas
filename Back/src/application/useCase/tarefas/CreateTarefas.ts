@@ -34,21 +34,31 @@ export class CreateTarefas {
     const hInicio = await converterTimerInNumber(hInicioController)
     const hTermino = await converterTimerInNumber(hTerminoController)
 
-    const tarefas = new Tarefas({
-      data,
-      item,
-      codAtividade,
-      idDocumento,
-      qtdFolha,
-      hInicio,
-      hTermino,
-      nAtendimento,
-      ativado: true,
-      userId
-    })
+    const documentos = idDocumento.split(" ").filter(Boolean)
 
-    const criado = await this.tarefasRepository.create(tarefas)
+    const registrosCriados = []
 
-    return criado
+    let itemAtual = item;
+
+    for(const doc of documentos) {
+      const tarefas = new Tarefas({
+        data,
+        item: itemAtual,
+        codAtividade,
+        idDocumento: doc,
+        qtdFolha,
+        hInicio,
+        hTermino,
+        nAtendimento,
+        ativado: true,
+        userId
+      })
+
+      const criado = await this.tarefasRepository.create(tarefas)
+      registrosCriados.push(criado)
+
+      itemAtual++
+    }
+    return registrosCriados
   }
 }

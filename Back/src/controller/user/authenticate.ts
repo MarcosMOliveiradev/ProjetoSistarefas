@@ -27,6 +27,7 @@ export async function authenticateController(
     },
     {
       sub: user.user.id,
+      expiresIn: '4h'
     })
 
     return reply.setCookie('refreshToken', token, {
