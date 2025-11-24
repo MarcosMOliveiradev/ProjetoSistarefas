@@ -7,13 +7,14 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    allowedHosts: ['.localhost', 'wdesk44'],
-    host: true,
-    port: 5173
+    host: '0.0.0.0',
+    port: 5173,
+    allowedHosts: ['all']
   },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  
 })

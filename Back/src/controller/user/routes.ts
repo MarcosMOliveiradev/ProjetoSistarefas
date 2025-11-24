@@ -6,6 +6,7 @@ import { Roles } from "../../application/entities/Roles.ts";
 import { authenticateController } from "./authenticate.ts";
 import { verifyJwt } from "../../lib/verify-jwt.ts";
 import { profileController } from "./profileController.ts";
+import { updatePasswordController } from "./updatePassword.ts";
 
 export async function userRoutes(app: FastifyInstance) {
 
@@ -65,5 +66,18 @@ export async function userRoutes(app: FastifyInstance) {
     onRequest: [verifyJwt]
   }, async (request, reply) => {
     return profileController(request, reply)
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().put('/update-password', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['User'],
+      summary: 'Atualiza a senha do usuario internamente.',
+      body: z.object({
+        senha: z.string()
+      })
+    }
+  }, async (request, reply) => {
+    return updatePasswordController(request, reply)
   })
 }

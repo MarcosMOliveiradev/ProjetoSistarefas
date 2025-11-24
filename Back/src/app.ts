@@ -43,7 +43,8 @@ app.register(fastifyJwt, {
 app.register(fastifyCookie)
 
 app.register(fastifyCors, {
-    origin:'*'
+    origin:'*',
+     methods: ["GET", "POST", "PUT", "PATCH"]
 })
 
 app.register(multipart)

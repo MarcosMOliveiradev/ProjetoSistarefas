@@ -8,11 +8,16 @@ import z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { CriarUsuarioButton } from "@/components/criarUsuarioButton"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { api } from "@/lib/axios"
+import { toast } from "sonner"
+import { AppErrors } from "@/lib/appErrors"
 
 
 const updateSchema = z.object({
-  nome: z.string(),
-  senha: z.string(),
+  nome: z.string().optional(),
+  senha: z.string().optional(),
   confirmSenha: z.string()
 }).refine((data) => data.senha === data.confirmSenha, {
   message: "As Senhas não conferem",
@@ -20,7 +25,7 @@ const updateSchema = z.object({
 })
 
 export function Profile() {
-  const { user } = useAuth()
+  const { user, signOut } = useAuth()
 
   const form = useForm<z.infer<typeof updateSchema>>({
     resolver: zodResolver(updateSchema)
@@ -30,7 +35,31 @@ export function Profile() {
   const profileUser = user.user
 
   async function updateUser(data: z.infer<typeof updateSchema>) {
-    console.log(data)
+    if(data.senha) {
+      // Chamar API para atualizar nome e senha
+      try {
+
+        console.log(data.senha)
+        const response = await api.put("/user/update-password", {
+          senha: data.senha
+        })
+
+
+        const title = response.status === 200 ? "Senha atualizada!" : response.data.message
+
+        toast.success(title)
+
+        signOut()
+
+      } catch (err) {
+
+        const isAppError = err instanceof AppErrors
+        const title = isAppError ? err.message : "Não foi possivel carregar as informações, por favor informe ao administrador!" 
+        
+        toast.error(title)
+
+      }
+    }
   }
   return (
 
@@ -42,8 +71,15 @@ export function Profile() {
           <p className="text-[20px]">{user.user.matricula}</p>
         </div>
         {
-          user.user_roles.role === "INFORMATICA" ? 
-            <Button className="w-[17rem] h-[3rem] mt-4 text-[20px] bg-slate-700 hover:bg-slate-400 cursor-pointer ">Criar Novo Usuario</Button> 
+          user.user_roles.role === "INFORMATICA" ?
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button className="w-[17rem] h-[3rem] mt-4 text-[20px] bg-slate-700 hover:bg-slate-400 cursor-pointer">Criar novo usuario</Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <CriarUsuarioButton/>
+                </DialogContent>
+            </Dialog>
             : <></>
         }
         
@@ -51,7 +87,7 @@ export function Profile() {
 
       <div className="flex flex-col justify-center items-center">
         <Form {...form}>
-          <form action="" className="grid grid-cols-2 w-[60vw] h-[50vh] bg-white rounded-lg" onSubmit={form.handleSubmit(updateUser)}>
+          <form className="grid grid-cols-2 w-[60vw] h-[50vh] bg-white rounded-lg shadow-xl/10" onSubmit={form.handleSubmit(updateUser)}>
             <div className="col-span-2 h-[5rem] shadow-xl/20 rounded-lg flex flex-col justify-center pl-8 font-semibold text-[2rem]">
               Editar perfil
             </div>
@@ -103,7 +139,7 @@ export function Profile() {
               />
             </div>
 
-            <Button className="col-span-2 mx-[30%] bg-green-800 hover:bg-green-400 h-[3rem] text-[20px]" >Salvar</Button>
+            <Button className="col-span-2 mx-[30%] bg-slate-700 hover:bg-slate-400 h-[3rem] text-[20px]" >Salvar</Button>
           </form>
         </Form>
       </div>
