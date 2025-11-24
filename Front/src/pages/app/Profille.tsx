@@ -38,8 +38,6 @@ export function Profile() {
     if(data.senha) {
       // Chamar API para atualizar nome e senha
       try {
-
-        console.log(data.senha)
         const response = await api.put("/user/update-password", {
           senha: data.senha
         })
