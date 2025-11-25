@@ -4,6 +4,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 
 import { Link } from "react-router"
 import { useAuth } from "@/hooks/useAuth";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { CodAtividades } from "./codAtividades";
 
 export function MenuButton() {
     const { signOut } = useAuth()
@@ -14,13 +16,24 @@ export function MenuButton() {
                 <Button variant={"outline"} className="bg-muted "> <Menu /></Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-muted text-muted-foreground w-[15rem]" align="end">
-                <DropdownMenuGroup className="gap-4 w-[100%]">
+                <DropdownMenuGroup className="flex flex-col gap-1">
 
                     {/* Lista de atividades */}
                     <DropdownMenuItem asChild>
                         <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
                             <Link to={"/"}>ATIVIDADES</Link>
                         </Button>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem asChild>
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>CÓD DE ATIVIDADE</Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <CodAtividades />
+                                </DialogContent>
+                            </Dialog>
                     </DropdownMenuItem>
 
                     <DropdownMenuItem asChild>

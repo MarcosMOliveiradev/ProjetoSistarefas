@@ -63,7 +63,7 @@ export function Profile() {
 
     <div className="grid grid-cols-[20%_1fr] h-[90vh]">
       <div className="flex flex-col items-center col-[20rem] border-r-2 border-muted-foreground">
-        <div className="w-[17rem] h-[19rem] bg-white rounded-lg shadow-xl/30 flex justify-center items-center flex-col gap-4">
+        <div className="w-[15rem] h-[17rem] bg-white rounded-lg shadow-xl/30 flex justify-center items-center flex-col gap-4">
           <img src={avata ?? profile} className="w-[10rem] h-[10rem] rounded-[50%] shadow-xl/20" />
           <p className="text-[20px]">{user.user.name}</p>
           <p className="text-[20px]">{user.user.matricula}</p>
@@ -72,7 +72,7 @@ export function Profile() {
           user.user_roles.role === "INFORMATICA" ?
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button className="w-[17rem] h-[3rem] mt-4 text-[20px] bg-slate-700 hover:bg-slate-400 cursor-pointer">Criar novo usuario</Button>
+                    <Button className="w-[15rem] h-[3rem] mt-4 text-[20px] bg-slate-700 hover:bg-slate-400 cursor-pointer">Criar novo usuario</Button>
                 </DialogTrigger>
                 <DialogContent>
                     <CriarUsuarioButton/>

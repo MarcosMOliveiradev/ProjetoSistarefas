@@ -65,7 +65,7 @@ export function CriarUsuarioButton() {
                 <DialogTitle>Criar novo usuario</DialogTitle>
             </DialogHeader>
             <Form {...form}>
-                <form className="grid grid-cols-4 gap-4" onSubmit={form.handleSubmit(onSubmit)}>
+                <form className="grid grid-cols-4 gap-4 " onSubmit={form.handleSubmit(onSubmit)}>
                     <FormField
                         name="name"
                         control={form.control}
@@ -152,8 +152,9 @@ export function CriarUsuarioButton() {
                             </FormItem>
                         )}
                     />
-
-                    <Button className="grid col-start-2 col-span-2 bg-emerald-900 hover:bg-emerald-700" type="submit">SALVAR</Button>
+                    <div className="grid col-start-2 col-span-2 justify-center">
+                        <Button className="w-[8rem] bg-slate-700 hover:bg-slate-400" type="submit">SALVAR</Button>
+                    </div>
                 </form>
             </Form>
         </DialogContent>

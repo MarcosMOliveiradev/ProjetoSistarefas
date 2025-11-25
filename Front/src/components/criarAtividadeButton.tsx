@@ -174,8 +174,9 @@ export function CriarAtividadeButton() {
                             </FormItem>
                         )}
                     />
-
-                    <Button className="grid col-start-2 col-span-2 bg-emerald-900 hover:bg-emerald-700" type="submit">SALVAR</Button>
+                    <div className="grid col-start-2 col-span-2 justify-center">
+                        <Button className="w-[10rem] bg-slate-700 hover:bg-slate-400" type="submit">SALVAR</Button>
+                    </div>
                 </form>
             </Form>
         </DialogContent>

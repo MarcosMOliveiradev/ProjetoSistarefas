@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import {
     Table,
     TableBody,
@@ -13,7 +12,6 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from './ui/button'
 import { Trash2 } from 'lucide-react'
 import type { tarefasDTO } from '@/dtos/tarefasDTO'
-import { api } from "@/lib/axios";
 
 export function TabelaAtividades({ dados }: any) {
     // filtro de ordenação
@@ -160,6 +158,7 @@ export function TabelaAtividades({ dados }: any) {
 
                     {Array.from({ length: totalPaginas }, (_, i) => (
                         <Button
+                        className={pagina === i + 1 ? "bg-cyan-700 hover:bg-cyan-600" : ""}
                         key={i}
                         variant={pagina === i + 1 ? "default" : "outline"}
                         onClick={() => setPagina(i + 1)}

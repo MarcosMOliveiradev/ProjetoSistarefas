@@ -91,7 +91,7 @@ export function DataPicker({ onDadosTarefas }: any) {
     return (
         <div className="pl-8">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-4 items-center">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-4 items-center ">
                     {/* Data Inicial */}
                     <FormField
                         control={form.control}
@@ -105,7 +105,7 @@ export function DataPicker({ onDadosTarefas }: any) {
                                             <Button
                                                 variant={"outline"}
                                                 className={cn(
-                                                    "w-[240px] pl-3 text-left font-normal",
+                                                    "w-[8rem] pl-3 text-left font-normal",
                                                     !field.value && "text-muted-foreground"
                                                 )}
                                                 >
@@ -124,14 +124,14 @@ export function DataPicker({ onDadosTarefas }: any) {
                                     </PopoverContent>
                                 </Popover>
                                 <FormDescription>
-                                    Selecione a data inicial das atividades.
+                                    Selecione a data.
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                    <Button className="hover:bg-muted hover:text-muted-foreground hover:border-muted-foreground hover:border-2" type="submit">Filtrar</Button>
-                    <Button className="cursor-pointer bg-slate-700 hover:bg-slate-400" onClick={() => geraPDF({dataInicial: form.getValues("dataInicial")})}>GERAR PDF</Button>
+                    <Button className="hover:bg-muted w-[8rem] hover:text-muted-foreground hover:border-muted-foreground hover:border-2 bg-cyan-700 cursor-pointer" type="submit">Filtrar</Button>
+                    <Button className="cursor-pointer w-[8rem] bg-slate-700 hover:bg-slate-400" onClick={() => geraPDF({dataInicial: form.getValues("dataInicial")})}>GERAR PDF</Button>
                 </form>
             </Form>
         </div>
