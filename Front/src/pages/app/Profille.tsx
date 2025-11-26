@@ -1,7 +1,6 @@
 import { useAuth } from "@/hooks/useAuth"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 
-
 import profile from "../../assets/PROFILE.png"
 import { useForm } from "react-hook-form"
 import z from "zod"
@@ -13,6 +12,8 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { api } from "@/lib/axios"
 import { toast } from "sonner"
 import { AppErrors } from "@/lib/appErrors"
+import { useState } from "react"
+import { Camera } from "lucide-react"
 
 
 const updateSchema = z.object({
@@ -26,6 +27,8 @@ const updateSchema = z.object({
 
 export function Profile() {
   const { user, signOut } = useAuth()
+  const [preview, setPreview] = useState<string | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
 
   const form = useForm<z.infer<typeof updateSchema>>({
     resolver: zodResolver(updateSchema)
@@ -50,21 +53,82 @@ export function Profile() {
         signOut()
 
       } catch (err) {
-
         const isAppError = err instanceof AppErrors
         const title = isAppError ? err.message : "Não foi possivel carregar as informações, por favor informe ao administrador!" 
-        
         toast.error(title)
-
       }
     }
   }
+
+  async function updateAvatar(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    // Preview instantâneo
+    const previewURL = URL.createObjectURL(file)
+    setPreview(previewURL)
+    setIsUploading(true)
+
+    try {
+      const formData = new FormData()
+      formData.append("file", file)
+
+      const { data } = await api.post("/user/file", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      })
+
+      const response = await api.put("/user/avataurl", {
+        avatarUrl: data
+      })
+
+      toast.success("Avatar atualizado!")
+
+
+      // Atualizar preview final
+      setPreview(response.data.user.avatarUrl)
+
+    } catch (err) {
+      toast.error("Falha ao enviar imagem")
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
   return (
 
     <div className="grid grid-cols-[20%_1fr] h-[90vh]">
       <div className="flex flex-col items-center col-[20rem] border-r-2 border-muted-foreground">
-        <div className="w-[15rem] h-[17rem] bg-white rounded-lg shadow-xl/30 flex justify-center items-center flex-col gap-4">
-          <img src={avata ?? profile} className="w-[10rem] h-[10rem] rounded-[50%] shadow-xl/20" />
+        <div className="w-[15rem] h-[18rem] bg-white rounded-lg shadow-xl/30 flex justify-center items-center flex-col gap-2">
+        <>
+          <label htmlFor="media" className="cursor-pointer flex flex-col items-center">
+            <div className="relative w-[8rem] h-[8rem]">
+              
+              <img
+                src={preview || avata || profile}
+                className="w-full h-full rounded-full object-cover shadow-xl/20"
+              />
+
+              {isUploading && (
+                <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <Camera className="h-4 w-4" />
+              Alterar foto
+            </div>
+
+            <input
+              type="file"
+              id="media"
+              className="hidden"
+              accept="image/*"
+              onChange={updateAvatar}
+            />
+          </label>
+        </>
           <p className="text-[20px]">{user.user.name}</p>
           <p className="text-[20px]">{user.user.matricula}</p>
         </div>

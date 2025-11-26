@@ -1,6 +1,8 @@
+import type { tarefasDTO } from "../../DTOs/TarefasDTO.ts";
 import type { Tarefas } from "../entities/tarefa.ts";
 
 export abstract class TarefasRepository {
   abstract create(data: Tarefas): Promise<Tarefas>
-  abstract listTarefas(data: string, userId: string): Promise<Tarefas[]>
+  abstract listTarefas(data: string, userId: string): Promise<tarefasDTO[]>
+  abstract deleteTarefa(id: string, ativado: boolean, userId: string): Promise<void>
 }

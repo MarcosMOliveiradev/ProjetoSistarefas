@@ -7,8 +7,12 @@ import type { userRoleDTO } from "../../DTOs/UserRoleDTO.ts";
 import type { userDTO } from "../../DTOs/UserDTO.ts";
 
 export class UserDrizzleRepository extends UserRepository {
+    async updateAvataUrl(avatarUrl: string, userId: string): Promise<void> {
+        await db.update(schema.user)
+            .set({avatarUrl: avatarUrl, updatedAt: new Date}).where(eq(schema.user.id, userId)).returning();
+    }
     async updatePassword(password: string, id: string): Promise<void> {
-        await db.update(schema.user).set({password: password}).where(eq(schema.user.id, id))
+        await db.update(schema.user).set({password: password, updatedAt: new Date}).where(eq(schema.user.id, id))
     }
 
     async create(data: User): Promise<userDTO> {

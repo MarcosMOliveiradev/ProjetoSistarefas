@@ -4,6 +4,7 @@ import { ScrollArea } from "./ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import type { atividadesDTO } from "@/dtos/atividadesDTOS";
 import { api } from "@/lib/axios";
+import { Input } from "./ui/input";
 
 export function CodAtividades() {
   // filtro de ordenação
@@ -21,18 +22,6 @@ export function CodAtividades() {
   useEffect(() => {
     listAtividades()
   }, []);
-
-    const dadosFiltrados = useMemo(() => {
-    if (!search) return dados;
-
-    const termo = search.toLowerCase();
-
-    return dados.filter((item) =>
-      item.cod_atividade.toString().toLowerCase().includes(termo) ||
-      item.setor.toLowerCase().includes(termo) ||
-      item.descricao.toLowerCase().includes(termo)
-    );
-  }, [dados, search]);
 
   function handleSort(col: string) {
     if (sortCol !== col) {
@@ -53,6 +42,18 @@ export function CodAtividades() {
       return;
     }
   }
+
+  const dadosFiltrados = useMemo(() => {
+  if (!search) return dados;
+
+  const termo = search.toLowerCase();
+
+  return dados.filter((item) =>
+    item.cod_atividade.toString().toLowerCase().includes(termo) ||
+    item.setor.toLowerCase().includes(termo) ||
+    item.descricao.toLowerCase().includes(termo)
+  );
+}, [dados, search]);
 
   const dadosOrdenados = useMemo(() => {
       const copia = [...dadosFiltrados];
@@ -84,7 +85,7 @@ export function CodAtividades() {
 
           return sortDir === "asc" ? v1 - v2 : v2 - v1;
       });
-      }, [dados, sortCol, sortDir]);
+      }, [dadosFiltrados, sortCol, sortDir]);
   
   return (
     <DialogContent className="flex flex-col items-center h-[40rem] min-w-[50rem]">
@@ -92,10 +93,10 @@ export function CodAtividades() {
         CÓDIGOS DE ATIVIDADES
       </DialogHeader>
 
-      <input
+      <Input
         className="w-[10rem] mb-2 p-2 border rounded"
         type="text"
-        placeholder="Pesquisar por código, setor ou descrição..."
+        placeholder="Pesquisar"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />

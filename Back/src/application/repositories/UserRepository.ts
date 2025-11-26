@@ -8,4 +8,5 @@ export abstract class UserRepository {
     abstract find(): Promise<userRoleDTO[]>;
     abstract findByMatricula(matricula: number): Promise<userRoleDTO>;
     abstract updatePassword(password: string, id: string): Promise<void>;
+    abstract updateAvataUrl(avatarUrl: string, userId: string): Promise<void>;
 }

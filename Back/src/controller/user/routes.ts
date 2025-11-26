@@ -7,6 +7,10 @@ import { authenticateController } from "./authenticate.ts";
 import { verifyJwt } from "../../lib/verify-jwt.ts";
 import { profileController } from "./profileController.ts";
 import { updatePasswordController } from "./updatePassword.ts";
+import { MediaController } from "../MediaController.ts";
+import { updateAvatarUrl } from "./updateAvataUrl.ts";
+
+const file = new MediaController()
 
 export async function userRoutes(app: FastifyInstance) {
 
@@ -62,12 +66,14 @@ export async function userRoutes(app: FastifyInstance) {
     return authenticateController(request, reply)
   })
 
+  // Perfil do usuario
   app.withTypeProvider<ZodTypeProvider>().get('/profile', {
     onRequest: [verifyJwt]
   }, async (request, reply) => {
     return profileController(request, reply)
   })
 
+  // Atualiza a senha do usuario
   app.withTypeProvider<ZodTypeProvider>().put('/update-password', {
     onRequest: [verifyJwt],
     schema: {
@@ -79,5 +85,24 @@ export async function userRoutes(app: FastifyInstance) {
     }
   }, async (request, reply) => {
     return updatePasswordController(request, reply)
+  })
+  // Atualiza foto do usuario
+  app.withTypeProvider<ZodTypeProvider>().post('/file', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['User'],
+      summary: 'Faz upload de midia, e retorna uma URL.',
+    }
+  }, async (request, reply) => {
+      return file.uploadMedia(request, reply);
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().put('/avataurl', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['User'],
+    }
+  }, async (request, reply) => {
+    return updateAvatarUrl(request, reply);
   })
 }

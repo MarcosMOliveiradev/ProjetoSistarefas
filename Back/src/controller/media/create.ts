@@ -16,9 +16,9 @@ export async function createMedia(
         roleBody: z.enum(Roles),
     })
 
-    const { name, description, category, roleBody } = await createMediaSchema.parse(request.body)
+    const { name, description, category, roleBody } = createMediaSchema.parse(request.body)
 
-    let costumerId = '123456'
+    let costumerId = request.user.sub
 
     try {
         const createMedia = makeCreateMedia()
