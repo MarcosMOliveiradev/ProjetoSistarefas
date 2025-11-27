@@ -20,7 +20,7 @@ export function Atividades() {
                     {/* Componente pra criar atividade */}
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button variant={"outline"}>Criar</Button>
+                            <Button className="w-[8rem] cursor-pointer bg-slate-500 hover:bg-slate-400 text-muted" variant={"outline"}>Criar</Button>
                         </DialogTrigger>
                         <DialogContent>
                             <CriarAtividadeButton />

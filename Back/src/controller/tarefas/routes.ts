@@ -4,9 +4,11 @@ import { verifyJwt } from "../../lib/verify-jwt.ts";
 import z from "zod";
 import { listaTarefasController } from "./listaTarefasController.ts";
 import { geraPdf } from "./gerarPDF.ts";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
+import { deleteTarefasController } from "./deleteTarefasControlle.ts";
 
 export async function tarefasRoutes(app: FastifyInstance) {
-  app.post('/create', {
+  app.withTypeProvider<ZodTypeProvider>().post('/create', {
     onRequest: [verifyJwt],
     schema: {
       tags: ['Tarefas'],
@@ -27,7 +29,7 @@ export async function tarefasRoutes(app: FastifyInstance) {
   })
 
 
-  app.post('/listaTarefas', {
+  app.withTypeProvider<ZodTypeProvider>().post('/listaTarefas', {
     onRequest: [verifyJwt],
     schema: {
       tags: ['Tarefas'],
@@ -40,7 +42,7 @@ export async function tarefasRoutes(app: FastifyInstance) {
     return listaTarefasController(reques, reply)
   })
 
-  app.post('/gerarPdf', {
+ app.withTypeProvider<ZodTypeProvider>().post('/gerarPdf', {
     onRequest: [verifyJwt]
   }, async (request, reply) => {
     try {
@@ -54,5 +56,23 @@ export async function tarefasRoutes(app: FastifyInstance) {
     } catch (err) {
       reply.status(500).send({ error: "Erro ao gerar PDF" });
     }
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().post('/deletar', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['Tarefas'],
+      summary: 'Deleta uma tarefa',
+      body: z.object({
+        id: z.string(),
+        ativado: z.boolean()
+      }),
+      response: {
+        204: z.object({ message: z.string() }),
+        400: z.object({ message: z.string() })
+      }
+    }
+  }, async (request, reply) => {
+    return deleteTarefasController(request, reply)
   })
 }

@@ -1,24 +1,25 @@
 export type tarefasDTO = {
     tarefas: {
-        id: string
+        id: string;
         data: string;
         item: number;
-        cod_atividade: number;
-        id_documento: string;
+        cod_atividade: number | null;
         qtd_folha: number;
-        h_inicio: string;
-        h_termino: string;
+        id_documento: string;
+        h_inicio: number;
+        h_termino: number;
         n_atendimento: number;
         ativado: boolean;
-        usuarioId: string;
+        usuarioId: string | null;
         createdAt: Date;
-    },
+        updatedAt: Date | null | undefined;
+    };
     Atividade: {
-        cod_atividade: number,
+        cod_atividade: number;
         setor: string;
         descricao: string;
         tempo_medio: number;
-        ativado: boolean
-        usuarioId: string;
-    }
+        ativado: boolean;
+        usuarioId: string | null;
+    };
 }

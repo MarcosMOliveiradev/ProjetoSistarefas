@@ -19,7 +19,8 @@ export const tarefas = pgTable("tarefas", {
     usuarioId: text("usuario").references(() => user.id, {
         onDelete: "cascade",
     }),
-    createdAt: timestamp("created_at").notNull().defaultNow()
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow()
 })
 
 export const tarefasRelations = relations(tarefas, ({ one }) => {
