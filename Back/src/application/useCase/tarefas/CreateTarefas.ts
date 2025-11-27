@@ -23,42 +23,75 @@ export class CreateTarefas {
     private atividadeRepository: AtividadeRepository
   ) {}
 
-  async exec({data, codAtividade, idDocumento, hInicioController, hTerminoController, item, nAtendimento, qtdFolha, userId }: ITarefas) {
-    const atividade = this.atividadeRepository.findForCod(codAtividade)
+  async exec({
+    data,
+    codAtividade,
+    idDocumento,
+    hInicioController,
+    hTerminoController,
+    item,
+    nAtendimento,
+    qtdFolha,
+    userId
+  }: ITarefas) {
 
-    if(!atividade) {
-      throw new UnexistAtividade()
+    const atividade = this.atividadeRepository.findForCod(codAtividade);
+
+    if (!atividade) {
+      throw new UnexistAtividade();
     }
+    const documentos = idDocumento.split(" ").filter(Boolean);
 
-    // Converter as horas em em minutos
-    const hInicio = await converterTimerInNumber(hInicioController)
-    const hTermino = await converterTimerInNumber(hTerminoController)
+    // Se qtdFolha tiver valores separados por espaço:
+    const folhasArr = typeof qtdFolha === "string"
+      ? qtdFolha.split(" ").map(Number)
+      : [];
 
-    const documentos = idDocumento.split(" ").filter(Boolean)
+    const folhasFinal = documentos.map((_, i) =>
+      folhasArr[i] ?? (typeof qtdFolha === "number" ? qtdFolha : null)
+    );
 
-    const registrosCriados = []
+    const inicioMin = await converterTimerInNumber(hInicioController);
+    const fimMin = await converterTimerInNumber(hTerminoController);
 
+    const totalMin = fimMin - inicioMin;
+    const quantidade = documentos.length;
+
+    const minutosPorRegistro = Math.floor(totalMin / quantidade);
+
+    let inicioAtual = inicioMin;
+
+    const registrosCriados = [];
     let itemAtual = item;
 
-    for(const doc of documentos) {
-      const tarefas = new Tarefas({
+    for (let i = 0; i < quantidade; i++) {
+      const doc = documentos[i];
+      const folhas = folhasFinal[i];
+
+      const fimAtual = (i === quantidade - 1)
+        ? fimMin // joga o resto no último
+        : inicioAtual + minutosPorRegistro;
+
+      const tarefa = new Tarefas({
         data,
         item: itemAtual,
         codAtividade,
         idDocumento: doc,
-        qtdFolha,
-        hInicio,
-        hTermino,
+        qtdFolha: folhas,
+        hInicio: inicioAtual,
+        hTermino: fimAtual,
         nAtendimento,
         ativado: true,
         userId
-      })
+      });
 
-      const criado = await this.tarefasRepository.create(tarefas)
-      registrosCriados.push(criado)
+      const criado = await this.tarefasRepository.create(tarefa);
+      registrosCriados.push(criado);
 
-      itemAtual++
+      inicioAtual = fimAtual;
+      itemAtual++;
     }
-    return registrosCriados
+
+    return registrosCriados;
   }
 }

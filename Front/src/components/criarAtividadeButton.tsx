@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns"
 
 import { 
     DialogContent,
@@ -14,14 +15,23 @@ import {
     FormField,
     FormItem,
     FormLabel,
+    FormMessage,
 } from "@/components/ui/form"
 import { Input } from "./ui/input";
 import { AppErrors } from "@/lib/appErrors";
 import { toast } from "sonner";
 import { api } from "@/lib/axios";
+import { useEffect } from "react";
+
+function getHoraAtual() {
+    const agora = new Date();
+    const horas = String(agora.getHours()).padStart(2, "0");
+    const minutos = String(agora.getMinutes()).padStart(2, "0");
+    return `${horas}:${minutos}`;
+}
 
 const criarAtividadeSchema = z.object({
-    data: z.string(),
+    data: z.date(),
     item: z.string(),
     codAtividade: z.string(),
     idDocumento: z.string(),
@@ -29,22 +39,82 @@ const criarAtividadeSchema = z.object({
     hInicioController: z.string(),
     hTerminoController: z.string(),
     nAtendimento: z.string(),
+}).refine((data) => {
+    const hoje = format(new Date(), "yyyy-MM-dd")
+    const dataSelecionada = format(data.data, "yyyy-MM-dd")
+
+    if(dataSelecionada !== hoje) {
+        return true
+    }
+
+    const horaTermino = data.hTerminoController
+    const horaAtual = getHoraAtual()
+
+    if (horaTermino > horaAtual ) {
+        return false
+    }
+    return true
+}, {
+    message: "A H. Termino não poder ser maior que a hora atual.",
+    path: ["hTerminoController"]
+}).refine((data) => {
+    const dataSelecionada = new Date(data.data.toDateString())
+    const hoje = new Date(new Date().toDateString())
+
+    return dataSelecionada <= hoje
+}, {
+    message: "A data não pode ser superior á data de hoje.",
+    path: ["data"]
 })
 
 export function CriarAtividadeButton() {
-    
+
     const form = useForm<z.infer<typeof criarAtividadeSchema>>({
         resolver: zodResolver(criarAtividadeSchema),
         defaultValues: {
-            data: new Date().toLocaleDateString('pt-BR')
+            data: new Date()
         }
     })
 
+    useEffect(() => {
+        function handleShortcut(e: KeyboardEvent) {
+            // Só ativa se o atalho for Ctrl + ;
+            if (!(e.ctrlKey && e.key === ";")) return;
+
+            const active = document.activeElement;
+
+            // Só funciona se estiver dentro de um input
+            if (!active || active.tagName !== "INPUT") return;
+
+            e.preventDefault();
+
+            const agora = new Date();
+            const horas = String(agora.getHours()).padStart(2, "0");
+            const minutos = String(agora.getMinutes()).padStart(2, "0");
+            const horaAtual = `${horas}:${minutos}`;
+
+            // Descobre qual campo está focado
+            const name = active.getAttribute("name");
+
+            if (!name) return;
+
+            // Preenche somente o campo focado
+            form.setValue(name as any, horaAtual);
+
+            // Valida o campo automaticamente
+            form.trigger(name as any);
+        }
+
+        document.addEventListener("keydown", handleShortcut);
+        return () => document.removeEventListener("keydown", handleShortcut);
+    }, [form]);
+
     async function onSubmit(dados: z.infer<typeof criarAtividadeSchema>) {
+        const dataB = new Date(dados.data).toLocaleDateString("pt-BR");
       
         try {
             const response = await api.post('/tarefas/create', {
-                data: dados.data,
+                data: dataB,
                 item: parseInt(dados.item),
                 codAtividade: parseInt(dados.codAtividade),
                 idDocumento: dados.idDocumento,
@@ -66,22 +136,32 @@ export function CriarAtividadeButton() {
     }
 
     return (
-        <DialogContent className="flex flex-col bg-muted min-w-[50rem] content-center text-muted-foreground">
+        <DialogContent className="flex flex-col bg-muted min-w-[50rem] h-[25rem] gap-10 items-center content-center text-muted-foreground">
             <DialogHeader>
-                <DialogTitle>Criar Nova Atividade</DialogTitle>
+                <DialogTitle className="font-bold font-sans text-[1.5rem]">Criar Nova Atividade</DialogTitle>
             </DialogHeader>
             <Form {...form}>
                 <form className="grid grid-cols-4 gap-4" onSubmit={form.handleSubmit(onSubmit)}>
                     
-                    <FormField
-                        name="data"
+                   <FormField
                         control={form.control}
-                        render={({ field}) => (
-                            <FormItem>
+                        name="data"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
                                 <FormLabel>Data</FormLabel>
                                 <FormControl>
-                                    <Input id="data" placeholder="EX: 01/01/2025" {...field} />
+                                    <Input
+                                        type="date"
+                                        className="w-full bg-muted"
+                                        value={field.value ? format(field.value, "yyyy-MM-dd") : ""}
+                                        onChange={(e) => {
+                                            const dateStr = e.target.value;
+                                            const date = dateStr ? new Date(dateStr + "T00:00:00") : undefined;
+                                            field.onChange(date);
+                                        }}
+                                    />
                                 </FormControl>
+                                <FormMessage className="text-center"/>
                             </FormItem>
                         )}
                     />
@@ -158,6 +238,7 @@ export function CriarAtividadeButton() {
                                 <FormControl>
                                     <Input id="hTerminoController" placeholder="H. Término" {...field} />
                                 </FormControl>
+                                <FormMessage className="text-center"/>
                             </FormItem>
                         )}
                     />
