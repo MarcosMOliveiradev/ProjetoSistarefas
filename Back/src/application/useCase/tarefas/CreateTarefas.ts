@@ -36,29 +36,46 @@ export class CreateTarefas {
 
     const documentos = idDocumento.split(" ").filter(Boolean)
 
+    const folhasArray = String(qtdFolha ?? "").split(" ").filter(Boolean)
+    const atendimentosArray = String(nAtendimento ?? "").split(" ").filter(Boolean)
+
+    const total = documentos.length
+
+    // Validação apenas quando há múltiplos valores
+    if (folhasArray.length > 1 && folhasArray.length !== total) {
+      throw new Error("Quantidade de valores de folhas não corresponde ao número de documentos")
+    }
+
+    if (atendimentosArray.length > 1 && atendimentosArray.length !== total) {
+      throw new Error("Quantidade de valores de atendimentos não corresponde ao número de documentos")
+    }
+
+    let itemAtual = item
     const registrosCriados = []
 
-    let itemAtual = item;
-
-    for(const doc of documentos) {
+    for (let i = 0; i < total; i++) {
       const tarefas = new Tarefas({
         data,
         item: itemAtual,
         codAtividade,
-        idDocumento: doc,
-        qtdFolha,
+        idDocumento: documentos[i],
+        qtdFolha: folhasArray.length === 1 
+          ? Number(folhasArray[0]) 
+          : Number(folhasArray[i]),
         hInicio,
         hTermino,
-        nAtendimento,
+        nAtendimento: atendimentosArray.length === 1
+          ? Number(atendimentosArray[0])
+          : Number(atendimentosArray[i]),
         ativado: true,
         userId
       })
 
       const criado = await this.tarefasRepository.create(tarefas)
       registrosCriados.push(criado)
-
       itemAtual++
     }
+
     return registrosCriados
   }
 }
