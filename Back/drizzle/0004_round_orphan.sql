@@ -1,0 +1,1 @@
+ALTER TABLE "tarefas" ADD COLUMN "updated_at" timestamp DEFAULT now();

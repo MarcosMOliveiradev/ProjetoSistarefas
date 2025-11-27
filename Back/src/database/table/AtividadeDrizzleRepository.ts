@@ -4,10 +4,11 @@ import { AtividadeRepository } from "../../application/repositories/AtividadeRep
 
 import { db } from "../connection.ts";
 import { schema } from "../drizzle/index.ts";
+import type { atividadesDTO } from "../../DTOs/AtividadesDTO.ts";
 
 export class AtividadeDrizzleRepository extends AtividadeRepository {
 
-  async create(dados: Atividade): Promise<Atividade> {
+  async create(dados: Atividade): Promise<atividadesDTO> {
 
     const [atividade] = await db.insert(schema.atividade).values({
       cod_atividade: dados.cod_atividade,
@@ -21,13 +22,13 @@ export class AtividadeDrizzleRepository extends AtividadeRepository {
     return atividade
   }
 
-  async find(): Promise<Atividade[]> {
-    const [atividades] = await db.select().from(schema.atividade)
+  async find(): Promise<atividadesDTO[]> {
+    const atividades = await db.select().from(schema.atividade)
 
     return atividades
   }
 
-  async findForCod(cod: number): Promise<Atividade> {
+  async findForCod(cod: number): Promise<atividadesDTO> {
     const [atividade] = await db.select().from(schema.atividade).where(eq(schema.atividade.cod_atividade, cod))
 
     return atividade
