@@ -9,7 +9,7 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
-    allowedHosts: ['wdesk44', '.localhost']
+    allowedHosts: ['wdesk31', '.localhost']
   },
   resolve: {
     alias: {
