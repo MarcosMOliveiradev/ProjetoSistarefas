@@ -22,9 +22,7 @@ export function Atividades() {
                         <DialogTrigger asChild>
                             <Button className="w-[8rem] cursor-pointer bg-slate-500 hover:bg-slate-400 text-muted" variant={"outline"}>Criar</Button>
                         </DialogTrigger>
-                        <DialogContent>
                             <CriarAtividadeButton />
-                        </DialogContent>
                     </Dialog>
                 </div>
                 
