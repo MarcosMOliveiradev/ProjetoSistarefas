@@ -20,6 +20,7 @@ import fastifySwaggerUi from '@fastify/swagger-ui';
 import fastifyCookie from '@fastify/cookie';
 import { atividadeRouter } from './controller/atividade/routes.ts';
 import { tarefasRoutes } from './controller/tarefas/routes.ts';
+import { feedbackRoutes } from './controller/feedback/routes.ts';
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -88,6 +89,10 @@ app.register(atividadeRouter, {
 
 app.register(tarefasRoutes, {
     prefix: '/tarefas'
+})
+
+app.register(feedbackRoutes, {
+    prefix: '/feedback'
 })
 
 app.register(mediaRoutes, {
