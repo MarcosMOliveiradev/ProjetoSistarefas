@@ -136,12 +136,12 @@ export function CriarAtividadeButton() {
     }
 
     return (
-        <DialogContent className="flex flex-col bg-muted min-w-[50rem] h-[25rem] gap-10 items-center content-center text-muted-foreground">
+        <DialogContent className="flex flex-col bg-muted min-w-[35rem] md:min-w-[45rem] md:h-[20rem] gap-10 items-center content-center text-muted-foreground ">
             <DialogHeader>
                 <DialogTitle className="font-bold font-sans text-[1.5rem]">Criar Nova Atividade</DialogTitle>
             </DialogHeader>
             <Form {...form}>
-                <form className="grid grid-cols-4 gap-4" onSubmit={form.handleSubmit(onSubmit)}>
+                <form className="grid grid-cols-3 gap-4 md:grid-cols-4" onSubmit={form.handleSubmit(onSubmit)}>
                     
                    <FormField
                         control={form.control}
@@ -255,7 +255,7 @@ export function CriarAtividadeButton() {
                             </FormItem>
                         )}
                     />
-                    <div className="grid col-start-2 col-span-2 justify-center">
+                    <div className="grid col-start-2 col-span-2 md:col-start-3 justify-end">
                         <Button className="w-[10rem] bg-slate-700 hover:bg-slate-400" type="submit">SALVAR</Button>
                     </div>
                 </form>

@@ -19,12 +19,8 @@ import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 
 const feedbackSchema = z.object({
-  conteudo: z.string(),
+  conteudo: z.string().refine((data) => data.length > 1, {error: "Campo obrigatório!"}),
   nome: z.string().optional()
-}).refine(() => {
-}, {
-  message: "O Conteudo é obrigatório",
-  path: ['conteudo']
 })
 
 export function Feedback() {
@@ -53,7 +49,7 @@ export function Feedback() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="cursor-pointer fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-700text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-allactive:scale-95">
+        <button className="cursor-pointer fixed bottom-6 right-6 z-50 bg-cyan-900 hover:cyan-700 text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-allactive:scale-95">
           <MessageCircleCode/>
         </button>
       </DialogTrigger>
@@ -63,7 +59,7 @@ export function Feedback() {
         </DialogHeader>
         <Form {...form}>
 
-          <form onSubmit={form.handleSubmit(createFeedback)}>
+          <form className="mt-4" onSubmit={form.handleSubmit(createFeedback)}>
 
             <FormField 
               name="nome"
@@ -83,11 +79,11 @@ export function Feedback() {
               )}
             />
 
-            <FormField 
+            <FormField
               name="conteudo"
               control={form.control}
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="mt-4">
                   <FormLabel>Conteudo:</FormLabel>
                   <FormControl>
                     <Textarea
@@ -102,11 +98,9 @@ export function Feedback() {
               )}
             />
             <div className="grid col-start-2 col-span-2 justify-end">
-              <Button className="w-[10rem] bg-slate-700 hover:bg-slate-400" type="submit">SALVAR</Button>
+              <Button className="w-[10rem] bg-slate-700 hover:bg-slate-400 mt-4" type="submit">SALVAR</Button>
             </div>
           </form>
-
-
         </Form>
       </DialogContent>
     </Dialog>
