@@ -30,6 +30,13 @@ const __dirname = resolve(__filename)
 app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
 
+app.register(fastifyCors, {
+    origin:'*',
+    methods: ["GET", "POST", "PUT", "PATCH"]
+})
+
+app.register(fastifyCookie)
+
 app.register(fastifyJwt, {
     secret: env.JWT_SECRET,
     cookie: {
@@ -41,12 +48,6 @@ app.register(fastifyJwt, {
     },
 })
 
-app.register(fastifyCookie)
-
-app.register(fastifyCors, {
-    origin:'*',
-     methods: ["GET", "POST", "PUT", "PATCH"]
-})
 
 app.register(multipart)
 

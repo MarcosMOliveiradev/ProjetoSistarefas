@@ -12,7 +12,7 @@ export class CreateFeedback {
 
   async execute({ conteudo, statusBody, nome }: IFeedbackRequest) {
 
-    const status = statusBody ?? feedbackOptions.EM_ANDAMENTO
+    const status = statusBody ?? feedbackOptions.ANALIZANDO
 
     const feedback = new Feedback({
       conteudo,

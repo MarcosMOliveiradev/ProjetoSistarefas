@@ -12,6 +12,13 @@ export function AppLayout() {
         queryFn: getProfile,
         staleTime: Infinity
     })
+    
+    if(!data) {
+        return
+    }
+
+    const nomeSeparado = data?.user.name.split(" ")
+
 
     return (
         <div className=" min-h-screen flex flex-col bg-muted text-muted-foreground content-between">
@@ -20,7 +27,7 @@ export function AppLayout() {
                 <div className="flex flex-row w-full justify-end items-center gap-8">
                     <NavLink className="flex items-center gap-1" to="/profile">
                         <img src={data?.user.avatarUrl ? data.user.avatarUrl : profile} className="w-10 h-10 rounded-full object-cover shadow-xl/20" alt="" />
-                        <p>{data?.user.name}</p>
+                        <p>{`${nomeSeparado[0]} ${nomeSeparado[1]}`}</p>
                     </NavLink>
 
                     <div className="mr-[4rem]"> <MenuButton /></div>

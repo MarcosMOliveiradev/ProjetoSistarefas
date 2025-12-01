@@ -1,7 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 
-import { useAuth } from "@/hooks/useAuth";
-
 import { SignIn } from "./auth/sign-in";
 
 import { AppLayout } from "./layout/AppLayout";
@@ -10,7 +8,7 @@ import { Video } from "./app/videos";
 import { Profile } from "./app/Profille";
 
 export function AppRoutes() {
-    const { user, isLoadingUserStorageData } = useAuth()
+    const token = localStorage.getItem('@token')
 
     // if(isLoadingUserStorageData) {
     //     return 
@@ -20,7 +18,7 @@ export function AppRoutes() {
     <BrowserRouter>
         <Routes>
             {
-                !user.user ? (
+                !token ? (
                     <>
                         <Route path="/auth" element={<SignIn/>} />
                         <Route path="*" element={<Navigate to="/auth" replace />} />

@@ -3,7 +3,7 @@ import { api } from "@/lib/axios"
 import { createContext, useEffect, useState, type ReactNode } from "react"
 import { toast } from "sonner"
 
-import { storageUserGet, storageUserRemove, storageUserSave } from "@/stora/storageUser"
+// import { storageUserGet, storageUserRemove, storageUserSave } from "@/stora/storageUser"
 import { storageAuthTokenGet, storageAuthTokenRemove, storageAuthTokenSave } from "@/stora/storaAuth"
 import type { userDTO } from "@/dtos/userDto"
 
@@ -24,9 +24,8 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [user, setUser] = useState<userDTO>({} as userDTO)
   const [isLoadingUserStorageData, setIsLoadingUserStorageData] = useState(true)
 
-  async function UserAndTokenUpdate(user: userDTO, token: string) {
+  async function UserAndTokenUpdate(token: string) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    setUser(user)
   }
 
   async function signIg(matricula: number, passwordBody: string) {
@@ -40,10 +39,11 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       if ( apiUser && data ) {
         setIsLoadingUserStorageData(true)
 
-        await storageUserSave(apiUser)
+        // await storageUserSave(apiUser)
+        setUser(apiUser)
         await storageAuthTokenSave(data)
 
-        UserAndTokenUpdate(apiUser, data)
+        UserAndTokenUpdate(data)
       }
     } catch (err) {
       throw err
@@ -56,11 +56,11 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     try {
       setIsLoadingUserStorageData(true)
 
-      const userLogged = await storageUserGet()
+      // const userLogged = await storageUserGet()
       const token = await storageAuthTokenGet()
 
-      if (token && userLogged) {
-        UserAndTokenUpdate(userLogged, token)
+      if (token ) {
+        UserAndTokenUpdate(token)
       }
     } catch (error) {
       
@@ -71,7 +71,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     try {
       setIsLoadingUserStorageData(true)
       setUser({} as userDTO)
-      storageUserRemove()
+      // storageUserRemove()
       storageAuthTokenRemove()
 
     } catch (err) {
