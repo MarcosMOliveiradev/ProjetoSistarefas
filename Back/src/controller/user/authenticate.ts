@@ -32,8 +32,8 @@ export async function authenticateController(
 
     return reply.setCookie('refreshToken', token, {
       path: '/',
-      secure: true,
-      sameSite: true,
+      secure: false,
+      sameSite: 'lax',
       httpOnly: true,
     }).status(200).send(token)
   
