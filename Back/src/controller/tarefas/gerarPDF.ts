@@ -1,5 +1,4 @@
 import PdfPriter from "pdfmake";
-import fs from "fs"
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 import { makeListTarefas } from "../../application/useCase/tarefas/factories/makeListTarefas.ts";

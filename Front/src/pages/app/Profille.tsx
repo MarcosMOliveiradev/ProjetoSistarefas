@@ -1,20 +1,23 @@
-import { useAuth } from "@/hooks/useAuth"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-
-import profile from "../../assets/PROFILE.png"
 import { useForm } from "react-hook-form"
+import { useState } from "react"
+import { Camera } from "lucide-react"
+import { toast } from "sonner"
 import z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+
+import { useAuth } from "@/hooks/useAuth"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { CriarUsuarioButton } from "@/components/criarUsuarioButton"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { api } from "@/lib/axios"
-import { toast } from "sonner"
 import { AppErrors } from "@/lib/appErrors"
-import { useState } from "react"
-import { Camera } from "lucide-react"
 
+import profile from "../../assets/PROFILE.png"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { updateAvatar } from "@/api/updataAvata"
+import { getProfile } from "@/api/profile"
 
 const updateSchema = z.object({
   nome: z.string().optional(),
@@ -26,7 +29,13 @@ const updateSchema = z.object({
 })
 
 export function Profile() {
-  const { user, signOut } = useAuth()
+
+  const { data: user } = useQuery({
+    queryKey: ['profile'],
+    queryFn: getProfile,
+  })
+
+  const { signOut } = useAuth()
   const [preview, setPreview] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
 
@@ -34,8 +43,8 @@ export function Profile() {
     resolver: zodResolver(updateSchema)
   })
 
-  const avata = user.user.avatarUrl
-  const profileUser = user.user
+  const avata = user?.user.avatarUrl
+  const profileUser = user?.user
 
   async function updateUser(data: z.infer<typeof updateSchema>) {
     if(data.senha) {
@@ -60,33 +69,23 @@ export function Profile() {
     }
   }
 
-  async function updateAvatar(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0]
-    if (!file) return
+  const avatarMutation = useMutation({
+    mutationFn: updateAvatar,
+    onSuccess: (data) => {
+      setPreview(data)
+    }
+  })
 
-    // Preview instantâneo
+  function handleUpdateAvata(event: React.ChangeEvent<HTMLInputElement>) {
+    setIsUploading(true)
+    try {
+      const file = event.target.files?.[0]
+      if (!file) return;
+
     const previewURL = URL.createObjectURL(file)
     setPreview(previewURL)
-    setIsUploading(true)
 
-    try {
-      const formData = new FormData()
-      formData.append("file", file)
-
-      const { data } = await api.post("/user/file", formData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      })
-
-      const response = await api.put("/user/avataurl", {
-        avatarUrl: data
-      })
-
-      toast.success("Avatar atualizado!")
-
-
-      // Atualizar preview final
-      setPreview(response.data.user.avatarUrl)
-
+      avatarMutation.mutate(file)
     } catch (err) {
       toast.error("Falha ao enviar imagem")
     } finally {
@@ -125,15 +124,15 @@ export function Profile() {
               id="media"
               className="hidden"
               accept="image/*"
-              onChange={updateAvatar}
+              onChange={handleUpdateAvata}
             />
           </label>
         </>
-          <p className="text-[20px]">{user.user.name}</p>
-          <p className="text-[20px]">{user.user.matricula}</p>
+          <p className="text-[20px]">{user?.user.name}</p>
+          <p className="text-[20px]">{user?.user.matricula}</p>
         </div>
         {
-          user.user_roles.role === "INFORMATICA" ?
+          user?.user_roles.role === "INFORMATICA" ?
             <Dialog>
                 <DialogTrigger asChild>
                     <Button className="w-[15rem] h-[3rem] mt-4 text-[20px] bg-slate-700 hover:bg-slate-400 cursor-pointer">Criar novo usuario</Button>
@@ -161,7 +160,7 @@ export function Profile() {
                   <FormItem>
                     <FormLabel className="text-[1.5rem]">Nome:</FormLabel>
                     <FormControl>
-                      <Input id="nome" placeholder={profileUser.name} {...field}/>
+                      <Input id="nome" placeholder={profileUser?.name} {...field}/>
                     </FormControl>
                     <FormMessage/>
                   </FormItem>

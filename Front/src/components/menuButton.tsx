@@ -13,7 +13,7 @@ export function MenuButton() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant={"outline"} className="bg-muted "> <Menu /></Button>
+                <Button variant={"outline"} className="bg-muted cursor-pointer"> <Menu /></Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-muted text-muted-foreground w-[15rem]" align="end">
                 <DropdownMenuGroup className="flex flex-col gap-1">
