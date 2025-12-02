@@ -6,13 +6,15 @@ import { AppLayout } from "./layout/AppLayout";
 import { Atividades } from "./app/Atividades";
 import { Video } from "./app/videos";
 import { Profile } from "./app/Profille";
+import { useAuth } from "@/hooks/useAuth";
+import { FeedbackRelatorio } from "./app/FeedbackRelatorio";
 
 export function AppRoutes() {
-    const token = localStorage.getItem('@token')
+    const { token, isLoadingUserStorageData } = useAuth()
 
-    // if(isLoadingUserStorageData) {
-    //     return 
-    // }
+    if(isLoadingUserStorageData) {
+        return <div className="flex flex-col justify-between text-center items-center">Carregando...</div>
+    }
 
    return (
     <BrowserRouter>
@@ -30,6 +32,7 @@ export function AppRoutes() {
                             <Route path="/" index element={<Atividades/>} />
                             <Route path="/video" element={<Video/>} />
                             <Route path="/profile" element={<Profile/>} />
+                            <Route path="/feedback" element={<FeedbackRelatorio/>} />
                         </Route>
                          <Route path="*" element={<Navigate to="/" replace />} />
                     </>

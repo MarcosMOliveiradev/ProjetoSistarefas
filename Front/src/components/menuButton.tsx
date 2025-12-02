@@ -37,6 +37,12 @@ export function MenuButton() {
                     </DropdownMenuItem>
 
                     <DropdownMenuItem asChild>
+                        <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
+                            <Link to={"/feedback"}>RELATÓRIO DE FEEDBACK</Link>
+                        </Button>
+                    </DropdownMenuItem>                    
+
+                    <DropdownMenuItem asChild>
                         <Button onClick={signOut} className="w-[100%] hover:bg-muted mt-4" variant={"destructive"}>
                             <Link to={"/"}>SAIR</Link>
                         </Button>
