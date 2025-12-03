@@ -9,7 +9,7 @@ export async function createFeedback(
 ) {
   const feedbackSchema = z.object({
     conteudo: z.string(),
-    status: z.enum(feedbackOptions).default(feedbackOptions.EM_ANDAMENTO),
+    status: z.enum(feedbackOptions).default(feedbackOptions.ANALIZANDO),
     nome: z.string().optional(),
   })
 

@@ -15,7 +15,7 @@ export function feedbackRoutes( app: FastifyInstance ) {
       summary: 'Cria um novo feedback',
       body: z.object({
         conteudo: z.string(),
-        status: z.enum(feedbackOptions).default(feedbackOptions.EM_ANDAMENTO),
+        status: z.enum(feedbackOptions).default(feedbackOptions.ANALIZANDO),
         nome: z.string().optional(),
       }),
       response: {
@@ -32,16 +32,15 @@ export function feedbackRoutes( app: FastifyInstance ) {
       tags: ['Feedback'],
       summary: 'Lista os feedbacks',
       response: {
-        200: z.object({
-          feedback: z.array(z.object({
+        200: z.array(z.object({
             id: z.string(),
             conteudo: z.string(),
             status: z.enum(feedbackOptions),
             nome: z.string().nullable(),
             createdAt: z.date(),
             updatedAt: z.date()
-          }))
-        }),
+          })
+        ),
         400: z.object({message: z.string()})
       }
     }
