@@ -5,33 +5,52 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { useState } from "react";
-import { api } from "@/lib/axios";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { listFeedback } from "@/api/listFeedbacks";
+import type { FeedbackDTO } from "@/dtos/feedbackDTO";
+import { Spinner } from "@/components/ui/spinner";
+import { StatusCell } from "@/funcoes/atualizaStatusFeedback";
+import { api } from "@/lib/axios";
+import { toast } from "sonner";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import type { userDTO } from "@/dtos/userDto";
 
-const data: Feedback[] = [
-  {
-    id: "jfkljalfjk",
-    nome: "Testa",
-    conteudo: "gsafghkjhlfjlsjfçlsjf çlsdfçksç",
-    status: "EM ANDAMENTO"
-  },
-  {
-    id: "jfkljalfwwjk",
-    nome: "Testa 2",
-    conteudo: "gsafghkjhlfjlsjfçlsjf çlsdfçksç",
-    status: "CANCELADO"
-  }
-]
 
-type Feedback = {
-  id: string,
-  conteudo: string,
-  nome: string,
-  status: "ANALIZANDO" | "EM ANDAMENTO" | "CONCLUIDO" | "CANCELADO" | null
-}
+export function FeedbackRelatorio() {
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [rowSelection, setColumnSelection] = useState({})
 
-const columns: ColumnDef<Feedback>[] = [
+  const { data: feedback } = useQuery<FeedbackDTO[]>({
+    queryKey: ['feedbacks'],
+    queryFn: listFeedback,
+  })
+  const {data: user } = useQuery<userDTO>({
+    queryKey: ['profile']
+  })
+
+  const queryClient = useQueryClient()
+
+  const updateStatusMutation = useMutation({
+    mutationFn: async ({id, status}: {id: string, status: string}) => {
+      if(user?.user_roles.role !== 'INFORMATICA') {
+        return (
+          toast.error('Você não tem permissão para fazer essa alteração')
+        )
+      }
+      return await api.patch('/feedback/updateStatus', {id, status})
+    },
+    onSuccess: () => {
+      toast.success("Status atualizado")
+      queryClient.invalidateQueries({queryKey: ['feedbacks']})
+    },
+    onError: () => {
+      toast.error("Não foi possivel atualizar status")
+    }
+  })
+
+  const columns: ColumnDef<FeedbackDTO>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -64,7 +83,7 @@ const columns: ColumnDef<Feedback>[] = [
   {
     accessorKey: "conteudo",
     header: "Conteudo",
-    cell: ({row}) => <div className="">{row.getValue("conteudo")}</div>
+    cell: ({row}) => <p className="line-clamp-2 text-ellipsis overflow-hidden max-w-[45rem] mx-auto text-center">{row.original.conteudo}</p>
   },
   {
     accessorKey: "status",
@@ -79,25 +98,21 @@ const columns: ColumnDef<Feedback>[] = [
         </Button>
       )
     },
-    cell: ({row}) => <div className="">{row.getValue("status")}</div>
+    cell: ({ row }) => {
+      const status = row.original
+
+      return (
+        < StatusCell 
+          status={row.getValue("status")}
+          onUpdate={async (novoStatus) => updateStatusMutation.mutate({ id: status.id, status: novoStatus })}
+        />
+      )
+    }
   }
 ]
 
-export function FeedbackRelatorio() {
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [rowSelection, setColumnSelection] = useState({})
-
-  const { data: teste } = useQuery({
-    queryKey: ['feedbacks'],
-    queryFn: listFeedback,
-  })
-
-  console.log(teste)
-
-  const table = useReactTable({
-    data,
+  const table = useReactTable<FeedbackDTO>({
+    data: feedback ?? [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -121,7 +136,7 @@ export function FeedbackRelatorio() {
       <div>
         <div className="font-medium text-[1.5rem] mb-[1rem]">Relatório de feedback</div>
 
-        <div className="w-[85vw] h-[30rem] bg-white flex rounded-lg shadow-xl/30">
+        <ScrollArea className="w-[85vw] h-[30rem] bg-white flex rounded-lg shadow-xl/30 ">
           <Table className="text-center">
             <TableHeader>
               {
@@ -168,15 +183,15 @@ export function FeedbackRelatorio() {
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className="h-24 text-center"
+                    className="h-24"
                   >
-                    No Results.
+                    <Spinner/>
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
-        </div>
+        </ScrollArea>
       </div>
     </div>
   )

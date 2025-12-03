@@ -10,9 +10,7 @@ export async function listFeedbacksController(
     const listFeedback = makeListFeedbacks()
     const feedback = await listFeedback.execute()
 
-    return reply.status(200).send({
-      feedback
-    })
+    return reply.status(200).send(feedback)
     
   } catch (err) {
 
