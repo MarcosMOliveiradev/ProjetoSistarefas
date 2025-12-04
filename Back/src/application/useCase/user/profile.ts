@@ -8,7 +8,7 @@ export class profile {
   constructor(private storage: UserRepository) {}
 
   async exec({ id }: IUserId) {
-    const user = this.storage.findById(id)
+    const user = await this.storage.findById(id)
 
     return user
   }

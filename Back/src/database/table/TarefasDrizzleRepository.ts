@@ -1,11 +1,29 @@
 import { and, eq } from "drizzle-orm";
+import { count } from "drizzle-orm/sql"
 import type { Tarefas } from "../../application/entities/tarefa.ts";
 import { TarefasRepository } from "../../application/repositories/TarefasRepository.ts";
 import { db } from "../connection.ts";
 import { schema } from "../drizzle/index.ts";
 import type { tarefasDTO } from "../../DTOs/TarefasDTO.ts";
+import type { CountDepartment } from "../../DTOs/countDepartmentDTO.ts";
 
 export class TarefasDrizzleRepository extends TarefasRepository {
+  
+  async countDepartment(userId: string, setor: string): Promise<CountDepartment[]> {
+    const countDepartmentResponse = await db.select({
+      setor: schema.atividade.setor,
+      total: count(schema.atividade.setor)
+    }).from(schema.tarefas)
+      .innerJoin(schema.atividade, eq(schema.tarefas.cod_atividade, schema.atividade.cod_atividade))
+      .where(and(
+        eq(schema.tarefas.usuarioId, userId),
+        eq(schema.atividade.setor, setor)
+      ))
+      .groupBy(schema.atividade.setor)
+    
+      return countDepartmentResponse
+  }
+
   async deleteTarefa(id: string, ativado: boolean, userId: string): Promise<void> {
     await db.update(schema.tarefas).set({ativado: ativado, updatedAt: new Date }).where(and(eq(schema.tarefas.id, id), eq(schema.tarefas.usuarioId, userId)))
   }
