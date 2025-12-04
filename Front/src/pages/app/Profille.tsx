@@ -35,6 +35,8 @@ export function Profile() {
     queryFn: getProfile,
   })
 
+  const nomeSeparado = user?.user.name.split(" ")
+
   const { signOut } = useAuth()
   const [preview, setPreview] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
@@ -128,7 +130,7 @@ export function Profile() {
             />
           </label>
         </>
-          <p className="text-[20px]">{user?.user.name}</p>
+          <p className="text-[20px]">{nomeSeparado ? `${nomeSeparado[0]} ${nomeSeparado[1]}` : "Carregando..."}</p>
           <p className="text-[20px]">{user?.user.matricula}</p>
         </div>
         {

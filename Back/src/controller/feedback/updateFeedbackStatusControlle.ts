@@ -14,7 +14,7 @@ export async function updateFeedbackStatusController(
     status: z.enum(feedbackOptions)
   })
   const { status, id } = updateFeedbackStatusSchema.parse(request.body)
-  console.log(status)
+  
   const userId = request.user.sub
 
    const profileMake = makeProfile()
