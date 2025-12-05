@@ -1,11 +1,17 @@
-import type { CountDepartment } from "../../DTOs/countDepartmentDTO.ts";
-import type { tarefasDTO } from "../../DTOs/TarefasDTO.ts";
+import type { ContagemTotal, CountCodigo, CountDepartment, Meses, TopFiveCod } from "../../DTOs/countDepartmentDTO.ts";
+import type { tarefas, tarefasDTO } from "../../DTOs/TarefasDTO.ts";
 import type { Tarefas } from "../entities/tarefa.ts";
 
 export abstract class TarefasRepository {
-  abstract create(data: Tarefas): Promise<Tarefas>
+  abstract create(data: Tarefas): Promise<tarefas>
   abstract listTarefas(data: string, userId: string): Promise<tarefasDTO[]>
   abstract deleteTarefa(id: string, ativado: boolean, userId: string): Promise<void>
 
-  abstract countDepartment(userId: string, setor: string): Promise<CountDepartment[]>
+  abstract countDepartment(userId: string, setor: string): Promise<CountDepartment>
+  abstract contagemCodigo(userId: string, codigo: number): Promise<CountCodigo>
+  abstract contagem(userId: string): Promise<ContagemTotal>
+  abstract contagem(userId: string): Promise<ContagemTotal>
+  abstract averageTime(userId: string): Promise<number | null>
+  abstract top5atividedes(userId: string): Promise<TopFiveCod[] | null>
+  abstract qtdMeses(userId: string): Promise<Meses[] | null>
 }
