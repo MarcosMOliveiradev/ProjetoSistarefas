@@ -1,23 +1,65 @@
 import { and, eq } from "drizzle-orm";
-import { count, sql, sum } from "drizzle-orm/sql"
+import { count, desc, sql, sum } from "drizzle-orm/sql"
 import type { Tarefas } from "../../application/entities/tarefa.ts";
 import { TarefasRepository } from "../../application/repositories/TarefasRepository.ts";
 import { db } from "../connection.ts";
 import { schema } from "../drizzle/index.ts";
-import type { tarefasDTO } from "../../DTOs/TarefasDTO.ts";
-import type { ContagemTotal, CountCodigo, CountDepartment } from "../../DTOs/countDepartmentDTO.ts";
+import type { tarefas, tarefasDTO } from "../../DTOs/TarefasDTO.ts";
+import type { ContagemTotal, CountCodigo, CountDepartment, Meses, TopFiveCod } from "../../DTOs/countDepartmentDTO.ts";
 
 export class TarefasDrizzleRepository extends TarefasRepository {
+
+  async qtdMeses(userId: string): Promise<Meses[] | null> {
+    const meses = await db.select({
+      mes: sql<string>`TO_CHAR(TO_DATE(${schema.tarefas.data}, 'DD/MM/YYYY'), 'MM/YYYY')`,
+      total: sql<number>`COUNT(*)`
+    })
+      .from(schema.tarefas)
+      .where(
+        and(
+          eq(schema.tarefas.usuarioId, userId),
+          eq(schema.tarefas.ativado, true)
+        )
+      )
+      .groupBy(sql`TO_CHAR(TO_DATE(${schema.tarefas.data}, 'DD/MM/YYYY'), 'MM/YYYY')`)
+      .orderBy(sql`TO_CHAR(TO_DATE(${schema.tarefas.data}, 'DD/MM/YYYY'), 'MM/YYYY')`)
+  
+    return meses
+  }
+
+  async top5atividedes(userId: string): Promise<TopFiveCod[] | null> {
+    const result = await db.select({
+      atividades: schema.tarefas.cod_atividade,
+      nome: schema.atividade.descricao,
+      total: count(schema.tarefas.cod_atividade)
+    }).from(schema.tarefas)
+      .innerJoin(schema.atividade, 
+        eq(schema.tarefas.cod_atividade, schema.atividade.cod_atividade))
+      .where(
+        and(
+          eq(schema.tarefas.usuarioId, userId),
+          eq(schema.tarefas.ativado, true)
+        )
+      )
+      .groupBy(schema.tarefas.cod_atividade, schema.atividade.descricao).orderBy(desc(count(schema.tarefas.cod_atividade))).limit(5)
+
+    return result
+  }
 
   async averageTime(userId: string): Promise<number | null> {
     const [result] = await db.select({
       totalTempo: sql<number>`SUM(${schema.tarefas.h_termino} - ${schema.tarefas.h_inicio})`,
       totalTarefas: count(schema.tarefas)
-    }).from(schema.tarefas).where(eq(schema.tarefas.usuarioId, userId))
+    }).from(schema.tarefas).where(and(
+          eq(schema.tarefas.usuarioId, userId),
+          eq(schema.tarefas.ativado, true)
+        ))
 
     if( !result || result.totalTarefas === 0 ) return null
 
-    const tempoMedio = result.totalTempo / result.totalTarefas
+    const totalTempoNumeric = Number(result.totalTempo)
+
+    const tempoMedio = Math.round(totalTempoNumeric / result.totalTarefas)
 
     return tempoMedio
   }
@@ -25,7 +67,10 @@ export class TarefasDrizzleRepository extends TarefasRepository {
   async contagem(userId: string): Promise<ContagemTotal> {
     const [contagem] = await db.select({
       total: count(schema.tarefas)
-    }).from(schema.tarefas).where(eq(schema.tarefas.usuarioId, userId))
+    }).from(schema.tarefas).where(and(
+          eq(schema.tarefas.usuarioId, userId),
+          eq(schema.tarefas.ativado, true)
+        ))
 
     return contagem
   }
@@ -38,7 +83,8 @@ export class TarefasDrizzleRepository extends TarefasRepository {
       .innerJoin(schema.atividade, eq(schema.tarefas.cod_atividade, schema.atividade.cod_atividade))
       .where(and(
         eq(schema.tarefas.usuarioId, userId),
-        eq(schema.atividade.cod_atividade, codigo)
+        eq(schema.atividade.cod_atividade, codigo),
+        eq(schema.tarefas.ativado, true)
       ))
       .groupBy(schema.atividade.cod_atividade)
 
@@ -53,7 +99,8 @@ export class TarefasDrizzleRepository extends TarefasRepository {
       .innerJoin(schema.atividade, eq(schema.tarefas.cod_atividade, schema.atividade.cod_atividade))
       .where(and(
         eq(schema.tarefas.usuarioId, userId),
-        eq(schema.atividade.setor, setor)
+        eq(schema.atividade.setor, setor),
+        eq(schema.tarefas.ativado, true)
       ))
       .groupBy(schema.atividade.setor)
     
@@ -72,7 +119,8 @@ export class TarefasDrizzleRepository extends TarefasRepository {
     return tarefas
   }
   
-  async create(data: Tarefas): Promise<Tarefas> {
+  async create(data: Tarefas): Promise<tarefas> {
+    console.log(data)
     const [tarefas] = await db.insert(schema.tarefas).values({
       id: data.id,
       data: data.data,
