@@ -9,11 +9,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { listFeedback } from "@/api/listFeedbacks";
 import type { FeedbackDTO } from "@/dtos/feedbackDTO";
 import { Spinner } from "@/components/ui/spinner";
-import { StatusCell } from "@/funcoes/atualizaStatusFeedback";
+import { StatusCell } from "@/components/atualizaStatusFeedback";
 import { api } from "@/lib/axios";
 import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { userDTO } from "@/dtos/userDto";
+import { DetalhesFeedback } from "@/components/detalhesFeedback";
 
 
 export function FeedbackRelatorio() {
@@ -108,6 +109,14 @@ export function FeedbackRelatorio() {
         />
       )
     }
+  },
+  {
+    id: "detalhes",
+    header: "Detalhes",
+    cell: ({ row }) => {
+      const item = row.original
+      return <DetalhesFeedback id={item.id} />
+    }
   }
 ]
 
@@ -142,23 +151,23 @@ export function FeedbackRelatorio() {
               {
                 table.getHeaderGroups().map((headersGroup) => (
                   <TableRow key={headersGroup.id}>
-                    {
-                      headersGroup.headers.map((header) => {
-                        return (
-                          <TableHead className="text-center" key={header.id}>
-                            {
-                              header.isPlaceholder
-                              ? null :
-                              flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )
-                            }
-                          </TableHead>
-                        )
-                      })
-                    }
-                  </TableRow>
+                        {
+                          headersGroup.headers.map((header) => {
+                            return (
+                              <TableHead className="text-center" key={header.id}>
+                                {
+                                  header.isPlaceholder
+                                  ? null :
+                                  flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext()
+                                  )
+                                }
+                              </TableHead>
+                            )
+                          })
+                        }
+                      </TableRow>
                 ))
               }
             </TableHeader>

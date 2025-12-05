@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { DataPicker } from "../../components/dataPicker";
 import { TabelaAtividades } from "@/components/tabelaAtividades";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { CriarAtividadeButton } from "@/components/criarAtividadeButton";
 import { useState } from "react";
 import type { tarefasDTO } from "@/dtos/tarefasDTO";

@@ -6,6 +6,7 @@ import { listaTarefasController } from "./listaTarefasController.ts";
 import { geraPdf } from "./gerarPDF.ts";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { deleteTarefasController } from "./deleteTarefasControlle.ts";
+import { countDepartmentController } from "./countDepartmentController.ts";
 
 export async function tarefasRoutes(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -74,5 +75,19 @@ export async function tarefasRoutes(app: FastifyInstance) {
     }
   }, async (request, reply) => {
     return deleteTarefasController(request, reply)
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().post('/countdepartment', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['Tarefas'],
+      summary: 'Conta as tarefas por setor',
+      body: z.object({
+        userId: z.string(),
+        setor: z.string()
+      })
+    }
+  }, async (request, reply) => {
+    return countDepartmentController(request, reply)
   })
 }
