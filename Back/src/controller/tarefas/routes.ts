@@ -10,6 +10,8 @@ import { countDepartmentController } from "./countDepartmentController.ts";
 import { countCodigoController } from "./countCodigoController.ts";
 import { countTotalController } from "./countTotalController.ts";
 import { averageTimeController } from "./averageTimeController.ts";
+import { topFiveACtiveController } from "./topFiveActiveController.ts";
+import { totalMesesController } from "./totalMesesController.ts";
 
 export async function tarefasRoutes(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -126,5 +128,25 @@ export async function tarefasRoutes(app: FastifyInstance) {
     }
   }, async (request, reply) => {
     return averageTimeController(request, reply)
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().get('/topactive/:userId', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['Tarefas'],
+      summary: 'Retorna as cinco tarefas mais feitas'
+    }
+  }, async (request, reply) => {
+    return topFiveACtiveController(request, reply)
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().get('/totalmeses/:userId', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['Tarefas'],
+      summary: 'Retorna o total de atividades mês a mês'
+    }
+  }, async (request, reply) => {
+    return totalMesesController(request, reply)
   })
 }
