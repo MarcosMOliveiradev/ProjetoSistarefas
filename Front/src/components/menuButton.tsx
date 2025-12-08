@@ -26,6 +26,12 @@ export function MenuButton() {
                     </DropdownMenuItem>
 
                     <DropdownMenuItem asChild>
+                        <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
+                            <Link to={"/dash"}>DASH</Link>
+                        </Button>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem asChild>
                             <Dialog>
                                 <DialogTrigger asChild>
                                     <Button className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>CÓD DE ATIVIDADE</Button>
