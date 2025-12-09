@@ -4,6 +4,7 @@ import { contagemCodigo } from "@/api/contagemCodigo"
 import { contagemSetor } from "@/api/contaSetor"
 import { topAtividade } from "@/api/topFiveAtividades"
 import { totalMeses } from "@/api/totalMesAMes"
+import { ChartBar } from "@/components/ChartBat"
 import { ChartContainer } from "@/components/ui/chart"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
@@ -13,14 +14,8 @@ import { useAuth } from "@/hooks/useAuth"
 import { api } from "@/lib/axios"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
-import { Bar, BarChart, CartesianGrid, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
-const chartConfig = {
-  atividades: {
-    label: "Atividades",
-    color: "#239151",
-  }
-}
+
 
 
 export function Dashboard() {
@@ -82,7 +77,7 @@ if(!countTotal || !average || !topFiveActivet || !totalMesAMes) {
 }
 
   return (
-    <div className="w-full pl-12">
+    <div className="w-full pl-12 bg-">
       <h1 className="text-2xl font-bold">Dashboard</h1>
       <div className="w-full flex  justify-around pt-8">
 
@@ -152,53 +147,7 @@ if(!countTotal || !average || !topFiveActivet || !totalMesAMes) {
       </div>
 
       <div className="grid grid-cols-2 gap-4 pt-8">
-        <ChartContainer className="w-full h-[35rem]" config={chartConfig}>
-          <h2 className="text-xl font-semibold mb-2 text-muted-foreground">
-            Top 5 atividades
-          </h2>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={topFiveActivet} margin={{ top: 20, right: 20, left: 10, bottom: 50 }}>
-              
-              <CartesianGrid vertical={false} strokeDasharray="3 3" />
-              <Tooltip
-                cursor={{ opacity: 0.1 }}
-                formatter={(value) => [`${value} execuções`, "Total"]}
-                labelFormatter={(label) => `Atividade: ${label}`}
-              />
-
-              <YAxis
-                tickLine={false}
-                axisLine={false}
-                tick={{ fill: "white" }}
-                allowDecimals={false}
-              />
-
-              <XAxis
-                dataKey="nome"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                interval={0}
-                angle={-20}
-                textAnchor="end"
-                height={80}
-                tick={{ fill: "white" }}
-              />
-
-              <Bar
-                dataKey="total"
-                fill="var(--color-atividades)"
-                radius={[4, 4, 0, 0]}
-              >
-                <LabelList
-                  dataKey="total"
-                  position="top"
-                  className="fill-muted-foreground font-bold"
-                />
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartContainer>
+        <ChartBar topFiveActivet={topFiveActivet} />
       </div>
     </div>
   )
