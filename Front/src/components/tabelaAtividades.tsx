@@ -22,6 +22,9 @@ export function TabelaAtividades({ dados }: any) {
     const [sortCol, setSortCol] = useState<string | null>(null);
     const [sortDir, setSortDir] = useState<"asc" | "desc" | null>(null);
 
+    // fecha dialog
+    const [open, setOpen] = useState(false);
+
     // paginação
     const [pagina, setPagina] = useState(1);
     const registrosPorPagina = 10;
@@ -108,7 +111,8 @@ export function TabelaAtividades({ dados }: any) {
             const title = response.status === 200 ? response.data.message : "Atividade deletada"
 
             toast.success(title)
-            window.location.reload();
+            setOpen(false)
+            window.location.reload()
 
         } catch (err) {
             const isAppError = err instanceof AppErrors
@@ -168,7 +172,7 @@ export function TabelaAtividades({ dados }: any) {
                                         <TableCell>{dado.tarefas.h_termino}</TableCell>
                                         <TableCell>{dado.tarefas.n_atendimento}</TableCell>
                                         <TableCell>
-                                            <AlertDialog>
+                                            <AlertDialog open={open} onOpenChange={setOpen}>
                                                 <AlertDialogTrigger asChild>
                                                     <Button variant={'ghost'} className="cursor-pointer"><Trash2 className='w-4'/></Button>
                                                 </AlertDialogTrigger >

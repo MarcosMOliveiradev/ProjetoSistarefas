@@ -1,4 +1,4 @@
-import type { ContagemTotal, CountCodigo, CountDepartment, Meses, TopFiveCod } from "../../DTOs/countDepartmentDTO.ts";
+import type { ContagemTotal, CountCodigo, CountDepartment, Meses, TopFiveCod, TotalTarefas } from "../../DTOs/countDepartmentDTO.ts";
 import type { tarefas, tarefasDTO } from "../../DTOs/TarefasDTO.ts";
 import type { Tarefas } from "../entities/tarefa.ts";
 
@@ -14,4 +14,5 @@ export abstract class TarefasRepository {
   abstract averageTime(userId: string): Promise<number | null>
   abstract top5atividedes(userId: string): Promise<TopFiveCod[] | null>
   abstract qtdMeses(userId: string): Promise<Meses[] | null>
+  abstract totalTarefas(): Promise<TotalTarefas>
 }

@@ -17,7 +17,7 @@ export async function averageTimeController(
     const averageTime = makeAverageTime()
     const average = await averageTime.execute({ userId })
 
-    return reply.status(200).send(average)
+    return reply.status(200).send({average})
 
   } catch (err) {
     if(err instanceof FormatoHoraErrado) {

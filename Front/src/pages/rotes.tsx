@@ -8,6 +8,7 @@ import { Video } from "./app/videos";
 import { Profile } from "./app/Profille";
 import { useAuth } from "@/hooks/useAuth";
 import { FeedbackRelatorio } from "./app/FeedbackRelatorio";
+import { Dashboard } from "./app/dashboard";
 
 export function AppRoutes() {
     const { token, isLoadingUserStorageData } = useAuth()
@@ -33,6 +34,7 @@ export function AppRoutes() {
                             <Route path="/video" element={<Video/>} />
                             <Route path="/profile" element={<Profile/>} />
                             <Route path="/feedback" element={<FeedbackRelatorio/>} />
+                            <Route path="/dash" element={<Dashboard/>} />
                         </Route>
                          <Route path="*" element={<Navigate to="/" replace />} />
                     </>

@@ -5,9 +5,26 @@ import { TarefasRepository } from "../../application/repositories/TarefasReposit
 import { db } from "../connection.ts";
 import { schema } from "../drizzle/index.ts";
 import type { tarefas, tarefasDTO } from "../../DTOs/TarefasDTO.ts";
-import type { ContagemTotal, CountCodigo, CountDepartment, Meses, TopFiveCod } from "../../DTOs/countDepartmentDTO.ts";
+import type { ContagemTotal, CountCodigo, CountDepartment, Meses, TopFiveCod, TotalTarefas } from "../../DTOs/countDepartmentDTO.ts";
 
 export class TarefasDrizzleRepository extends TarefasRepository {
+  async totalTarefas(): Promise<TotalTarefas> {
+    const [total] = await db.select({
+      total: count(schema.tarefas.id)
+    }).from(schema.tarefas)
+      .innerJoin(schema.user, eq(schema.tarefas.usuarioId, schema.user.id))
+      .where(and(
+        eq(schema.tarefas.ativado, true),
+        eq(schema.user.ativado, true)
+      )
+    )
+
+    if(!total) {
+      return { total: 0 }
+    }
+
+    return total
+  }
 
   async qtdMeses(userId: string): Promise<Meses[] | null> {
     const meses = await db.select({
@@ -15,7 +32,12 @@ export class TarefasDrizzleRepository extends TarefasRepository {
       total: sql<number>`COUNT(*)`
     })
       .from(schema.tarefas)
-      .where(eq(schema.tarefas.usuarioId, userId))
+      .where(
+        and(
+          eq(schema.tarefas.usuarioId, userId),
+          eq(schema.tarefas.ativado, true)
+        )
+      )
       .groupBy(sql`TO_CHAR(TO_DATE(${schema.tarefas.data}, 'DD/MM/YYYY'), 'MM/YYYY')`)
       .orderBy(sql`TO_CHAR(TO_DATE(${schema.tarefas.data}, 'DD/MM/YYYY'), 'MM/YYYY')`)
   
@@ -30,7 +52,12 @@ export class TarefasDrizzleRepository extends TarefasRepository {
     }).from(schema.tarefas)
       .innerJoin(schema.atividade, 
         eq(schema.tarefas.cod_atividade, schema.atividade.cod_atividade))
-      .where(eq(schema.tarefas.usuarioId, userId))
+      .where(
+        and(
+          eq(schema.tarefas.usuarioId, userId),
+          eq(schema.tarefas.ativado, true)
+        )
+      )
       .groupBy(schema.tarefas.cod_atividade, schema.atividade.descricao).orderBy(desc(count(schema.tarefas.cod_atividade))).limit(5)
 
     return result
@@ -40,7 +67,10 @@ export class TarefasDrizzleRepository extends TarefasRepository {
     const [result] = await db.select({
       totalTempo: sql<number>`SUM(${schema.tarefas.h_termino} - ${schema.tarefas.h_inicio})`,
       totalTarefas: count(schema.tarefas)
-    }).from(schema.tarefas).where(eq(schema.tarefas.usuarioId, userId))
+    }).from(schema.tarefas).where(and(
+          eq(schema.tarefas.usuarioId, userId),
+          eq(schema.tarefas.ativado, true)
+        ))
 
     if( !result || result.totalTarefas === 0 ) return null
 
@@ -54,8 +84,14 @@ export class TarefasDrizzleRepository extends TarefasRepository {
   async contagem(userId: string): Promise<ContagemTotal> {
     const [contagem] = await db.select({
       total: count(schema.tarefas)
-    }).from(schema.tarefas).where(eq(schema.tarefas.usuarioId, userId))
-
+    }).from(schema.tarefas).where(and(
+          eq(schema.tarefas.usuarioId, userId),
+          eq(schema.tarefas.ativado, true)
+        ))
+    
+    if (!contagem) {
+      return { total: 0 }
+    }
     return contagem
   }
 
@@ -67,9 +103,17 @@ export class TarefasDrizzleRepository extends TarefasRepository {
       .innerJoin(schema.atividade, eq(schema.tarefas.cod_atividade, schema.atividade.cod_atividade))
       .where(and(
         eq(schema.tarefas.usuarioId, userId),
-        eq(schema.atividade.cod_atividade, codigo)
+        eq(schema.atividade.cod_atividade, codigo),
+        eq(schema.tarefas.ativado, true)
       ))
       .groupBy(schema.atividade.cod_atividade)
+    
+    if (!countCodigoResponse) {
+      return {
+        codigo,
+        total: 0
+      }
+    }
 
     return countCodigoResponse
   }
@@ -82,10 +126,17 @@ export class TarefasDrizzleRepository extends TarefasRepository {
       .innerJoin(schema.atividade, eq(schema.tarefas.cod_atividade, schema.atividade.cod_atividade))
       .where(and(
         eq(schema.tarefas.usuarioId, userId),
-        eq(schema.atividade.setor, setor)
+        eq(schema.atividade.setor, setor),
+        eq(schema.tarefas.ativado, true)
       ))
       .groupBy(schema.atividade.setor)
     
+    if (!countDepartmentResponse) {
+      return {
+        setor,
+        total: 0
+      }
+    }
     return countDepartmentResponse
   }
 
