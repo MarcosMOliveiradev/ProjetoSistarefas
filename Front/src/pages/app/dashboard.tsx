@@ -113,20 +113,61 @@ const dadosMeses = totalMesAMes
   return (
     <div className={`pl-[1.5rem] ${user.user_roles.role === "INFORMATICA" ? "ml-[13rem]" : ""}`}>
       {user.user_roles.role === "INFORMATICA" && (
-        <ScrollArea className="w-[13rem] rounded-r-2xl h-full fixed left-0 bg-slate-900 text-white p-4 flex flex-col gap-2">
-          <h2 className="text-xl font-semibold mb-4">Usuários</h2>
+        <div className="w-[13rem] rounded-r-2xl h-full fixed left-0 bg-slate-900 text-white p-4 flex flex-col gap-2">
+          <ScrollArea className="h-[90vh]">
+            <h2 className="text-xl font-semibold mb-4">Usuários</h2>
 
-          {listUsuarios.map(u => (
-            <button
-              key={u.id}
-              onClick={() => setUsuarioSelecionado(u.id)}
-              className={` cursor-pointer p-2 rounded text-left hover:bg-slate-700 
-                ${usuarioSelecionado === u.id ? "bg-slate-700" : ""}`}
-            >
-              {getPrimeiroESegundoNome(u.name)}
-            </button>
-          ))}
-        </ScrollArea>
+            {listUsuarios.map(u => (
+              <button
+                key={u.id}
+                onClick={() => setUsuarioSelecionado(u.id)}
+                className={` cursor-pointer p-2 rounded text-left hover:bg-slate-700 
+                  ${usuarioSelecionado === u.id ? "bg-slate-700" : ""}`}
+              >
+                {getPrimeiroESegundoNome(u.name)}
+              </button>
+            ))}
+          </ScrollArea>
+        </div>
+      )}
+
+      {user.user_roles.role === "INFORMATICA" && (
+        <div className="w-[13rem] rounded-r-2xl h-full fixed left-0 bg-slate-900 text-white p-4 flex flex-col gap-2">
+          <ScrollArea className="h-[90vh]">
+            <h2 className="text-xl font-semibold mb-4">Usuários</h2>
+
+            {listUsuarios.map(u => (
+              <button
+                key={u.id}
+                onClick={() => setUsuarioSelecionado(u.id)}
+                className={` cursor-pointer p-2 rounded text-left hover:bg-slate-700 
+                  ${usuarioSelecionado === u.id ? "bg-slate-700" : ""}`}
+              >
+                {getPrimeiroESegundoNome(u.name)}
+              </button>
+            ))}
+          </ScrollArea>
+        </div>
+      )}
+
+      {user.user_roles.role === "INFORMATICA" && (
+        <div className="w-[13rem] rounded-r-2xl h-full fixed left-0 bg-slate-900 text-white p-4 flex flex-col gap-2">
+          <ScrollArea className="h-[90vh]">
+            <h2 className="text-xl font-semibold mb-4">Usuários</h2>
+
+            {listUsuarios.map(u => (
+              <button
+                key={u.id}
+                onClick={() => setUsuarioSelecionado(u.id)}
+                className={` cursor-pointer p-2 rounded text-left hover:bg-slate-700 
+                  ${usuarioSelecionado === u.id ? "bg-slate-700" : ""}`}
+              >
+                {getPrimeiroESegundoNome(u.name)}
+              </button>
+            ))}
+
+          </ScrollArea>
+        </div>
       )}
 
       <h1 className="text-2xl font-bold">Dashboard</h1>
