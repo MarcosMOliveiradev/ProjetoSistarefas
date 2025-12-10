@@ -13,3 +13,12 @@ export type userRoleDTO = {
         userId: string
     }
 }
+
+export type Users = {
+    id: string;
+    name: string;
+    matricula: number;
+    ativado: boolean;
+    avatarUrl: string | null;
+    role: "COMPRAS" | "ALMOXARIFADO" | "SECRETARIA" | "FINANCEIRO" | "DP" | "INFORMATICA" | "PONTO" | "SEMAC" | "SEMAL" | "PCM" | "PJA" | "OUTROS" | "TODOS";
+}

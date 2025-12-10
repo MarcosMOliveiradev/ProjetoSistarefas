@@ -5,9 +5,26 @@ import { TarefasRepository } from "../../application/repositories/TarefasReposit
 import { db } from "../connection.ts";
 import { schema } from "../drizzle/index.ts";
 import type { tarefas, tarefasDTO } from "../../DTOs/TarefasDTO.ts";
-import type { ContagemTotal, CountCodigo, CountDepartment, Meses, TopFiveCod } from "../../DTOs/countDepartmentDTO.ts";
+import type { ContagemTotal, CountCodigo, CountDepartment, Meses, TopFiveCod, TotalTarefas } from "../../DTOs/countDepartmentDTO.ts";
 
 export class TarefasDrizzleRepository extends TarefasRepository {
+  async totalTarefas(): Promise<TotalTarefas> {
+    const [total] = await db.select({
+      total: count(schema.tarefas.id)
+    }).from(schema.tarefas)
+      .innerJoin(schema.user, eq(schema.tarefas.usuarioId, schema.user.id))
+      .where(and(
+        eq(schema.tarefas.ativado, true),
+        eq(schema.user.ativado, true)
+      )
+    )
+
+    if(!total) {
+      return { total: 0 }
+    }
+
+    return total
+  }
 
   async qtdMeses(userId: string): Promise<Meses[] | null> {
     const meses = await db.select({
@@ -71,7 +88,10 @@ export class TarefasDrizzleRepository extends TarefasRepository {
           eq(schema.tarefas.usuarioId, userId),
           eq(schema.tarefas.ativado, true)
         ))
-
+    
+    if (!contagem) {
+      return { total: 0 }
+    }
     return contagem
   }
 
@@ -87,6 +107,13 @@ export class TarefasDrizzleRepository extends TarefasRepository {
         eq(schema.tarefas.ativado, true)
       ))
       .groupBy(schema.atividade.cod_atividade)
+    
+    if (!countCodigoResponse) {
+      return {
+        codigo,
+        total: 0
+      }
+    }
 
     return countCodigoResponse
   }
@@ -104,6 +131,12 @@ export class TarefasDrizzleRepository extends TarefasRepository {
       ))
       .groupBy(schema.atividade.setor)
     
+    if (!countDepartmentResponse) {
+      return {
+        setor,
+        total: 0
+      }
+    }
     return countDepartmentResponse
   }
 

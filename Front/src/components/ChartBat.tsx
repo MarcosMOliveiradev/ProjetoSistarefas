@@ -9,6 +9,14 @@ const chartConfig = {
 }
 
 export function ChartBar({ topFiveActivet }: any) {
+  if (!topFiveActivet || topFiveActivet.length === 0) {
+  return (
+    <div className="w-full h-[15rem] bg-slate-800 rounded-xl flex items-center justify-center text-white">
+      Nenhuma atividade registrada ainda.
+    </div>
+    )
+  }
+
   return (
     <ChartContainer className="w-full h-[35rem]" config={chartConfig}>
       <h2 className="text-2xl font-semibold mb-2 text-muted-foreground">

@@ -22,3 +22,7 @@ export interface Meses {
     mes: string;
     total: number;
 }
+
+export interface TotalTarefas {
+  total: number;
+}

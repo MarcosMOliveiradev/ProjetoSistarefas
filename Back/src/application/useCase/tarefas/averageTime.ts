@@ -10,9 +10,9 @@ export class AverageTime {
 
   async execute({ userId }: IAverageTimeRequest) {
     const average = await this.repository.averageTime(userId)
-
-    if(!average) {
-      return new Error("Não foi possivel calcular o time")
+    console.log(average)
+    if(average === null) {
+      return "00:00" 
     }
     
     const averageTimeTextFormat = await converterNumberInTimer(average)
