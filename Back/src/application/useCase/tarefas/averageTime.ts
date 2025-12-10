@@ -10,7 +10,7 @@ export class AverageTime {
 
   async execute({ userId }: IAverageTimeRequest) {
     const average = await this.repository.averageTime(userId)
-    console.log(average)
+    
     if(average === null) {
       return "00:00" 
     }
