@@ -8,6 +8,7 @@ import { totalMeses } from "@/api/totalMesAMes"
 import { totalTarefas } from "@/api/totalTarefas"
 import { ChartBar } from "@/components/ChartBat"
 import { ChartLin } from "@/components/ChartLin"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
 import type { atividadesDTO } from "@/dtos/atividadesDTOS"
@@ -112,7 +113,7 @@ const dadosMeses = totalMesAMes
   return (
     <div className={`pl-[1.5rem] ${user.user_roles.role === "INFORMATICA" ? "ml-[13rem]" : ""}`}>
       {user.user_roles.role === "INFORMATICA" && (
-        <div className="w-[13rem] rounded-r-2xl h-full fixed left-0 bg-slate-900 text-white p-4 flex flex-col gap-2">
+        <ScrollArea className="w-[13rem] rounded-r-2xl h-full fixed left-0 bg-slate-900 text-white p-4 flex flex-col gap-2">
           <h2 className="text-xl font-semibold mb-4">Usuários</h2>
 
           {listUsuarios.map(u => (
@@ -125,7 +126,7 @@ const dadosMeses = totalMesAMes
               {getPrimeiroESegundoNome(u.name)}
             </button>
           ))}
-        </div>
+        </ScrollArea>
       )}
 
       <h1 className="text-2xl font-bold">Dashboard</h1>
