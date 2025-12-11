@@ -16,6 +16,7 @@ import type { userDTO } from "@/dtos/userDto"
 import { useAuth } from "@/hooks/useAuth"
 import { api } from "@/lib/axios"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { Clock, FileCheck } from "lucide-react"
 import { useEffect, useState } from "react"
 
 export function Dashboard() {
@@ -111,7 +112,7 @@ const dadosMeses = totalMesAMes
   }
 
   return (
-    <div className={`pl-[1.5rem] ${user.user_roles.role === "INFORMATICA" ? "ml-[13rem]" : ""}`}>
+    <div className={`pl-[1.5rem] ${user.user_roles.role === "INFORMATICA" ? "ml-[13rem]" : ""} flex flex-col`}>
       {user.user_roles.role === "INFORMATICA" && (
         <div className="w-[13rem] rounded-r-2xl h-full fixed left-0 bg-slate-900 text-white p-4 flex flex-col gap-2">
           <ScrollArea className="h-[90vh]">
@@ -174,11 +175,11 @@ const dadosMeses = totalMesAMes
       <div className="grid grid-cols-2 items-center gap-4">
         <div className="grid grid-cols-2 justify-center items-center gap-4">
 
-          <div className="w-full h-[10rem] bg-emerald-900 rounded-2xl text-muted flex flex-col justify-center items-center text-[1rem]">
+          <div className="w-full h-[10rem] bg-emerald-900 rounded-2xl text-muted flex flex-col justify-center items-center text-[1rem] shadow-xl/50">
             <span className="font-bold text-[1rem]">Total geral de atividades</span>
-            <span className="text-6xl font-bold">{totalIsLoadin ? <Spinner /> : total.total}</span>
+            <span className="text-6xl font-bold flex justify-center items-center gap-2">{totalIsLoadin ? <Spinner /> : total.total} <FileCheck height={50}  width={50}/> </span>
           </div>
-          <div className="w-full h-[10rem] bg-emerald-900 rounded-2xl text-muted flex flex-col justify-center items-center text-[1rem]">
+          <div className="w-full h-[10rem] bg-emerald-900 rounded-2xl text-muted flex flex-col justify-center items-center text-[1rem] shadow-xl/50">
             <span className="font-semibold text-2xl">Você tem</span>
             <span className="text-6xl font-bold">{totalIsLoadin ? <Spinner /> : porcentagem}%</span>
             <span className="font-semibold text-[1rem]">das atividades do programa</span>
@@ -186,22 +187,22 @@ const dadosMeses = totalMesAMes
 
         </div>
 
-        <div className="grid grid-cols-2 justify-center items-center gap-4">
+        <div className="grid grid-cols-2 gap-4">
 
-          <div className="w-[15rem] h-[6rem] bg-cyan-900 rounded-2xl text-muted flex flex-col justify-center items-center text-[1rem]">
+          <div className="w-[15rem] h-[6rem] bg-cyan-900 rounded-2xl text-muted flex flex-col justify-center items-center text-[1rem] shadow-xl/50">
             <span className="font-semibold">Total de Atividades</span>
-            <span className="text-3xl font-bold">{countTotalIsLoading ? <Spinner /> : countTotal.total}</span>
+            <span className="text-3xl font-bold flex justify-center items-center gap-2">{countTotalIsLoading ? <Spinner /> : countTotal.total} <FileCheck /> </span>
           </div>
-          <div className="w-[15rem] h-[6rem] bg-cyan-900 rounded-2xl text-muted flex flex-col justify-center items-center text-[1rem]">
+          <div className="w-[15rem] h-[6rem] bg-cyan-900 rounded-2xl text-muted flex flex-col justify-center items-center text-[1rem] shadow-xl/50">
             <span className="font-semibold">Tempo Médio</span>
-            <span className="text-3xl font-bold">{averageIsLoading ? <Spinner/> : average.average }</span>
+            <span className="text-3xl font-bold flex justify-center items-center gap-2">{averageIsLoading ? <Spinner/> : average.average } <Clock /></span>
           </div>   
-          <div className="w-[15rem] h-[6rem] bg-cyan-900 rounded-2xl text-muted flex flex-col justify-center items-center text-[1rem]">
+          <div className="w-[15rem] h-[6rem] bg-cyan-900 rounded-2xl text-muted flex flex-col justify-center items-center text-[1rem] shadow-xl/50">
             <span className="font-semibold">Total por Código: <span className="text-2xl font-bold">{isCodeLoading ? <Spinner/> : listCountCode.codigo}</span></span>
             <div className="flex items-center gap-4">
               {isCodeLoading ? ( < Spinner/> ) : (
                 <>
-                  <span className="text-3xl font-bold">{listCountCode.total ?? <Spinner/>}</span>
+                  <span className="text-3xl font-bold flex justify-center items-center gap-2">{listCountCode.total ?? <Spinner/>}</span>
                   <Select
                     value={String(codSelecionado)}
                     onValueChange={(value) => setCodSelecionado(Number(value))}
@@ -222,12 +223,12 @@ const dadosMeses = totalMesAMes
               )}
             </div>
           </div>
-          <div className="w-[15rem] h-[6rem] bg-cyan-900 rounded-2xl text-muted flex flex-col justify-center items-center text-[1rem]">
+          <div className="w-[15rem] h-[6rem] bg-cyan-900 rounded-2xl text-muted flex flex-col justify-center items-center text-[1rem] shadow-xl/50">
             <span className="font-semibold">Total por setor: <span className="font-bold">{isDepartmentLoading ? <Spinner/> : listCountDepartment.setor}</span></span>
             <div className="flex items-center gap-4">
               {isDepartmentLoading ? ( < Spinner/> ) : (
                 <>
-                  <span className="text-3xl font-bold">{listCountDepartment.total ?? <Spinner />}</span>
+                  <span className="text-3xl font-bold flex justify-center items-center gap-2">{listCountDepartment.total ?? <Spinner />}</span>
                   <Select
                     value={setorSelecionado}
                     onValueChange={(value) => setSetorSelecionado(value)}

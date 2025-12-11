@@ -18,8 +18,8 @@ export function ChartBar({ topFiveActivet }: any) {
   }
 
   return (
-    <ChartContainer className="w-full h-[35rem]" config={chartConfig}>
-      <h2 className="text-2xl font-semibold mb-2 text-muted-foreground">
+    <ChartContainer className="w-[95%] h-[35rem] shadow-xl/30" config={chartConfig}>
+      <h2 className="text-2xl font-semibold ml-4 text-muted-foreground">
         Top 5 atividades
       </h2>
       <ResponsiveContainer width="100%" height="100%">
