@@ -18,8 +18,8 @@ export function ChartLin({ totalMesAMes }: any) {
     )
   }
   return (
-    <div className="w-full h-[30rem] mt-10">
-      <h2 className="text-2xl font-semibold mb-2 text-muted-foreground">
+    <div className="w-[95%] h-[35rem] shadow-xl/50 ">
+      <h2 className="text-2xl ml-4 font-semibold mb-2 text-muted-foreground">
         Evolução Mensal de Atividades
       </h2>
 

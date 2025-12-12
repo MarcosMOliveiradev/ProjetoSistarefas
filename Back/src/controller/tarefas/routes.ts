@@ -13,6 +13,7 @@ import { averageTimeController } from "./averageTimeController.ts";
 import { topFiveACtiveController } from "./topFiveActiveController.ts";
 import { totalMesesController } from "./totalMesesController.ts";
 import { totalTarefasController } from "./totalTarefasController.ts";
+import { listTarefasByIntervalControll } from "./listTarefasByIntervalControll.ts";
 
 export async function tarefasRoutes(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -159,5 +160,19 @@ export async function tarefasRoutes(app: FastifyInstance) {
     }
   }, async (request, reply) => {
     return totalTarefasController(request, reply)
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().post('/listbyinterval', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['Tarefas'],
+      summary: 'Retorna as atividades feitas em um intervalo de datas',
+      body: z.object({
+        startDate: z.string(),
+        endDate: z.string()
+      })
+    }
+  }, async (request, reply) => {
+    return listTarefasByIntervalControll(request, reply)
   })
 }

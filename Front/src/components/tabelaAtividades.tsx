@@ -201,6 +201,7 @@ export function TabelaAtividades({ dados }: any) {
                 {
                     dados.length < 10 ? <></> : 
                     <div className="flex items-center justify-center gap-2 mt-4">
+
                         <Button
                             variant="outline"
                             disabled={pagina === 1}
@@ -209,16 +210,51 @@ export function TabelaAtividades({ dados }: any) {
                             Anterior
                         </Button>
 
-                        {Array.from({ length: totalPaginas }, (_, i) => (
-                            <Button
-                            className={pagina === i + 1 ? "bg-cyan-700 hover:bg-cyan-600" : ""}
-                            key={i}
-                            variant={pagina === i + 1 ? "default" : "outline"}
-                            onClick={() => setPagina(i + 1)}
-                            >
-                            {i + 1}
-                            </Button>
-                        ))}
+                        {(() => {
+                            const pages: (number | string)[] = [];
+                            const total = totalPaginas;
+
+                            if (total <= 7) {
+                                // poucas páginas → mostra todas
+                                for (let i = 1; i <= total; i++) pages.push(i);
+                            } else {
+                                // muitas páginas → compacta
+
+                                // sempre mostra 1 e a última
+                                pages.push(1);
+
+                                // caso esteja longe do começo → coloca "..."
+                                if (pagina > 3) pages.push("...");
+
+                                // páginas ao redor da página atual
+                                const start = Math.max(2, pagina - 1);
+                                const end = Math.min(total - 1, pagina + 1);
+
+                                for (let i = start; i <= end; i++) pages.push(i);
+
+                                // caso esteja longe do fim → coloca "..."
+                                if (pagina < total - 2) pages.push("...");
+
+                                pages.push(total);
+                            }
+
+                            return pages.map((p, idx) =>
+                                typeof p === "number" ? (
+                                    <Button
+                                        key={idx}
+                                        className={pagina === p ? "bg-cyan-700 hover:bg-cyan-600" : ""}
+                                        variant={pagina === p ? "default" : "outline"}
+                                        onClick={() => setPagina(p)}
+                                    >
+                                        {p}
+                                    </Button>
+                                ) : (
+                                    <span key={idx} className="px-2 text-muted-foreground">
+                                        {p}
+                                    </span>
+                                )
+                            )
+                        })()}
 
                         <Button
                             variant="outline"
@@ -227,6 +263,7 @@ export function TabelaAtividades({ dados }: any) {
                         >
                             Próximo
                         </Button>
+
                     </div>
                 }
             </ScrollArea>
