@@ -30,7 +30,10 @@ import { useAuth } from "@/hooks/useAuth"
 
 
 const dataPickerSchema = z.object({
-    dataInicial: z.date(),
+    dateRage: z.object({
+        from: z.date(),
+        to: z.date()
+    }),
 })
 
 export function DataPicker({ onDadosTarefas }: any) {
@@ -38,31 +41,51 @@ export function DataPicker({ onDadosTarefas }: any) {
     const form = useForm<z.infer<typeof dataPickerSchema>>({
         resolver: zodResolver(dataPickerSchema),
         defaultValues: {
-            dataInicial: new Date(),
+            dateRage: {
+                from: new Date(),
+                to: new Date(),
+            },
         }
     })
 
     async function onSubmit(data: z.infer<typeof dataPickerSchema>) {
-        const dataB = new Date(data.dataInicial).toLocaleDateString('pt-BR')
-        try {
-            const tarefas = await api.post('/tarefas/listaTarefas', {dataB})
+        const startDate = new Date(data.dateRage.from).toLocaleDateString('pt-BR')
+        const endDate = new Date(data.dateRage.to).toLocaleDateString('pt-BR');
+        
+        if(startDate === endDate) {
+            try {
+                const tarefas = await api.post('/tarefas/listaTarefas', {dataB: startDate})
 
-            onDadosTarefas(tarefas.data.tarefas)
-        } catch (err) {
-           const isAppError = err instanceof AppErrors
-           const title = isAppError ? err.message : "Não foi possivel carregar as informações, por favor informe ao administrador!" 
+                onDadosTarefas(tarefas.data.tarefas)
+            } catch (err) {
+               const isAppError = err instanceof AppErrors
+               const title = isAppError ? err.message : "Não foi possivel carregar as informações, por favor informe ao administrador!" 
 
-           toast.error(title)
+               toast.error(title)
+            }
+        } else {
+            try {
+                const tarefas = await api.post('/tarefas/listbyinterval', {startDate, endDate})
+
+                onDadosTarefas(tarefas.data.tarefas)
+            } catch (err) {
+               const isAppError = err instanceof AppErrors
+               const title = isAppError ? err.message : "Não foi possivel carregar as informações, por favor informe ao administrador!" 
+
+               toast.error(title)
+            }
         }
+        
     }
 
     async function geraPDF(data: z.infer<typeof dataPickerSchema>) {
-        const dataB = new Date(data.dataInicial).toLocaleDateString("pt-BR");
+        const startDate = new Date(data.dateRage.from).toLocaleDateString("pt-BR");
+        const endDate = new Date(data.dateRage.to).toLocaleDateString("pt-BR");
         
         try {
             const response = await api.post(
             "/tarefas/gerarPdf",
-            { dataB },
+            { startDate, endDate },
             { responseType: "blob" }
             );
             
@@ -72,7 +95,7 @@ export function DataPicker({ onDadosTarefas }: any) {
 
             const link = document.createElement("a");
             link.href = fileURL;
-            link.download = `${user.user.name}-${dataB}.pdf`;
+            link.download = `${user.user.name}-${startDate}.pdf`;
             link.click();
 
             URL.revokeObjectURL(fileURL);
@@ -83,7 +106,10 @@ export function DataPicker({ onDadosTarefas }: any) {
 
     useEffect(() => {
         const hoje = {
-            dataInicial: new Date()
+            dateRage: {
+                from: new Date(),
+                to: new Date(),
+            }
         }
         onSubmit(hoje)
     }, []);
@@ -95,7 +121,7 @@ export function DataPicker({ onDadosTarefas }: any) {
                     {/* Data Inicial */}
                     <FormField
                         control={form.control}
-                        name="dataInicial"
+                        name="dateRage"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Data</FormLabel>
@@ -103,19 +129,30 @@ export function DataPicker({ onDadosTarefas }: any) {
                                     <PopoverTrigger asChild>
                                         <FormControl className="bg-muted hover:bg-gray-800 hover:text-amber-50">
                                             <Button
-                                                variant={"outline"}
+                                                variant="outline"
                                                 className={cn(
-                                                    "w-[8rem] pl-3 text-left font-normal",
-                                                    !field.value && "text-muted-foreground"
-                                                )}
-                                                >
-                                                { format(field.value, "dd/MM/yyyy") }
+                                                "w-[14rem] pl-3 text-left font-normal",
+                                                !field.value?.from && "text-muted-foreground"
+                                            )}
+                                            >
+                                            {field.value?.from ? (
+                                                field.value.to ? (
+                                                <>
+                                                    {format(field.value.from, "dd/MM/yyyy")} -{" "}
+                                                    {format(field.value.to, "dd/MM/yyyy")}
+                                                </>
+                                                ) : (
+                                                format(field.value.from, "dd/MM/yyyy")
+                                                )
+                                            ) : (
+                                                "Selecione o período"
+                                            )}
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0 bg-muted text-muted-foreground" align="start">
                                         <Calendar
-                                            mode="single"
+                                            mode="range"
                                             selected={field.value}
                                             onSelect={field.onChange}
                                             disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
@@ -131,7 +168,7 @@ export function DataPicker({ onDadosTarefas }: any) {
                         )}
                     />
                     <Button className="hover:bg-muted w-[8rem] hover:text-muted-foreground hover:border-muted-foreground hover:border-2 bg-cyan-700 cursor-pointer" type="submit">Filtrar</Button>
-                    <Button className="cursor-pointer w-[8rem] bg-slate-700 hover:bg-slate-400" onClick={() => geraPDF({dataInicial: form.getValues("dataInicial")})}>GERAR PDF</Button>
+                    <Button className="cursor-pointer w-[8rem] bg-slate-700 hover:bg-slate-400" onClick={() => geraPDF({dateRage: form.getValues("dateRage")})}>GERAR PDF</Button>
                 </form>
             </Form>
         </div>

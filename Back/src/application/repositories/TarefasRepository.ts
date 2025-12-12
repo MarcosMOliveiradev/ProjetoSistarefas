@@ -5,6 +5,7 @@ import type { Tarefas } from "../entities/tarefa.ts";
 export abstract class TarefasRepository {
   abstract create(data: Tarefas): Promise<tarefas>
   abstract listTarefas(data: string, userId: string): Promise<tarefasDTO[]>
+  abstract listTarefasByDateInterval(startDate: string, endDate: string, userId: string): Promise<tarefasDTO[]>
   abstract deleteTarefa(id: string, ativado: boolean, userId: string): Promise<void>
 
   abstract countDepartment(userId: string, setor: string): Promise<CountDepartment>

@@ -132,45 +132,6 @@ const dadosMeses = totalMesAMes
         </div>
       )}
 
-      {user.user_roles.role === "INFORMATICA" && (
-        <div className="w-[13rem] rounded-r-2xl h-full fixed left-0 bg-slate-900 text-white p-4 flex flex-col gap-2">
-          <ScrollArea className="h-[90vh]">
-            <h2 className="text-xl font-semibold mb-4">Usuários</h2>
-
-            {listUsuarios.map(u => (
-              <button
-                key={u.id}
-                onClick={() => setUsuarioSelecionado(u.id)}
-                className={` cursor-pointer p-2 rounded text-left hover:bg-slate-700 
-                  ${usuarioSelecionado === u.id ? "bg-slate-700" : ""}`}
-              >
-                {getPrimeiroESegundoNome(u.name)}
-              </button>
-            ))}
-          </ScrollArea>
-        </div>
-      )}
-
-      {user.user_roles.role === "INFORMATICA" && (
-        <div className="w-[13rem] rounded-r-2xl h-full fixed left-0 bg-slate-900 text-white p-4 flex flex-col gap-2">
-          <ScrollArea className="h-[90vh]">
-            <h2 className="text-xl font-semibold mb-4">Usuários</h2>
-
-            {listUsuarios.map(u => (
-              <button
-                key={u.id}
-                onClick={() => setUsuarioSelecionado(u.id)}
-                className={` cursor-pointer p-2 rounded text-left hover:bg-slate-700 
-                  ${usuarioSelecionado === u.id ? "bg-slate-700" : ""}`}
-              >
-                {getPrimeiroESegundoNome(u.name)}
-              </button>
-            ))}
-
-          </ScrollArea>
-        </div>
-      )}
-
       <h1 className="text-2xl font-bold">Dashboard</h1>
       <div className="grid grid-cols-2 items-center gap-4">
         <div className="grid grid-cols-2 justify-center items-center gap-4">
@@ -211,7 +172,7 @@ const dadosMeses = totalMesAMes
                       <SelectValue placeholder="Selecione um código" />
                     </SelectTrigger>
 
-                    <SelectContent className="max-h-[40rem] ">
+                    <SelectContent className="max-h-[20rem] ">
                       {codigosUnicos.map((cod) => (
                         <SelectItem key={cod} value={String(cod)}>
                           {cod}
@@ -237,7 +198,7 @@ const dadosMeses = totalMesAMes
                       <SelectValue placeholder="Setor" />
                     </SelectTrigger>
 
-                    <SelectContent className="max-h-[40rem] ">
+                    <SelectContent className="max-h-[20rem] ">
                       {setoresUnicos.map((set) => (
                         <SelectItem key={set} value={set}>
                           {set}

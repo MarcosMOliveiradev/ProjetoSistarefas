@@ -8,6 +8,17 @@ import type { tarefas, tarefasDTO } from "../../DTOs/TarefasDTO.ts";
 import type { ContagemTotal, CountCodigo, CountDepartment, Meses, TopFiveCod, TotalTarefas } from "../../DTOs/countDepartmentDTO.ts";
 
 export class TarefasDrizzleRepository extends TarefasRepository {
+  async listTarefasByDateInterval(startDate: string, endDate: string, userId: string): Promise<tarefasDTO[]> {
+    const tarefasByInterval = await db.select().from(schema.tarefas)
+                                      .innerJoin(schema.atividade, eq(schema.tarefas.cod_atividade, schema.atividade.cod_atividade))
+                                      .where(and(
+                                        eq(schema.tarefas.usuarioId, userId),
+                                        eq(schema.tarefas.ativado, true),
+                                        sql`TO_DATE(${schema.tarefas.data}, 'DD/MM/YYYY') BETWEEN TO_DATE(${startDate}, 'DD/MM/YYYY') AND TO_DATE(${endDate}, 'DD/MM/YYYY')`
+                                      )).orderBy(sql`TO_DATE(${schema.tarefas.data}, 'DD/MM/YYYY') ASC`)
+    return tarefasByInterval
+  }
+
   async totalTarefas(): Promise<TotalTarefas> {
     const [total] = await db.select({
       total: count(schema.tarefas.id)

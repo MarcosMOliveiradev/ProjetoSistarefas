@@ -27,7 +27,7 @@ export function MenuButton() {
 
                     <DropdownMenuItem asChild>
                         <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
-                            <Link to={"/dash"}>DASH</Link>
+                            <Link to={"/dash"}>DASHBOARD</Link>
                         </Button>
                     </DropdownMenuItem>
 
