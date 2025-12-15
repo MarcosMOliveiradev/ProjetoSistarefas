@@ -50,6 +50,34 @@
       "when": 1764345840564,
       "tag": "0006_furry_falcon",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1765826640597,
+      "tag": "0007_stale_proudstar",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1765826852824,
+      "tag": "0008_ancient_runaways",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1765827014899,
+      "tag": "0009_loving_morlun",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1765828225676,
+      "tag": "0010_nappy_skaar",
+      "breakpoints": true
     }
   ]
 }

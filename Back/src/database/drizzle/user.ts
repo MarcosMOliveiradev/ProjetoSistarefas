@@ -4,6 +4,7 @@ import { relations } from "drizzle-orm";
 import { media } from "./media.ts";
 import { tarefas } from "./tarefas.ts";
 import { atividade } from "./atividades.ts";
+import { turnoEnum } from "./enums.ts";
 
 export const user = pgTable("user", {
     id: text("id").$defaultFn(() => createId()).primaryKey(),
@@ -11,6 +12,7 @@ export const user = pgTable("user", {
     matricula: integer("matricula").notNull().unique(),
     password: text("password").notNull(),
     avatarUrl: text("avatar_url"),
+    turno: turnoEnum("turno"),
     ativado: boolean("ativado").notNull().default(true),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
