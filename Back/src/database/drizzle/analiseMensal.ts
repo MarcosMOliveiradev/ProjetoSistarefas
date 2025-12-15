@@ -19,6 +19,5 @@ export const analisesMensais = pgTable("analises_mensais", {
 
   selo: seloEnum("selo").notNull(),
 
-  pdfPath: text("pdf_path").notNull(),
   geradoEm: timestamp("gerado_em").defaultNow(),
 });
