@@ -1,5 +1,4 @@
 import { createId } from "@paralleldrive/cuid2";
-import { Replace } from "../../lib/Replace.ts";
 import { origemPresencaEnum, statusPresencaEnum, tipoEsperadoEnum } from "./Roles.ts";
 
 export interface IPresenca {

@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify";
 import { createUserController } from "./createUser.ts";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod"
-import { Roles } from "../../application/entities/Roles.ts";
+import { Roles, turnoEnum } from "../../application/entities/Roles.ts";
 import { authenticateController } from "./authenticate.ts";
 import { verifyJwt } from "../../lib/verify-jwt.ts";
 import { profileController } from "./profileController.ts";
@@ -27,6 +27,7 @@ export async function userRoutes(app: FastifyInstance) {
           matricula: z.number(),
           passwordBody: z.string(),
           avatarUrl: z.string().optional(),
+          turno: z.enum(turnoEnum),
           role: z.enum(Roles)
         }),
         response: {

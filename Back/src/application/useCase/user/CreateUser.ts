@@ -1,6 +1,6 @@
 import { hash } from "bcryptjs";
 
-import type { Roles } from "../../entities/Roles.ts";
+import type { Roles, turnoEnum } from "../../entities/Roles.ts";
 import { User } from "../../entities/User.ts";
 import type { UserRepository } from "../../repositories/UserRepository.ts";
 import type { UserRoleRepository } from "../../repositories/UserRoleRepository.ts";
@@ -11,6 +11,7 @@ export interface UserI {
   matricula: number
   passwordBody: string
   avatarUrl: string | null | undefined
+  turno: turnoEnum
 
   role: Roles
 }
@@ -22,7 +23,7 @@ export class CreateUser {
   ) {}
 
   async exec( data: UserI ) {
-    const { name, avatarUrl, matricula, passwordBody, role } = data
+    const { name, avatarUrl, matricula, passwordBody, role, turno } = data
 
     // Verifica se o usuario ja existe
     const userAlreadyExist = await this.userRepository.findByMatricula(matricula)
@@ -36,6 +37,7 @@ export class CreateUser {
       name,
       matricula,
       password,
+      turno,
       ativado: true,
       avatarUrl
     })
