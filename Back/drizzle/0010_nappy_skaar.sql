@@ -35,8 +35,8 @@ CREATE TABLE "user_grupos" (
 	"id" text PRIMARY KEY NOT NULL,
 	"user_id" text NOT NULL,
 	"grupo_id" text NOT NULL,
-	"data_inicio" text NOT NULL,
-	"data_fim" text
+	"data_inicio" date NOT NULL,
+	"data_fim" date
 );
 --> statement-breakpoint
 ALTER TABLE "analises_mensais" ADD CONSTRAINT "analises_mensais_usuario_id_user_id_fk" FOREIGN KEY ("usuario_id") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint

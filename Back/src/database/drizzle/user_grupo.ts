@@ -1,5 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
-import { pgTable, text } from "drizzle-orm/pg-core";
+import { date, pgTable, text } from "drizzle-orm/pg-core";
 import { user } from "./user.ts";
 import { grupos } from "./grupos.ts";
 
@@ -12,6 +12,6 @@ export const userGrupos = pgTable("user_grupos", {
 
   grupoId: text("grupo_id").references(() => grupos.id).notNull(),
 
-  dataInicio: text("data_inicio").notNull(),
-  dataFim: text("data_fim"),
+  dataInicio: date("data_inicio").notNull(),
+  dataFim: date("data_fim"),
 })
