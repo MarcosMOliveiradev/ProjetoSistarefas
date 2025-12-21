@@ -21,6 +21,7 @@ import fastifyCookie from '@fastify/cookie';
 import { atividadeRouter } from './controller/atividade/routes.ts';
 import { tarefasRoutes } from './controller/tarefas/routes.ts';
 import { feedbackRoutes } from './controller/feedback/routes.ts';
+import { routesGrupos } from './controller/grupos/routes.ts';
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -98,5 +99,9 @@ app.register(feedbackRoutes, {
 
 app.register(mediaRoutes, {
     prefix: '/media',
+})
+
+app.register(routesGrupos, {
+    prefix: '/grupos'
 })
 

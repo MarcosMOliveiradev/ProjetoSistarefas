@@ -8,13 +8,14 @@ function toDateOnly(date: Date): string {
   return date.toISOString().split("T")[0];
 }
 
+
 export class GrupoDrizzleRepository extends GrupoRepository {
   async create(grupo: Grupo): Promise<void> {
     await db.insert(schema.grupos).values({
       id: grupo.id,
       nome: grupo.nome,
-      dataInicio: grupo.dataInicio,
-      dataFim: grupo.dataFim,
+      dataInicio: toDateOnly(grupo.dataInicio),
+      dataFim: grupo.dataFim ? toDateOnly(grupo.dataFim) : grupo.dataFim,
       diasEmpresa: grupo.diasEmpresa,
       diasInstituicao: grupo.diasInstituicao,
     })
