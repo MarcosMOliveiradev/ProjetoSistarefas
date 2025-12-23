@@ -8,6 +8,10 @@ export interface IGrupo {
   dataFim?: Date | null;
 }
 
+export interface IUserRestore extends IGrupo {
+  id: string
+}
+
 export class Grupo {
   private props: IGrupo;
   private _id: string;
@@ -20,6 +24,21 @@ export class Grupo {
 
     this._id = createId();
     this.props = { ...props };
+  }
+
+  static restore(props: IUserRestore) {
+    const obj = Object.create(Grupo.prototype) as Grupo;
+
+    obj._id = props.id;
+    obj.props = {
+      nome: props.nome,
+      dataInicio: props.dataInicio,
+      diasEmpresa: props.diasEmpresa,
+      diasInstituicao: props.diasInstituicao,
+      dataFim: props.dataFim
+    };
+
+    return obj
   }
 
   private validarDias(dias: number[]) {
@@ -94,5 +113,13 @@ export class Grupo {
   public set dataFim(dataFim: Date | null | undefined) {
     this.validarPeriodo(this.props.dataInicio, dataFim);
     this.props.dataFim = dataFim;
+  }
+  
+  public isDiaEmpresa(diaSemana: number): boolean {
+    return this.props.diasEmpresa.includes(diaSemana)
+  }
+
+  public isDiaInstituicao(diaSemana: number): boolean {
+    return this.props.diasInstituicao.includes(diaSemana)
   }
 }

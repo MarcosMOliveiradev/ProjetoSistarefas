@@ -25,6 +25,7 @@ export async function createUserController(
   if(userRole != Roles.INFORMATICA) {
     return reply.send(401).send('Você não pode criar um usuario')
   }
+  
   try {
     const createUser = makeCreateUser()
 

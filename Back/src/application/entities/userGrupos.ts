@@ -6,6 +6,9 @@ export interface IUserGrupos {
   dataInicio: Date;
   dataFim?: Date | null;
 }
+export interface IUserGruposRestore extends IUserGrupos {
+  id: string;
+}
 
 export class UserGrupos {
   private props: IUserGrupos;
@@ -16,6 +19,20 @@ export class UserGrupos {
 
     this._id = createId();
     this.props = { ...props };
+  }
+
+  static restore(props: IUserGruposRestore): UserGrupos {
+    const obj = Object.create(UserGrupos.prototype) as UserGrupos;
+
+    obj._id = props.id;
+    obj.props = {
+      userId: props.userId,
+      grupoId: props.grupoId,
+      dataInicio: props.dataInicio,
+      dataFim: props.dataFim ?? null
+    };
+
+    return obj;
   }
 
   private validarPeriodo(dataInicio: Date, dataFim?: Date | null) {
@@ -33,30 +50,16 @@ export class UserGrupos {
   public get userId() {
     return this.props.userId;
   }
-  public set userId(userId: string) {
-    this.props.userId = userId;
-  }
 
   public get grupoId() {
     return this.props.grupoId;
-  }
-  public set grupoId(grupoId: string) {
-    this.props.grupoId = grupoId;
   }
 
   public get dataInicio() {
     return this.props.dataInicio;
   }
-  public set dataInicio(dataInicio: Date) {
-    this.validarPeriodo(dataInicio, this.props.dataFim);
-    this.props.dataInicio = dataInicio;
-  }
 
   public get dataFim() {
     return this.props.dataFim;
-  }
-  public set dataFim(dataFim: Date | null | undefined) {
-    this.validarPeriodo(this.props.dataInicio, dataFim);
-    this.props.dataFim = dataFim;
   }
 }

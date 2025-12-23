@@ -2,7 +2,7 @@ import { pgEnum } from "drizzle-orm/pg-core";
 
 export const turnoEnum = pgEnum("turno", ["MANHA", "TARDE", "INTEGRAL"])
 
-export const tipoEsperadoEnum = pgEnum("tipo_esperado", ["EMPRESA", "INSTITUICAO"])
+export const tipoEsperadoEnum = pgEnum("tipo_esperado", ["EMPRESA", "INSTITUICAO", "FOLGA", "LIBERACAO"])
 
 export const statusPresencaEnum = pgEnum("status_presenca", ["PENDENTE", "PRESENTE", "ATRASADO", "FALTA"])
 

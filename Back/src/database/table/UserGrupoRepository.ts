@@ -9,17 +9,7 @@ function toDateOnly(date: Date): string {
 }
 
 export class UserGrupoDrizzleRepository extends UserGrupoRepository {
-  async vincular(userGrupo: UserGrupos): Promise<void> {
-    await db.insert(schema.userGrupos).values({
-      id: userGrupo.id,
-      userId: userGrupo.userId,
-      grupoId: userGrupo.grupoId,
-      dataInicio: userGrupo.dataInicio,
-      dataFim: userGrupo.dataFim ?? null
-    })
-  }
-
-  async findGrupoAtivoDoUsuario(userId: string, date: Date): Promise<UserGrupos | null> {
+  async findGrupoAtivo(userId: string, date: Date): Promise<UserGrupos | null> {
     const [row] = await db
     .select()
     .from(schema.userGrupos)
@@ -31,6 +21,31 @@ export class UserGrupoDrizzleRepository extends UserGrupoRepository {
           isNull(schema.userGrupos.dataFim),
           gte(schema.userGrupos.dataFim, toDateOnly(date))
         )
+      )
+    );
+
+    if(!row) return null
+
+    return row
+  }
+  
+  async vincular(userGrupo: UserGrupos): Promise<void> {
+    await db.insert(schema.userGrupos).values({
+      id: userGrupo.id,
+      userId: userGrupo.userId,
+      grupoId: userGrupo.grupoId,
+      dataInicio: toDateOnly(userGrupo.dataInicio),
+      dataFim: userGrupo.dataFim ? toDateOnly(userGrupo.dataFim) : null
+    })
+  }
+
+  async findGrupoAtivoDoUsuario(userId: string): Promise<UserGrupos | null> {
+    const [row] = await db
+    .select()
+    .from(schema.userGrupos)
+    .where(
+      and(
+        eq(schema.userGrupos.userId, userId)
       )
     );
 

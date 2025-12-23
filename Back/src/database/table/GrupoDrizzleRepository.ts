@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import type { Grupo } from "../../application/entities/grupo.ts";
+import { Grupo } from "../../application/entities/grupo.ts";
 import { GrupoRepository } from "../../application/repositories/GrupoRepository.ts";
 import { db } from "../connection.ts";
 import { schema } from "../drizzle/index.ts";
@@ -10,6 +10,11 @@ function toDateOnly(date: Date): string {
 
 
 export class GrupoDrizzleRepository extends GrupoRepository {
+  async find(): Promise<Grupo[]> {
+    const grupos = await db.select().from(schema.grupos)
+
+    return grupos
+  }
   async create(grupo: Grupo): Promise<void> {
     await db.insert(schema.grupos).values({
       id: grupo.id,
@@ -26,7 +31,14 @@ export class GrupoDrizzleRepository extends GrupoRepository {
 
     if(!row) return null
     
-    return row
+    return Grupo.restore({
+      id: row.id,
+      dataInicio: new Date(row.dataInicio),
+      diasEmpresa: row.diasEmpresa,
+      diasInstituicao: row.diasInstituicao,
+      nome: row.nome,
+      dataFim: row.dataFim ? new Date(row.dataFim) : null
+    })
   }
 
   async findAtivoByDate(date: Date): Promise<Grupo[]> {

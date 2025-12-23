@@ -122,7 +122,6 @@ export async function geraPdf(
     });
 
     } else if (startDate === endDate) {
-      console.log("ENTROU NA DATA IGUAL")
       const listaTarefas = makeListTarefas()
       const tarefas: tarefasDTO[] = await listaTarefas.exec({ data: startDate, userId })
 

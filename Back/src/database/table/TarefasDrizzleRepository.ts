@@ -164,7 +164,6 @@ export class TarefasDrizzleRepository extends TarefasRepository {
   }
   
   async create(data: Tarefas): Promise<tarefas> {
-    console.log(data)
     const [tarefas] = await db.insert(schema.tarefas).values({
       id: data.id,
       data: data.data,

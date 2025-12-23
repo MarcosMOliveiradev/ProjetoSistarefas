@@ -22,7 +22,8 @@ export enum turnoEnum {
 
 export enum tipoEsperadoEnum  {
   EMPRESA = 'EMPRESA',
-  INSTITUICAO = 'INSTITUICAO'
+  INSTITUICAO = 'INSTITUICAO',
+  FOLGA = 'FOLGA'
 }
 
 export enum statusPresencaEnum  {
