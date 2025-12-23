@@ -1,1 +1,0 @@
-ALTER TABLE "tarefas" ADD COLUMN "n_atendimento" integer NOT NULL;

@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
-import { Roles } from "../../application/entities/Roles.ts";
+import { Roles, turnoEnum } from "../../application/entities/Roles.ts";
 import { makeCreateUser } from "../../application/useCase/user/factories/make-create-user.ts";
 import { UserAlreadyExistError } from "../../application/useCase/user/error/userAlreadyExistsError.ts";
 import type { User } from "../../application/entities/User.ts";
@@ -14,16 +14,18 @@ export async function createUserController(
     matricula: z.number(),
     passwordBody: z.string(),
     avatarUrl: z.string().optional(),
+    turno: z.enum(turnoEnum),
     role: z.enum(Roles)
   })
 
-  const { name, matricula, passwordBody, avatarUrl, role } = createUserSchema.parse(request.body)
+  const { name, matricula, passwordBody, avatarUrl, role, turno } = createUserSchema.parse(request.body)
 
   const userRole = request.user.role
 
   if(userRole != Roles.INFORMATICA) {
     return reply.send(401).send('Você não pode criar um usuario')
   }
+  
   try {
     const createUser = makeCreateUser()
 
@@ -32,6 +34,7 @@ export async function createUserController(
       passwordBody,
       matricula,
       avatarUrl,
+      turno,
       role
     })
 

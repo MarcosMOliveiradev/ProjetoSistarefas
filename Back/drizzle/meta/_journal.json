@@ -5,50 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1759499624958,
-      "tag": "0000_useful_jackpot",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1759944789876,
-      "tag": "0001_nosy_frog_thor",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1761159372054,
-      "tag": "0002_medical_darwin",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1761589244259,
-      "tag": "0003_puzzling_veda",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1764165769318,
-      "tag": "0004_round_orphan",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1764337980294,
-      "tag": "0005_colorful_lenny_balinger",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1764345840564,
-      "tag": "0006_furry_falcon",
+      "when": 1766508904306,
+      "tag": "0000_lonely_tigra",
       "breakpoints": true
     }
   ]

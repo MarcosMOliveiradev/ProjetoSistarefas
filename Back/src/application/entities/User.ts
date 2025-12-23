@@ -1,6 +1,7 @@
 import { createId } from "@paralleldrive/cuid2"
 
 import { Replace } from "../../lib/Replace.ts";
+import type { turnoEnum } from "./Roles.ts";
 
 export interface IUser {
     name: string;
@@ -8,6 +9,7 @@ export interface IUser {
     password: string;
     avatarUrl: string | null | undefined;
     ativado: boolean;
+    turno: turnoEnum;
     createdAt: Date;
     updatedAt?: Date | null;
 }
@@ -61,6 +63,13 @@ export class User {
     }
     public get password(): string {
         return this.props.password;
+    }
+
+    public set turno(turno: turnoEnum) {
+        this.props.turno = turno
+    }
+    public get turno(): turnoEnum {
+        return this.props.turno
     }
 
     public set updateAt(update: Date | null | undefined) {

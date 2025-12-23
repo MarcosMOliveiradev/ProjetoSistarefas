@@ -1,1 +1,0 @@
-ALTER TYPE "public"."status_option" ADD VALUE 'CANCELADO';

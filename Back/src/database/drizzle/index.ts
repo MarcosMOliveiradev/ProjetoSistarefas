@@ -6,6 +6,11 @@ import { RolesEnum } from './roles.ts'
 import { tarefas, tarefasRelations } from './tarefas.ts'
 import { user, userRelations } from './user.ts'
 import { userRoles } from './user_roles.ts'
+import { origemPresencaEnum, seloEnum, statusPresencaEnum, tipoEsperadoEnum, turnoEnum } from './enums.ts'
+import { grupos } from './grupos.ts'
+import { userGrupos } from './user_grupo.ts'
+import { presenca } from './presenca.ts'
+import { analisesMensais } from './analiseMensal.ts'
 
 export const schema = {
     user,
@@ -21,5 +26,14 @@ export const schema = {
     atividade,
     atividadesRelations,
     statusOption,
-    feedback
+    feedback,
+    turnoEnum,
+    tipoEsperadoEnum,
+    statusPresencaEnum,
+    origemPresencaEnum,
+    seloEnum,
+    grupos,
+    userGrupos,
+    presenca,
+    analisesMensais,
 }
