@@ -1,1 +1,0 @@
-ALTER TABLE "tarefas" ADD COLUMN "id_documento" text DEFAULT '0' NOT NULL;

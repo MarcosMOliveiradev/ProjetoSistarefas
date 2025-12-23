@@ -1,1 +1,0 @@
-ALTER TABLE "analises_mensais" DROP COLUMN "pdf_path";

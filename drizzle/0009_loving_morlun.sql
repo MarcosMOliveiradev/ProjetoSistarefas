@@ -1,1 +1,0 @@
-ALTER TYPE "public"."turno" ADD VALUE 'INTEGRAL';
