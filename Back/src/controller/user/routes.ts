@@ -109,7 +109,7 @@ export async function userRoutes(app: FastifyInstance) {
   })
 
   app.withTypeProvider<ZodTypeProvider>().get('/find', {
-    onRequest: [verifyJwt],
+    // onRequest: [verifyJwt],
     schema: {
       tags: ['User'],
       summary: 'Busca todos os usuários (Apenas para TI).',

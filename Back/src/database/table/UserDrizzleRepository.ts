@@ -48,9 +48,10 @@ export class UserDrizzleRepository extends UserRepository {
 
         return users
     }
-    async findByMatricula(matricula: number): Promise<userRoleDTO> {
-        const [user] = await db.select().from(schema.user).where(eq(schema.user.matricula, matricula)).innerJoin(schema.userRoles, eq(schema.user.id, schema.userRoles.userId))
 
+    async findByMatricula(matricula: number): Promise<userRoleDTO> {
+        const [user] = await db.select().from(schema.user).innerJoin(schema.userRoles, eq(schema.user.id, schema.userRoles.userId)).where(eq(schema.user.matricula, matricula))
+        console.log(user)
         return user
     }
 

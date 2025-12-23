@@ -32,7 +32,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
   async function signIg(matricula: number, passwordBody: string) {
     try {
-
       const { data } = await api.post('/user/auth', { matricula, passwordBody })
       const response = await api.get('/user/profile', {headers: {Authorization: `Bearer ${data}`}})
 

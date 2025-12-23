@@ -15,7 +15,6 @@ export class Authenticate {
   ) {}
 
   async expec({ matricula, passwordBody }: IUser) {
-
     const user = await this.userRepository.findByMatricula(matricula)
 
     if(!user) {

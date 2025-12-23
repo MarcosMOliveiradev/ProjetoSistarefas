@@ -15,7 +15,7 @@ export async function authenticateController(
   })
 
   const { matricula, passwordBody } = authenticateSchema.parse(request.body)
-
+  
   try {
     
     const authenticateUser = makeAutheticate()
