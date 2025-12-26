@@ -31,7 +31,21 @@ export class UserDrizzleRepository extends UserRepository {
     }
 
     async findById(id: string): Promise<userRoleDTO | null> {
-        const [user] = await db.select().from(schema.user).where(eq(schema.user.id, id)).innerJoin(schema.userRoles, eq(schema.user.id, schema.userRoles.userId))
+        const [user] = await db.select({
+            user: {
+                id: schema.user.id,
+                name: schema.user.name,
+                matricula: schema.user.matricula,
+                avatarUrl: schema.user.avatarUrl,
+                ativado: schema.user.ativado,
+                createdAt: schema.user.createdAt,
+                updatedAt: schema.user.updatedAt,
+            },
+            user_roles: {
+                role: schema.userRoles.role,
+                userId: schema.userRoles.userId
+            }
+        }).from(schema.user).where(eq(schema.user.id, id)).innerJoin(schema.userRoles, eq(schema.user.id, schema.userRoles.userId))
 
         return user
     }
@@ -50,8 +64,24 @@ export class UserDrizzleRepository extends UserRepository {
     }
 
     async findByMatricula(matricula: number): Promise<userRoleDTO> {
-        const [user] = await db.select().from(schema.user).innerJoin(schema.userRoles, eq(schema.user.id, schema.userRoles.userId)).where(eq(schema.user.matricula, matricula))
-        console.log(user)
+        const [user] = await db.select({
+            user: {
+                id: schema.user.id,
+                name: schema.user.name,
+                matricula: schema.user.matricula,
+                password: schema.user.password,
+                avatarUrl: schema.user.avatarUrl,
+                ativado: schema.user.ativado,
+                createdAt: schema.user.createdAt,
+                updatedAt: schema.user.updatedAt,
+            },
+            user_roles: {
+                role: schema.userRoles.role,
+                userId: schema.userRoles.userId
+            }
+        }).from(schema.user)
+            .innerJoin(schema.userRoles, eq(schema.user.id, schema.userRoles.userId))
+            .where(eq(schema.user.matricula, matricula))
         return user
     }
 
