@@ -7,4 +7,5 @@ export abstract class PresencaRepository {
   abstract findByUserAndPeriod(userId: string, inicio: Date, fim: Date): Promise<Presenca[]>
   abstract updateStatus(presencaId: string, status: statusPresencaEnum): Promise<void>
   abstract updateHoraEntrada(presencaId: string, hora: string): Promise<void>
+  abstract findByPendente(status: statusPresencaEnum): Promise<Presenca[]>
 }

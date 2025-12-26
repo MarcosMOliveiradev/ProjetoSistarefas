@@ -7,6 +7,7 @@ import { findGruposController } from "./findGruposController.ts";
 import { userForGrupController } from "./userForGrupController.ts";
 import { origemPresencaEnum } from "../../application/entities/Roles.ts";
 import { createPresencaController } from "./createPresencaController.ts";
+import { findPresencaForDateController } from "./findPresencaForDateController.ts";
 
 export async function routesGrupos(app: FastifyInstance) {
     app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -59,11 +60,25 @@ export async function routesGrupos(app: FastifyInstance) {
             summary: 'Cria presença do usuario',
             body: z.object({
                 userId: z.string(),
-                    data: z.coerce.date(),
-                    origem: z.enum(origemPresencaEnum)
+                data: z.coerce.date(),
+                origem: z.enum(origemPresencaEnum)
             })
          }
     }, async (request, reply) => {
         return createPresencaController(request, reply)
+    })
+
+    app.withTypeProvider<ZodTypeProvider>().post('/findfordate', {
+        onRequest: [verifyJwt],
+        schema: {
+            tags: ['Grupos'],
+            summary: 'Lista a presença de um usario apartir de uma data',
+            body: z.object({
+                userId: z.string(),
+                date: z.coerce.date(),
+            })
+        }
+    }, async (request, reply) => {
+        return findPresencaForDateController(request, reply)
     })
 }

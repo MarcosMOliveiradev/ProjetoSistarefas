@@ -1,7 +1,7 @@
 import { and, eq, gte, lte } from "drizzle-orm";
 import { Presenca } from "../../application/entities/presenca.ts";
 import type { statusPresencaEnum } from "../../application/entities/Roles.ts";
-import { PresencaRepository } from "../../application/repositories/presencaRepository.ts";
+import { PresencaRepository } from "../../application/repositories/PresencaRepository.ts";
 import { db } from "../connection.ts";
 import { schema } from "../drizzle/index.ts";
 
@@ -10,6 +10,12 @@ function toDateOnly(date: Date): string {
 }
 
 export class PresencaDrizzleRepository extends PresencaRepository {
+
+  async findByPendente(status: statusPresencaEnum): Promise<Presenca[]> {
+    const pendente = await db.select().from(schema.presenca).where(eq(schema.presenca.status, status))
+
+    return pendente
+  }
   async create(presenca: Presenca): Promise<void> {
 
     await db.insert(schema.presenca).values({
