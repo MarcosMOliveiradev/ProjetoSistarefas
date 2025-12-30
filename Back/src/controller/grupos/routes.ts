@@ -5,9 +5,11 @@ import z from "zod";
 import { createGruposCroller } from "./createGruposController.ts";
 import { findGruposController } from "./findGruposController.ts";
 import { userForGrupController } from "./userForGrupController.ts";
-import { origemPresencaEnum } from "../../application/entities/Roles.ts";
+import { origemPresencaEnum, statusPresencaEnum } from "../../application/entities/Roles.ts";
 import { createPresencaController } from "./createPresencaController.ts";
 import { findPresencaForDateController } from "./findPresencaForDateController.ts";
+import { findPresencaByStatusController } from "./findPresecaByStatusController.ts";
+import { registraEntradaPresencaController } from "./registraEntradaPresencaController.ts";
 
 export async function routesGrupos(app: FastifyInstance) {
     app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -80,5 +82,33 @@ export async function routesGrupos(app: FastifyInstance) {
         }
     }, async (request, reply) => {
         return findPresencaForDateController(request, reply)
+    })
+
+    app.withTypeProvider<ZodTypeProvider>().post('/findbystatus', {
+        onRequest: [verifyJwt],
+        schema: {
+            tags: ['Grupos'],
+            summary: 'Lista a presença por status',
+            body: z.object({
+                status: z.enum(statusPresencaEnum),
+            })
+        }
+    }, async (request, reply) => {
+        return findPresencaByStatusController(request, reply)
+    })
+
+        app.withTypeProvider<ZodTypeProvider>().post('/registrar', {
+        onRequest: [verifyJwt],
+        schema: {
+            tags: ['Grupos'],
+            summary: 'Registra a presenca e a hora',
+            body: z.object({
+                presencaId: z.string(),
+                userId: z.string(),
+                horaEntrada: z.string()
+            })
+        }
+    }, async (request, reply) => {
+        return registraEntradaPresencaController(request, reply)
     })
 }

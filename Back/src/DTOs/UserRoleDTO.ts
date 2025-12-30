@@ -5,6 +5,7 @@ export type userRoleDTO = {
         matricula: number;
         avatarUrl: string | null | undefined;
         ativado: boolean;
+        turno: "MANHA" | "TARDE" | "INTEGRAL",
         createdAt: Date;
         updatedAt?: Date | null;
     },

@@ -10,6 +10,19 @@ function toDateOnly(date: Date): string {
 }
 
 export class PresencaDrizzleRepository extends PresencaRepository {
+  async findPresencaId(presencaId: string): Promise<Presenca> {
+    const [presenca] = await db.select().from(schema.presenca).where(eq(schema.presenca.id, presencaId))
+
+    return Presenca.restore({
+      id: presenca.id,
+      data: new Date(presenca.data),
+      origem: presenca.origem,
+      status: presenca.status,
+      tipoEsperado: presenca.tipoEsperado,
+      userId: presenca.userId,
+      horaEntrada: presenca.horaEntrada,
+    })
+  }
 
   async findByPendente(status: statusPresencaEnum): Promise<Presenca[]> {
     const pendente = await db.select().from(schema.presenca).where(eq(schema.presenca.status, status))
