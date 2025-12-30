@@ -21,6 +21,7 @@ export class UserDrizzleRepository extends UserRepository {
             id: data.id,
             name: data.name,
             matricula: data.matricula,
+            turno: data.turno,
             ativado: data.ativado,
             avatarUrl: data.avata,
             password: data.password,
@@ -32,10 +33,11 @@ export class UserDrizzleRepository extends UserRepository {
 
     async findById(id: string): Promise<userRoleDTO | null> {
         const [user] = await db.select({
-            user: {
+           user: {
                 id: schema.user.id,
                 name: schema.user.name,
                 matricula: schema.user.matricula,
+                turno: schema.user.turno,
                 avatarUrl: schema.user.avatarUrl,
                 ativado: schema.user.ativado,
                 createdAt: schema.user.createdAt,
@@ -55,6 +57,7 @@ export class UserDrizzleRepository extends UserRepository {
             id: schema.user.id,
             name: schema.user.name,
             matricula: schema.user.matricula,
+            turno: schema.user.turno,
             ativado: schema.user.ativado,
             avatarUrl: schema.user.avatarUrl,
             role: schema.userRoles.role
@@ -69,6 +72,7 @@ export class UserDrizzleRepository extends UserRepository {
                 id: schema.user.id,
                 name: schema.user.name,
                 matricula: schema.user.matricula,
+                turno: schema.user.turno,
                 password: schema.user.password,
                 avatarUrl: schema.user.avatarUrl,
                 ativado: schema.user.ativado,

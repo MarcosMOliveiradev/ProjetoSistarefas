@@ -20,6 +20,7 @@ export class Authenticate {
     if(!user) {
       throw new UnexistUser()
     }
+    
 
     const hash = user.user.password
 

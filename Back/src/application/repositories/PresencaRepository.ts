@@ -3,8 +3,10 @@ import type { statusPresencaEnum } from "../entities/Roles.ts";
 
 export abstract class PresencaRepository {
   abstract create( presenca: Presenca ): Promise<void>
+  abstract findPresencaId( presencaId: string ): Promise<Presenca>
   abstract findByUserAndDate( userId: string, date: Date ): Promise<Presenca | null>
   abstract findByUserAndPeriod(userId: string, inicio: Date, fim: Date): Promise<Presenca[]>
   abstract updateStatus(presencaId: string, status: statusPresencaEnum): Promise<void>
   abstract updateHoraEntrada(presencaId: string, hora: string): Promise<void>
+  abstract findByPendente(status: statusPresencaEnum): Promise<Presenca[]>
 }
