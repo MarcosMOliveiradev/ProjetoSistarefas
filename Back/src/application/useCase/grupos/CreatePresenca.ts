@@ -1,5 +1,5 @@
 import { Presenca } from "../../entities/presenca.ts";
-import { statusPresencaEnum, tipoEsperadoEnum, type origemPresencaEnum } from "../../entities/Roles.ts";
+import { tipoEsperadoEnum, type origemPresencaEnum } from "../../entities/Roles.ts";
 import type { GrupoRepository } from "../../repositories/GrupoRepository.ts";
 import type { PresencaRepository } from "../../repositories/PresencaRepository.ts";
 import type { UserGrupoRepository } from "../../repositories/UserGrupoRepository.ts";

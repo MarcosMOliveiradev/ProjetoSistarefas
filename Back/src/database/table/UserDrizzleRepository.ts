@@ -73,6 +73,7 @@ export class UserDrizzleRepository extends UserRepository {
                 name: schema.user.name,
                 matricula: schema.user.matricula,
                 turno: schema.user.turno,
+                password: schema.user.password,
                 avatarUrl: schema.user.avatarUrl,
                 ativado: schema.user.ativado,
                 createdAt: schema.user.createdAt,

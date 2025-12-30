@@ -10,6 +10,8 @@ import { createPresencaController } from "./createPresencaController.ts";
 import { findPresencaForDateController } from "./findPresencaForDateController.ts";
 import { findPresencaByStatusController } from "./findPresecaByStatusController.ts";
 import { registraEntradaPresencaController } from "./registraEntradaPresencaController.ts";
+import { encerraVinculoUsuarioController } from "./encerraVinculoUsuarioController.ts";
+import { trocarVinculoUsuarioController } from "./trocarVinculoUsarionController.ts";
 
 export async function routesGrupos(app: FastifyInstance) {
     app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -97,18 +99,47 @@ export async function routesGrupos(app: FastifyInstance) {
         return findPresencaByStatusController(request, reply)
     })
 
-        app.withTypeProvider<ZodTypeProvider>().post('/registrar', {
-        onRequest: [verifyJwt],
-        schema: {
-            tags: ['Grupos'],
-            summary: 'Registra a presenca e a hora',
-            body: z.object({
-                presencaId: z.string(),
-                userId: z.string(),
-                horaEntrada: z.string()
-            })
-        }
+    app.withTypeProvider<ZodTypeProvider>().post('/registrar', {
+    onRequest: [verifyJwt],
+    schema: {
+        tags: ['Grupos'],
+        summary: 'Registra a presenca e a hora',
+        body: z.object({
+            presencaId: z.string(),
+            userId: z.string(),
+            horaEntrada: z.string()
+        })
+    }
     }, async (request, reply) => {
         return registraEntradaPresencaController(request, reply)
+    })
+
+    app.withTypeProvider<ZodTypeProvider>().post('/encerrarvinculo', {
+    onRequest: [verifyJwt],
+    schema: {
+        tags: ['Grupos'],
+        summary: 'Registra a presenca e a hora',
+        body: z.object({
+            userId: z.string(),
+            dataFim: z.coerce.date()
+        })
+    }
+    }, async (request, reply) => {
+        return encerraVinculoUsuarioController(request, reply)
+    })
+
+    app.withTypeProvider<ZodTypeProvider>().post('/trocarvinculo', {
+    onRequest: [verifyJwt],
+    schema: {
+        tags: ['Grupos'],
+        summary: 'Registra a presenca e a hora',
+        body: z.object({
+            userId: z.string(),
+            novoGrupoId: z.string(),
+            dataInicio: z.coerce.date()
+        })
+    }
+    }, async (request, reply) => {
+        return trocarVinculoUsuarioController(request, reply)
     })
 }
