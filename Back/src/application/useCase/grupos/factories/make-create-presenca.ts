@@ -2,7 +2,7 @@
 import { GrupoDrizzleRepository } from "../../../../database/table/GrupoDrizzleRepository.ts"
 import { PresencaDrizzleRepository } from "../../../../database/table/PresencaDrizzleRepository.ts"
 import { UserGrupoDrizzleRepository } from "../../../../database/table/UserGrupoRepository.ts"
-import { CreatePresenca } from "../createPresenca.ts"
+import { CreatePresenca } from "../CreatePresenca.ts"
 
 export function makeCreatePresenca() {
   const presencaRepository = new PresencaDrizzleRepository()

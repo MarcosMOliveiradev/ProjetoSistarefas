@@ -1,5 +1,6 @@
 import type { userDTO } from "../../DTOs/UserDTO.ts";
 import type { userRoleDTO, Users } from "../../DTOs/UserRoleDTO.ts";
+import { turnoEnum } from "../entities/Roles.ts";
 import { User } from "../entities/User.ts";
 
 export abstract class UserRepository {
@@ -9,4 +10,5 @@ export abstract class UserRepository {
     abstract findByMatricula(matricula: number): Promise<userRoleDTO>;
     abstract updatePassword(password: string, id: string): Promise<void>;
     abstract updateAvataUrl(avatarUrl: string, userId: string): Promise<void>;
+    abstract updateTurno(userId: string, turno: turnoEnum): Promise<void>;
 }

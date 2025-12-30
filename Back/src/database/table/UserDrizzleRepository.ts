@@ -1,12 +1,16 @@
-import { eq } from "drizzle-orm";
 import { User } from "../../application/entities/User.ts";
 import { UserRepository } from "../../application/repositories/UserRepository.ts";
 import { db } from "../connection.ts";
 import { schema } from "../drizzle/index.ts";
 import type { userRoleDTO, Users } from "../../DTOs/UserRoleDTO.ts";
 import type { userDTO } from "../../DTOs/UserDTO.ts";
+import { eq } from "drizzle-orm";
+import { turnoEnum } from "../../application/entities/Roles.ts";
 
 export class UserDrizzleRepository extends UserRepository {
+    async updateTurno(userId: string, turno: turnoEnum): Promise<void> {
+        await db.update(schema.user).set({turno, updatedAt: new Date}).where(eq(schema.user.id, userId))
+    }
     async updateAvataUrl(avatarUrl: string, userId: string): Promise<void> {
         await db.update(schema.user)
             .set({avatarUrl: avatarUrl, updatedAt: new Date}).where(eq(schema.user.id, userId)).returning();
@@ -21,6 +25,7 @@ export class UserDrizzleRepository extends UserRepository {
             id: data.id,
             name: data.name,
             matricula: data.matricula,
+            turno: data.turno,
             ativado: data.ativado,
             avatarUrl: data.avata,
             password: data.password,
@@ -32,10 +37,11 @@ export class UserDrizzleRepository extends UserRepository {
 
     async findById(id: string): Promise<userRoleDTO | null> {
         const [user] = await db.select({
-            user: {
+           user: {
                 id: schema.user.id,
                 name: schema.user.name,
                 matricula: schema.user.matricula,
+                turno: schema.user.turno,
                 avatarUrl: schema.user.avatarUrl,
                 ativado: schema.user.ativado,
                 createdAt: schema.user.createdAt,
@@ -55,11 +61,12 @@ export class UserDrizzleRepository extends UserRepository {
             id: schema.user.id,
             name: schema.user.name,
             matricula: schema.user.matricula,
+            turno: schema.user.turno,
             ativado: schema.user.ativado,
             avatarUrl: schema.user.avatarUrl,
             role: schema.userRoles.role
-        }).from(schema.user).innerJoin(schema.userRoles, eq(schema.user.id, schema.userRoles.userId)).where(eq(schema.user.ativado, true));
-
+        }).from(schema.user).innerJoin(schema.userRoles, eq(schema.user.id, schema.userRoles.userId))
+        .where(eq(schema.user.ativado, true));
         return users
     }
 
@@ -69,6 +76,7 @@ export class UserDrizzleRepository extends UserRepository {
                 id: schema.user.id,
                 name: schema.user.name,
                 matricula: schema.user.matricula,
+                turno: schema.user.turno,
                 password: schema.user.password,
                 avatarUrl: schema.user.avatarUrl,
                 ativado: schema.user.ativado,

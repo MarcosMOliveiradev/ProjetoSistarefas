@@ -6,4 +6,5 @@ export abstract class UserGrupoRepository {
   abstract findGrupoAtivo(userId: string, date: Date): Promise<UserGrupos | null>
   abstract findHistoricoDoUsuario(userId: string): Promise<UserGrupos[]>
   abstract encerrarVinculo(id: string, dataFim: Date): Promise<void>
+  abstract findAtivosPorData(data: Date): Promise<UserGrupos[]>
 }

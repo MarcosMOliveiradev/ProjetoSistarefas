@@ -9,6 +9,21 @@ function toDateOnly(date: Date): string {
 }
 
 export class UserGrupoDrizzleRepository extends UserGrupoRepository {
+  async findAtivosPorData(data: Date): Promise<UserGrupos[]> {
+    const ativos = await db.select({
+      userId: schema.userGrupos.userId,
+      grupoId: schema.userGrupos.grupoId
+    }).from(schema.userGrupos).where(and(
+        lte(schema.userGrupos.dataInicio, toDateOnly(data)),
+        or(
+          isNull(schema.userGrupos.dataFim),
+          gte(schema.userGrupos.dataFim, toDateOnly(data))
+        )
+      ))
+    
+    return ativos
+  }
+  
   async findGrupoAtivo(userId: string, date: Date): Promise<UserGrupos | null> {
     const [row] = await db
     .select()
