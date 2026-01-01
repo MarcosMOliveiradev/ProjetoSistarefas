@@ -12,6 +12,7 @@ import { findPresencaByStatusController } from "./findPresecaByStatusController.
 import { registraEntradaPresencaController } from "./registraEntradaPresencaController.ts";
 import { encerraVinculoUsuarioController } from "./encerraVinculoUsuarioController.ts";
 import { trocarVinculoUsuarioController } from "./trocarVinculoUsarionController.ts";
+import { findPresencaUserController } from "./findPresencaUserController.ts";
 
 export async function routesGrupos(app: FastifyInstance) {
     app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -78,7 +79,6 @@ export async function routesGrupos(app: FastifyInstance) {
             tags: ['Grupos'],
             summary: 'Lista a presença de um usario apartir de uma data',
             body: z.object({
-                userId: z.string(),
                 date: z.coerce.date(),
             })
         }
@@ -106,7 +106,6 @@ export async function routesGrupos(app: FastifyInstance) {
         summary: 'Registra a presenca e a hora',
         body: z.object({
             presencaId: z.string(),
-            userId: z.string(),
             horaEntrada: z.string()
         })
     }
@@ -141,5 +140,15 @@ export async function routesGrupos(app: FastifyInstance) {
     }
     }, async (request, reply) => {
         return trocarVinculoUsuarioController(request, reply)
+    })
+
+    app.withTypeProvider<ZodTypeProvider>().get('/presencauser', {
+    onRequest: [verifyJwt],
+    schema: {
+        tags: ['Grupos'],
+        summary: 'Lista o historico de presenca do usuario',
+    }
+    }, async (request, reply) => {
+        return findPresencaUserController(request, reply)
     })
 }

@@ -11,9 +11,9 @@ export class FindPresencaForDate {
   async execute({ userId, date }: IFindPrensenca){
     const presenca = await this.repository.findByUserAndDate(userId, date)
 
-    // if(!presenca) {
-    //   throw new Error('Data ou usuario não localizada!')
-    // }
+    if(!presenca) {
+      throw new Error('Data ou usuario não localizada!')
+    }
 
     return presenca
   }
