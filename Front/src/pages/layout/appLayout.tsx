@@ -1,10 +1,12 @@
 import { NavLink, Outlet } from "react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import profile from "../../assets/PROFILE.png"
 import { MenuButton } from "@/components/menuButton";
 import { getProfile } from "@/api/profile";
 import { Feedback } from "@/components/feedback";
+import { registraEntrada } from "@/api/registraEntrada";
+import { useEffect } from "react";
 
 export function AppLayout() {
     const { data } = useQuery({
@@ -12,6 +14,16 @@ export function AppLayout() {
         queryFn: getProfile,
         staleTime: Infinity
     })
+
+    const registrarEntradaMutation = useMutation({
+    mutationFn: registraEntrada
+    })
+
+    useEffect(() => {
+        if (!data?.user) return
+
+        registrarEntradaMutation.mutate()
+    }, [data?.user])
     
     if(!data) {
         return

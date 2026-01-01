@@ -7,12 +7,12 @@ export async function findPresencaForDateController(
   reply: FastifyReply
 ) {
   const presencaSchema = z.object({
-    userId: z.string(),
     date: z.coerce.date()
   })
 
-  const { userId, date } = presencaSchema.parse(request.body)
-
+  const { date } = presencaSchema.parse(request.body)
+  const userId = request.user.sub
+  
   try {
 
     const findPresenca = makeFindPresencaForDate()

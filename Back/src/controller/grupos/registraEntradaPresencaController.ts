@@ -8,11 +8,11 @@ export async function registraEntradaPresencaController(
 ) {
   const entradaSchema = z.object({
     presencaId: z.string(),
-    userId: z.string(),
     horaEntrada: z.string()
   })
 
-  const { horaEntrada, presencaId, userId } = entradaSchema.parse(request.body)
+  const { horaEntrada, presencaId } = entradaSchema.parse(request.body)
+  const userId = request.user.sub
 
   try {
     const entradaPresenca = makeRegistraEntradaPresenca()

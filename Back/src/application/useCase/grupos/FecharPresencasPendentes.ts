@@ -21,13 +21,11 @@ export class FecharPresencasPendentes {
       const user = await this.userRepository.findById(presenca.userId);
       if (!user) continue;
 
-      // Regra: integral não entra
       if (user.user.turno === turnoEnum.INTEGRAL) continue;
 
       const horaLimite =
         user.user.turno === turnoEnum.MANHA ? "08:10" : "13:10";
 
-      // Se chegou aqui e ainda está pendente → FALTA
       await this.presencaRepository.updateStatus(
         presenca.id,
         statusPresencaEnum.FALTA
