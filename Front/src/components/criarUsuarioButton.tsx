@@ -25,6 +25,7 @@ const criarUsuarioSchema = z.object({
   name: z.string(),
   matriculaInput: z.string(),
   passwordBody: z.string().min(6, "A senha deve ter no minimo 6 caracteres"),
+  turno: z.enum(['MANHA', 'TARDE', 'INTEGRAL']),
   confirmPassword: z.string(),
   role: z.enum(['TODOS', 'COMPRAS', 'ALMOXARIFADO', 'SECRETARIA', 'FINANCEIRO', 'DP', 'INFORMATICA', 'PONTO', 'SEMAC', 'SEMAL', 'PCM', 'PJA', 'OUTROS',])
 }).refine((data) => data.passwordBody === data.confirmPassword, {
@@ -44,6 +45,7 @@ export function CriarUsuarioButton() {
             const response = await api.post('/user/created', {
               name: dados.name,
               matricula: matricula,
+              turno: dados.turno,
               passwordBody: dados.passwordBody,
               role: dados.role
             })
@@ -108,6 +110,31 @@ export function CriarUsuarioButton() {
                                         <SelectItem value="PCM">PCM</SelectItem>
                                         <SelectItem value="PJA">PJA</SelectItem>
                                         <SelectItem value="OUTROS">OUTROS</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        name="turno"
+                        control={form.control}
+                        render={({ field}) => (
+                            <FormItem className="col-span-2">
+                                <FormLabel>Selecione o turno do usuario</FormLabel>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                >
+                                    <FormControl className="w-full">
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Selecione..." />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="MANHA">MANHÃ</SelectItem>
+                                        <SelectItem value="TARDE">TARDE</SelectItem>
+                                        <SelectItem value="INTEGRAL">INTEGRAL</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </FormItem>
