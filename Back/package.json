@@ -7,7 +7,9 @@
     "start": "node --env-file .env --experimental-strip-types --no-warnings src/server.ts",
     "dev": "tsx watch src/server.ts",
     "generate": "drizzle-kit generate",
-    "migrate": "drizzle-kit migrate"
+    "migrate": "drizzle-kit migrate",
+    "criapresenca": "tsx src/teste/job/criaPresencaJob.ts",
+    "fechapresenca": "tsx src/teste/job/fechaPresencaJob.ts"
   },
   "keywords": [],
   "author": "",

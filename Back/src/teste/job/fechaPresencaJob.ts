@@ -1,7 +1,7 @@
-import { makeGeraPresencaDiaJob } from "../../application/useCase/grupos/factories/make-gera-presenca-dia-job.ts"
+import { makeFecharPresencasPendentes } from "../../application/useCase/grupos/factories/make-fechar-presencas-pendentes.ts"
 
 async function test() {
-  const job = makeGeraPresencaDiaJob()
+  const job = makeFecharPresencasPendentes()
 
   const data = new Date()
   data.setUTCHours(0, 0, 0, 0)

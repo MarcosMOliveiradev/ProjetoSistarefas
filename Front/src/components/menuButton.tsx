@@ -54,11 +54,18 @@ export function MenuButton() {
 
                     {user?.user_roles.role !== "INFORMATICA" ? 
                         <></> :
-                        <DropdownMenuItem asChild>
-                            <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
-                                <Link to={"/gerenciargrupo"}>GERENCIAR GRUPO</Link>
-                            </Button>
-                        </DropdownMenuItem>
+                        <>
+                            <DropdownMenuItem asChild>
+                                <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
+                                    <Link to={"/gerenciargrupo"}>GERENCIAR GRUPO</Link>
+                                </Button>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                                <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
+                                    <Link to={"/gerenciarpresenca"}>GERENCIAR PRESENÇA</Link>
+                                </Button>
+                            </DropdownMenuItem>
+                        </>
                     }
 
                     <DropdownMenuItem asChild>
