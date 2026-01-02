@@ -60,23 +60,23 @@ export class Presenca {
   horaEntrada: string,
   horaLimite: string
 ) {
-  const horaEntradanum = await converterTimerInNumber(horaEntrada)
-  const horaLimitenum = await converterTimerInNumber(horaLimite)
+  const horaEntradanum = converterTimerInNumber(horaEntrada)
+  const horaLimitenum = converterTimerInNumber(horaLimite)
 
   if (this.props.status !== statusPresencaEnum.PENDENTE) {
-    throw new Error("Não é possível registrar entrada para presença já finalizada");
+    return
   }
 
   if (this.props.horaEntrada) {
-    throw new Error("Entrada já registrada");
+    return
   }
 
   this.props.horaEntrada = horaEntrada;
 
   if (horaEntradanum <= horaLimitenum) {
-    console.log('presente')
     this.props.status = statusPresencaEnum.PRESENTE;
   } else {
+    console.log("ATRASADO")
     this.props.status = statusPresencaEnum.ATRASADO;
   }
 }
