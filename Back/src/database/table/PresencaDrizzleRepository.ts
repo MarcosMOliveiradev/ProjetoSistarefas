@@ -32,6 +32,7 @@ export class PresencaDrizzleRepository extends PresencaRepository {
   async findByPendente(status: statusPresencaEnum): Promise<Presenca[]> {
     const pendente = await db.select({
       id: schema.presenca.id,
+      userId: schema.presenca.userId,
       usuario: schema.user.name,
       matricula: schema.user.matricula,
       data: schema.presenca.data,

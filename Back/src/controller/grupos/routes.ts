@@ -13,6 +13,7 @@ import { registraEntradaPresencaController } from "./registraEntradaPresencaCont
 import { encerraVinculoUsuarioController } from "./encerraVinculoUsuarioController.ts";
 import { trocarVinculoUsuarioController } from "./trocarVinculoUsarionController.ts";
 import { findPresencaUserController } from "./findPresencaUserController.ts";
+import { updateStatusController } from "./updateStatusController.ts";
 
 export async function routesGrupos(app: FastifyInstance) {
     app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -150,5 +151,19 @@ export async function routesGrupos(app: FastifyInstance) {
     }
     }, async (request, reply) => {
         return findPresencaUserController(request, reply)
+    })
+
+    app.withTypeProvider<ZodTypeProvider>().patch('/updatestatus', {
+    onRequest: [verifyJwt],
+    schema: {
+        tags: ['Grupos'],
+        summary: 'Atualiza status do usuario',
+        body: z.object({
+            presencaId: z.string(),
+            status: z.enum(statusPresencaEnum)
+        })
+    }
+    }, async (request, reply) => {
+        return updateStatusController(request, reply)
     })
 }
