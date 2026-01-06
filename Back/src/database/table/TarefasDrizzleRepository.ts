@@ -1,13 +1,30 @@
 import { and, eq } from "drizzle-orm";
 import { count, desc, sql, sum } from "drizzle-orm/sql"
 import type { Tarefas } from "../../application/entities/tarefa.ts";
-import { TarefasRepository } from "../../application/repositories/TarefasRepository.ts";
+import { TarefasRepository, type IUpdataTarefas } from "../../application/repositories/TarefasRepository.ts";
 import { db } from "../connection.ts";
 import { schema } from "../drizzle/index.ts";
 import type { tarefas, tarefasDTO } from "../../DTOs/TarefasDTO.ts";
 import type { ContagemTotal, CountCodigo, CountDepartment, Meses, TopFiveCod, TotalTarefas } from "../../DTOs/countDepartmentDTO.ts";
 
 export class TarefasDrizzleRepository extends TarefasRepository {
+  async findById(id: string): Promise<tarefasDTO> {
+    const [tarefas] = await db.select().from(schema.tarefas).where(eq(schema.tarefas.id, id)).innerJoin(schema.atividade, eq(schema.tarefas.cod_atividade, schema.atividade.cod_atividade))
+
+    return tarefas
+  }
+  async updateTarefa(data: Tarefas): Promise<void> {
+    await db.update(schema.tarefas).set({
+      data: data.data,
+      item: data.item,
+      cod_atividade: data.codAtividade,
+      id_documento: data.idDocumento,
+      qtd_folha: data.qtdFolha ?? 0,
+      h_inicio: data.hInicio,
+      h_termino: data.hTermino,
+      n_atendimento: data.nAtendimento
+    }).where(eq(schema.tarefas.id, data.id))
+  }
   async listTarefasByDateInterval(startDate: string, endDate: string, userId: string): Promise<tarefasDTO[]> {
     const tarefasByInterval = await db.select().from(schema.tarefas)
                                       .innerJoin(schema.atividade, eq(schema.tarefas.cod_atividade, schema.atividade.cod_atividade))

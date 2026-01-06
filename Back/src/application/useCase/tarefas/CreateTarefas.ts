@@ -35,7 +35,7 @@ export class CreateTarefas {
     userId
   }: ITarefas) {
 
-    const atividade = this.atividadeRepository.findForCod(codAtividade);
+    const atividade = await this.atividadeRepository.findForCod(codAtividade);
 
     if (!atividade) {
       throw new UnexistAtividade();
