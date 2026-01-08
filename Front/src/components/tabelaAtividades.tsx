@@ -144,7 +144,7 @@ export function TabelaAtividades({ dados }: any) {
                                     className="w-[60px] text-sm text-center cursor-pointer"
                                     onClick={() => handleSort("codAtividade")}
                                     >
-                                    CÓd. ATIVIDADE {sortCol === "codAtividade" && (sortDir === "asc" ? "▲" : "▼")}
+                                    CÓD. ATIVIDADE {sortCol === "codAtividade" && (sortDir === "asc" ? "▲" : "▼")}
                                 </TableHead>
                                 <TableHead className="text-center text-sm text-muted-foreground">SETOR</TableHead>
                                 <TableHead
@@ -168,8 +168,8 @@ export function TabelaAtividades({ dados }: any) {
                                         <TableCell className="text-sm w-[30px]">{dado.tarefas.data}</TableCell>
                                         <TableCell className="text-sm w-[30px]">{dado.tarefas.item}</TableCell>
                                         <TableCell className="text-sm w-[30px]">{dado.tarefas.cod_atividade}</TableCell>
-                                        <TableCell className="text-sm">{dado.Atividade.setor}</TableCell>
-                                        <TableCell className="text-sm">{dado.Atividade.descricao}</TableCell>
+                                        <TableCell className="text-[12px]">{dado.Atividade.setor}</TableCell>
+                                        <TableCell className="text-[12px]">{dado.Atividade.descricao}</TableCell>
                                         <TableCell className="text-sm w-[30px]">{dado.tarefas.id_documento}</TableCell>
                                         <TableCell className="text-sm w-[30px]">{dado.tarefas.qtd_folha}</TableCell>
                                         <TableCell className="text-sm w-[30px]">{dado.tarefas.h_inicio}</TableCell>
