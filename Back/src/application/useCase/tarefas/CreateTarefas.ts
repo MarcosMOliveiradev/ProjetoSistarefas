@@ -54,6 +54,10 @@ export class CreateTarefas {
     const inicioMin = await converterTimerInNumber(hInicioController);
     const fimMin = await converterTimerInNumber(hTerminoController);
 
+    if(inicioMin === undefined || fimMin === undefined) {
+      throw new Error("Horário de início ou término inválido")
+    }
+
     const totalMin = fimMin - inicioMin;
     const quantidade = documentos.length;
 

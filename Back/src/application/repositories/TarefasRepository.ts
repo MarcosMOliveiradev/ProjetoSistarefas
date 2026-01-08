@@ -9,8 +9,8 @@ export interface IUpdataTarefas {
   codAtividade?: number;
   qtdFolha?: number;
   idDocumento?: string;
-  hInicio?: number;
-  hTermino?: number;
+  h_inicio?: number | null;
+  h_termino?: number | null;
   nAtendimento?: number;
 }
 
@@ -21,7 +21,7 @@ export abstract class TarefasRepository {
   abstract listTarefasByDateInterval(startDate: string, endDate: string, userId: string): Promise<tarefasDTO[]>
   abstract deleteTarefa(id: string, ativado: boolean, userId: string): Promise<void>
 
-  abstract updateTarefa(data: Tarefas): Promise<void>
+  abstract updateTarefa(data: IUpdataTarefas): Promise<void>
 
   abstract countDepartment(userId: string, setor: string): Promise<CountDepartment>
   abstract contagemCodigo(userId: string, codigo: number): Promise<CountCodigo>

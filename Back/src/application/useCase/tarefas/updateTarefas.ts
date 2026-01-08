@@ -1,29 +1,53 @@
 import { Tarefas } from "../../entities/tarefa.ts";
-import type { IUpdataTarefas, TarefasRepository } from "../../repositories/TarefasRepository.ts";
+import type { TarefasRepository } from "../../repositories/TarefasRepository.ts";
+import { converterTimerInNumber } from "./functions/converterTimerInNumber.ts";
+
+export interface IUpdataTarefas {
+  id: string
+  data?: string;
+  item?: number;
+  codAtividade?: number;
+  qtdFolha?: number;
+  idDocumento?: string;
+  hInicioController?: string | null;
+  hTerminoController?: string | null;
+  nAtendimento?: number;
+}
 
 export class UpdateTarefas {
-  constructor (private tarefasRepository: TarefasRepository) {}
+  constructor(private tarefasRepository: TarefasRepository) {}
 
-  async execute(dados: IUpdataTarefas) {
-    const tarefas = await this.tarefasRepository.findById(dados.id)
+  async execute(dados: IUpdataTarefas, userId: string) {
+    const tarefa = await this.tarefasRepository.findById(dados.id)
 
-    if(!tarefas || !tarefas.tarefas.cod_atividade || !tarefas.tarefas.usuarioId) {
+    if (!tarefa) {
       throw new Error("Tarefa não encontrada")
     }
 
-    const update = new Tarefas({
-      data: dados.data ? dados.data : tarefas.tarefas.data,
-      codAtividade: dados.codAtividade ? dados.codAtividade : tarefas.tarefas.cod_atividade,
-      item: dados.item ? dados.item : tarefas.tarefas.item,
-      hInicio: dados.hInicio ? dados.hInicio : tarefas.tarefas.h_inicio,
-      hTermino: dados.hTermino ? dados.hTermino: tarefas.tarefas.h_termino,
-      idDocumento: dados.idDocumento ?? tarefas.tarefas.id_documento,
-      nAtendimento: dados.nAtendimento ?? tarefas.tarefas.n_atendimento,
-      qtdFolha: dados.qtdFolha ?? tarefas.tarefas.qtd_folha,
-      ativado: true,
-      userId: tarefas.tarefas.usuarioId,
-    })
+    if (userId !== tarefa.tarefas.usuarioId) {
+      throw new Error("Usuário não autorizado")
+    }
 
-    await this.tarefasRepository.updateTarefa(update)
+    const h_inicio =
+      dados.hInicioController !== undefined
+        ? await converterTimerInNumber(dados.hInicioController)
+        : tarefa.tarefas.h_inicio
+
+    const h_termino =
+      dados.hTerminoController !== undefined
+        ? await converterTimerInNumber(dados.hTerminoController)
+        : tarefa.tarefas.h_termino
+
+    await this.tarefasRepository.updateTarefa({
+      id: dados.id,
+      data: dados.data,
+      codAtividade: dados.codAtividade,
+      item: dados.item,
+      h_inicio,
+      h_termino,
+      idDocumento: dados.idDocumento,
+      nAtendimento: dados.nAtendimento,
+      qtdFolha: dados.qtdFolha,
+    })
   }
 }

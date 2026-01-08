@@ -14,6 +14,8 @@ import { topFiveACtiveController } from "./topFiveActiveController.ts";
 import { totalMesesController } from "./totalMesesController.ts";
 import { totalTarefasController } from "./totalTarefasController.ts";
 import { listTarefasByIntervalControll } from "./listTarefasByIntervalControll.ts";
+import { updateTarefasController } from "./updateTarefasController.ts";
+import { findTarefaByIdController } from "./findByIdController.ts";
 
 export async function tarefasRoutes(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -174,5 +176,37 @@ export async function tarefasRoutes(app: FastifyInstance) {
     }
   }, async (request, reply) => {
     return listTarefasByIntervalControll(request, reply)
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().patch('/update', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['Tarefas'],
+      summary: 'Atualiza uma tarefa',
+        id: z.string(),
+        data: z.string().optional(),
+        item: z.number().optional(),
+        codAtividade: z.number().optional(),
+        idDocumento: z.string().optional(),
+        qtdFolha: z.number().optional(),
+        hInicioController: z.string().optional(),
+        hTerminoController: z.string().optional(),
+        nAtendimento: z.number().optional()
+    }
+  }, async (request, reply) => {
+    return updateTarefasController(request, reply)
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().get('/find/:id', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['Tarefas'],
+      summary: 'Busca uma tarefa pelo ID',
+      params: z.object({
+        id: z.string()
+      })
+    }
+  }, async (request, reply) => {
+    return findTarefaByIdController(request, reply)
   })
 }

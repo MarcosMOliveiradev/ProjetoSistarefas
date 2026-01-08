@@ -10,14 +10,18 @@ import {
 
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from './ui/button'
-import { Trash2 } from 'lucide-react'
+import { FilePenLine, Trash2 } from 'lucide-react'
 import type { tarefasDTO } from '@/dtos/tarefasDTO'
 import { toast } from "sonner";
 import { AppErrors } from "@/lib/appErrors";
 import { api } from "@/lib/axios";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogHeader, AlertDialogTrigger } from "./ui/alert-dialog";
+import { Dialog, DialogTrigger } from "./ui/dialog";
+import { UpdateTarefas } from "./updateTarefas";
 
 export function TabelaAtividades({ dados }: any) {
+    const [tarefaSelecionada, setTarefaSelecionada] = useState<tarefasDTO | null>(null)
+    const [openUpdate, setOpenUpdate] = useState(false)
     // filtro de ordenação
     const [sortCol, setSortCol] = useState<string | null>(null);
     const [sortDir, setSortDir] = useState<"asc" | "desc" | null>(null);
@@ -192,9 +196,32 @@ export function TabelaAtividades({ dados }: any) {
                                                 </AlertDialogContent>
                                             </AlertDialog>
                                         </TableCell>
+                                        <TableCell>
+                                            <Button 
+                                                variant={'ghost'}
+                                                className="cursor-pointer"
+                                                onClick={() => {
+                                                    setTarefaSelecionada(dado)
+                                                    setOpenUpdate(true)
+                                                }}
+                                            >
+                                                <FilePenLine />
+                                            </Button>
+                                        </TableCell>
                                     </TableRow>
                                 ))
                             }
+                            <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
+                                {tarefaSelecionada && (
+                                    <UpdateTarefas 
+                                        dados={tarefaSelecionada}
+                                        onSuccess={() => {
+                                            setOpen(false)
+                                            setTarefaSelecionada(null)
+                                        }}
+                                    />
+                                )}
+                            </Dialog>
                         </TableBody>
                     </Table>
                 </div>

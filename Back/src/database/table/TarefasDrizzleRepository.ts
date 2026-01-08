@@ -13,15 +13,15 @@ export class TarefasDrizzleRepository extends TarefasRepository {
 
     return tarefas
   }
-  async updateTarefa(data: Tarefas): Promise<void> {
+  async updateTarefa(data: IUpdataTarefas): Promise<void> {
     await db.update(schema.tarefas).set({
       data: data.data,
       item: data.item,
       cod_atividade: data.codAtividade,
       id_documento: data.idDocumento,
       qtd_folha: data.qtdFolha ?? 0,
-      h_inicio: data.hInicio,
-      h_termino: data.hTermino,
+      h_inicio: data.h_inicio,
+      h_termino: data.h_termino,
       n_atendimento: data.nAtendimento
     }).where(eq(schema.tarefas.id, data.id))
   }
