@@ -35,7 +35,7 @@ export class CreateTarefas {
     userId
   }: ITarefas) {
 
-    const atividade = this.atividadeRepository.findForCod(codAtividade);
+    const atividade = await this.atividadeRepository.findForCod(codAtividade);
 
     if (!atividade) {
       throw new UnexistAtividade();
@@ -53,6 +53,10 @@ export class CreateTarefas {
 
     const inicioMin = await converterTimerInNumber(hInicioController);
     const fimMin = await converterTimerInNumber(hTerminoController);
+
+    if(inicioMin === undefined || fimMin === undefined) {
+      throw new Error("Horário de início ou término inválido")
+    }
 
     const totalMin = fimMin - inicioMin;
     const quantidade = documentos.length;

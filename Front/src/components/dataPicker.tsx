@@ -27,6 +27,7 @@ import { toast } from "sonner"
 import { api } from "@/lib/axios"
 import { useEffect } from "react"
 import { useAuth } from "@/hooks/useAuth"
+import type { tarefasDTO } from "@/dtos/tarefasDTO"
 
 
 const dataPickerSchema = z.object({
@@ -51,12 +52,12 @@ export function DataPicker({ onDadosTarefas }: any) {
     async function onSubmit(data: z.infer<typeof dataPickerSchema>) {
         const startDate = new Date(data.dateRage.from).toLocaleDateString('pt-BR')
         const endDate = new Date(data.dateRage.to).toLocaleDateString('pt-BR');
-        
+
         if(startDate === endDate) {
             try {
-                const tarefas = await api.post('/tarefas/listaTarefas', {dataB: startDate})
+                const { data } = await api.post<tarefasDTO>('/tarefas/listaTarefas', {dataB: startDate})
 
-                onDadosTarefas(tarefas.data.tarefas)
+                onDadosTarefas(data.tarefas)
             } catch (err) {
                const isAppError = err instanceof AppErrors
                const title = isAppError ? err.message : "Não foi possivel carregar as informações, por favor informe ao administrador!" 

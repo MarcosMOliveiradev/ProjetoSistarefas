@@ -41,16 +41,16 @@ export async function atividadeRouter( app: FastifyInstance ) {
     schema: {
       tags: ['Atividade'],
       summary: 'Lista todas as atividades',
-      response: {
-        200: z.array(z.object({
-          cod_atividade: z.number(),
-          setor: z.string(),
-          descricao: z.string(),
-          tempo_medio: z.string(),
-          ativado: z.boolean(),
-          usuarioId: z.string()
-        }))
-      }
+      // response: {
+      //   200: z.array(z.object({
+      //     cod_atividade: z.number(),
+      //     setor: z.string(),
+      //     descricao: z.string(),
+      //     tempo_medio: z.string(),
+      //     ativado: z.boolean(),
+      //     usuarioId: z.string()
+      //   }))
+      // }
     }
   }, async (request, reply) => {
     return listAtividadesController(request, reply)

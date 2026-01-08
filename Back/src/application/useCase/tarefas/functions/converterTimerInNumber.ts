@@ -1,7 +1,10 @@
 import { FormatoHoraErrado } from "../error/formatoHoraErrado.ts"
 
-export function converterTimerInNumber(data: string) {
+export async function converterTimerInNumber(data: string | undefined | null) {
   // Converte a string do tipo "00:00" em um array de numeros
+  if(!data) {
+    return undefined
+  }
   const partes = data.split(':').map(Number)
 
   if (partes.length !== 2 || partes.some(isNaN)) {
