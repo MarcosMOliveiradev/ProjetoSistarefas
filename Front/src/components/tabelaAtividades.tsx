@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { AppErrors } from "@/lib/appErrors";
 import { api } from "@/lib/axios";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogHeader, AlertDialogTrigger } from "./ui/alert-dialog";
-import { Dialog, DialogTrigger } from "./ui/dialog";
+import { Dialog } from "./ui/dialog";
 import { UpdateTarefas } from "./updateTarefas";
 
 export function TabelaAtividades({ dados }: any) {
@@ -133,49 +133,49 @@ export function TabelaAtividades({ dados }: any) {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="w-[60px] text-center text-muted-foreground">DATA</TableHead>
+                                <TableHead className="w-[30px] text-sm text-center text-muted-foreground">DATA</TableHead>
                                 <TableHead
-                                    className="w-[60px] text-center cursor-pointer"
+                                    className="w-[30px] text-sm text-center cursor-pointer"
                                     onClick={() => handleSort("item")}
                                     >
                                     ITEM {sortCol === "item" && (sortDir === "asc" ? "▲" : "▼")}
                                 </TableHead>
                                 <TableHead
-                                    className="w-[60px] text-center cursor-pointer"
+                                    className="w-[60px] text-sm text-center cursor-pointer"
                                     onClick={() => handleSort("codAtividade")}
                                     >
                                     CÓd. ATIVIDADE {sortCol === "codAtividade" && (sortDir === "asc" ? "▲" : "▼")}
                                 </TableHead>
-                                <TableHead className="text-center text-muted-foreground">SETOR</TableHead>
+                                <TableHead className="text-center text-sm text-muted-foreground">SETOR</TableHead>
                                 <TableHead
                                     className="text-center cursor-pointer"
                                     onClick={() => handleSort("descricao")}
                                     >
                                     DESCRIÇÃO {sortCol === "descricao" && (sortDir === "asc" ? "▲" : "▼")}
                                 </TableHead>
-                                <TableHead className="w-[60px] text-center text-muted-foreground">ID DOCUMENTO</TableHead>
-                                <TableHead className="w-[60px] text-center text-muted-foreground">QTD FOLHAS</TableHead>
-                                <TableHead className="w-[60px] text-center text-muted-foreground">INICIO</TableHead>
-                                <TableHead className="w-[60px] text-center text-muted-foreground">TERMINO</TableHead>
-                                <TableHead className="w-[60px] text-center text-muted-foreground">Nº ATENTIMENTO</TableHead>
-                                <TableHead className="w-[60px] text-center text-muted-foreground">APAGAR</TableHead>
+                                <TableHead className="w-[60px] text-sm text-center text-muted-foreground">ID DOCUMENTO</TableHead>
+                                <TableHead className="w-[60px] text-sm text-center text-muted-foreground">QTD FOLHAS</TableHead>
+                                <TableHead className="w-[60px] text-sm text-center text-muted-foreground">INICIO</TableHead>
+                                <TableHead className="w-[60px] text-sm text-center text-muted-foreground">TERMINO</TableHead>
+                                <TableHead className="w-[60px] text-sm text-center text-muted-foreground">Nº ATENTIMENTO</TableHead>
+                                <TableHead className="w-[10px] text-sm text-center text-muted-foreground">APAGAR</TableHead>
                             </TableRow>
                         </TableHeader>
-                        <TableBody>
+                        <TableBody className="text-sm w-[30px]">
                             {
                                 dadosPaginados.map((dado: tarefasDTO) => (
                                     <TableRow className='text-center' key={dado.tarefas.id}>
-                                        <TableCell>{dado.tarefas.data}</TableCell>
-                                        <TableCell>{dado.tarefas.item}</TableCell>
-                                        <TableCell>{dado.tarefas.cod_atividade}</TableCell>
-                                        <TableCell>{dado.Atividade.setor}</TableCell>
-                                        <TableCell>{dado.Atividade.descricao}</TableCell>
-                                        <TableCell>{dado.tarefas.id_documento}</TableCell>
-                                        <TableCell>{dado.tarefas.qtd_folha}</TableCell>
-                                        <TableCell>{dado.tarefas.h_inicio}</TableCell>
-                                        <TableCell>{dado.tarefas.h_termino}</TableCell>
-                                        <TableCell>{dado.tarefas.n_atendimento}</TableCell>
-                                        <TableCell>
+                                        <TableCell className="text-sm w-[30px]">{dado.tarefas.data}</TableCell>
+                                        <TableCell className="text-sm w-[30px]">{dado.tarefas.item}</TableCell>
+                                        <TableCell className="text-sm w-[30px]">{dado.tarefas.cod_atividade}</TableCell>
+                                        <TableCell className="text-sm">{dado.Atividade.setor}</TableCell>
+                                        <TableCell className="text-sm">{dado.Atividade.descricao}</TableCell>
+                                        <TableCell className="text-sm w-[30px]">{dado.tarefas.id_documento}</TableCell>
+                                        <TableCell className="text-sm w-[30px]">{dado.tarefas.qtd_folha}</TableCell>
+                                        <TableCell className="text-sm w-[30px]">{dado.tarefas.h_inicio}</TableCell>
+                                        <TableCell className="text-sm w-[30px]">{dado.tarefas.h_termino}</TableCell>
+                                        <TableCell className="text-sm w-[30px]">{dado.tarefas.n_atendimento}</TableCell>
+                                        <TableCell className="text-sm w-[20px]">
                                             <AlertDialog open={open} onOpenChange={setOpen}>
                                                 <AlertDialogTrigger asChild>
                                                     <Button variant={'ghost'} className="cursor-pointer"><Trash2 className='w-4'/></Button>
@@ -196,7 +196,7 @@ export function TabelaAtividades({ dados }: any) {
                                                 </AlertDialogContent>
                                             </AlertDialog>
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell className="text-[12px] w-[30px]">
                                             <Button 
                                                 variant={'ghost'}
                                                 className="cursor-pointer"

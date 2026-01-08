@@ -36,7 +36,7 @@ export function GerenciaPresenca() {
   }
 
   return (
-    <div className="m-10">
+    <div className="m-10 h-[80%]">
       <Helmet title="Presenças" />
 
       <h2 className="text-xl font-semibold mb-6">
@@ -80,7 +80,7 @@ export function GerenciaPresenca() {
       </Form>
 
       {/* TABELA */}
-      <ScrollArea className="h-[70vh] border rounded">
+      <ScrollArea className="h-[60%] border rounded">
         <Table>
           <TableHeader>
             <TableRow>
