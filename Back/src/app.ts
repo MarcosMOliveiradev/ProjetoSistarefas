@@ -22,6 +22,8 @@ import { atividadeRouter } from './controller/atividade/routes.ts';
 import { tarefasRoutes } from './controller/tarefas/routes.ts';
 import { feedbackRoutes } from './controller/feedback/routes.ts';
 import { routesGrupos } from './controller/grupos/routes.ts';
+import "./application/useCase/grupos/function/criaPresencaJob.ts"
+import "./application/useCase/grupos/function/fechaPresencaJob.ts"
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
