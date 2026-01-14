@@ -10,7 +10,7 @@ import { updatePasswordController } from "./updatePassword.ts";
 import { MediaController } from "../MediaController.ts";
 import { updateAvatarUrl } from "./updateAvataUrl.ts";
 import { findUserController } from "./findUserController.ts";
-import { updateTurnoController } from "./updateTurnoController.ts";
+import { findUserByIdController } from "./findUserByIdController.ts";
 
 const file = new MediaController()
 
@@ -119,17 +119,13 @@ export async function userRoutes(app: FastifyInstance) {
     return findUserController(request, reply);
   })
 
-  app.withTypeProvider<ZodTypeProvider>().put('/updateturno', {
+  app.withTypeProvider<ZodTypeProvider>().get('/findid/:id', {
     onRequest: [verifyJwt],
     schema: {
       tags: ['User'],
-      summary: 'Atualiza turno do usuario',
-      body: z.object({
-        userId: z.string(),
-        turno: z.enum(turnoEnum)
-      })
+      summary: 'Busca todos usuarios pelo id.',
     }
   }, async (request, reply) => {
-    return updateTurnoController(request, reply)
+    return findUserByIdController(request, reply);
   })
 }

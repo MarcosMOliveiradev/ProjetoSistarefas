@@ -1,4 +1,5 @@
 import type { TarefasRepository } from "../../repositories/TarefasRepository.ts";
+import { converterNumberInTimer } from "./functions/converterNumberInTimer.ts";
 export enum SearchType {
   id_documento = "id_documento",
   cod_atividade = "cod_atividade",
@@ -25,6 +26,22 @@ export class SearchTarefas {
 
     const tarefas = await this.tarefasRepository.searchTarefasByType(type, convetedValue, userId)
 
-    return tarefas
+    const tarefasConvertidas = await Promise.all(
+      tarefas.map(async (item: any) => {
+        const h_inicio = item.tarefas.h_inicio
+        const h_termino = item.tarefas.h_termino
+
+        return {
+          ...item,
+          tarefas: {
+            ...item.tarefas,
+            h_inicio: await converterNumberInTimer(h_inicio),
+            h_termino: await converterNumberInTimer(h_termino),
+          }
+        }
+      })
+    )
+
+    return tarefasConvertidas
   }
 }
