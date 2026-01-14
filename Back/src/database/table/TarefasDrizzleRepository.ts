@@ -6,8 +6,24 @@ import { db } from "../connection.ts";
 import { schema } from "../drizzle/index.ts";
 import type { tarefas, tarefasDTO } from "../../DTOs/TarefasDTO.ts";
 import type { ContagemTotal, CountCodigo, CountDepartment, Meses, TopFiveCod, TotalTarefas } from "../../DTOs/countDepartmentDTO.ts";
+import type { SearchType } from "../../application/useCase/tarefas/searchTarefas.ts";
 
 export class TarefasDrizzleRepository extends TarefasRepository {
+  async searchTarefasByType(type: SearchType, value: string | number, userId?: string): Promise<tarefasDTO[]> {
+    if(userId) {
+      const tarefas = await db.select().from(schema.tarefas).where(and(
+        eq(schema.tarefas.usuarioId, userId),
+        eq(schema.tarefas.ativado, true),
+        eq(schema.tarefas[type], value)
+      )).innerJoin(schema.atividade, eq(schema.tarefas.cod_atividade, schema.atividade.cod_atividade))
+
+      return tarefas
+    } else {
+      const tarefas = await db.select().from(schema.tarefas).where(eq(schema.tarefas[type], value)).innerJoin(schema.atividade, eq(schema.tarefas.cod_atividade, schema.atividade.cod_atividade))
+
+      return tarefas
+    }
+  }
   async findById(id: string): Promise<tarefasDTO> {
     const [tarefas] = await db.select().from(schema.tarefas).where(eq(schema.tarefas.id, id)).innerJoin(schema.atividade, eq(schema.tarefas.cod_atividade, schema.atividade.cod_atividade))
 

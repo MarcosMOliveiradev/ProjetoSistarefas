@@ -16,6 +16,8 @@ import { totalTarefasController } from "./totalTarefasController.ts";
 import { listTarefasByIntervalControll } from "./listTarefasByIntervalControll.ts";
 import { updateTarefasController } from "./updateTarefasController.ts";
 import { findTarefaByIdController } from "./findByIdController.ts";
+import { searchTarefasController } from "./searchTarefasController.ts";
+import { SearchType } from "../../application/useCase/tarefas/searchTarefas.ts";
 
 export async function tarefasRoutes(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -208,5 +210,19 @@ export async function tarefasRoutes(app: FastifyInstance) {
     }
   }, async (request, reply) => {
     return findTarefaByIdController(request, reply)
+  }),
+
+  app.withTypeProvider<ZodTypeProvider>().post('/search', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['Tarefas'],
+      summary: 'Busca tarefas por tipo e valor',
+      body: z.object({
+        type: z.enum(SearchType),
+        value: z.string(),
+      })
+    }
+  }, async (request, reply) => {
+    return searchTarefasController(request, reply)
   })
 }
