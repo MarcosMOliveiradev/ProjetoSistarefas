@@ -10,7 +10,7 @@ import {
 
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from './ui/button'
-import { FilePenLine, Trash2 } from 'lucide-react'
+import { FilePenLine, Trash2, UserRoundSearch } from 'lucide-react'
 import type { tarefasDTO } from '@/dtos/tarefasDTO'
 import { toast } from "sonner";
 import { AppErrors } from "@/lib/appErrors";
@@ -18,8 +18,13 @@ import { api } from "@/lib/axios";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogHeader, AlertDialogTrigger } from "./ui/alert-dialog";
 import { Dialog } from "./ui/dialog";
 import { UpdateTarefas } from "./updateTarefas";
+import { FindUserId } from "./findUserId";
 
 export function TabelaAtividades({ dados }: any) {
+    //descrição do usuario da atividade
+    const [usuarioDescricao, setUsuarioDescricao] = useState<tarefasDTO | null>(null)
+    const [openUsuario, setOpenUsuario] = useState(false) 
+    // update atividades
     const [tarefaSelecionada, setTarefaSelecionada] = useState<tarefasDTO | null>(null)
     const [openUpdate, setOpenUpdate] = useState(false)
     // filtro de ordenação
@@ -159,6 +164,8 @@ export function TabelaAtividades({ dados }: any) {
                                 <TableHead className="w-[60px] text-sm text-center text-muted-foreground">TERMINO</TableHead>
                                 <TableHead className="w-[60px] text-sm text-center text-muted-foreground">Nº ATENTIMENTO</TableHead>
                                 <TableHead className="w-[10px] text-sm text-center text-muted-foreground">APAGAR</TableHead>
+                                <TableHead className="w-[10px] text-sm text-center text-muted-foreground">EDITRA</TableHead>
+                                <TableHead className="w-[10px] text-sm text-center text-muted-foreground">USUARIO</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody className="text-sm w-[30px]">
@@ -208,6 +215,18 @@ export function TabelaAtividades({ dados }: any) {
                                                 <FilePenLine />
                                             </Button>
                                         </TableCell>
+                                        <TableCell>
+                                            <Button 
+                                                variant={'ghost'}
+                                                className="cursor-pointer"
+                                                onClick={() => {
+                                                    setUsuarioDescricao(dado)
+                                                    setOpenUsuario(true)
+                                                }}
+                                            >
+                                                <UserRoundSearch />
+                                            </Button>
+                                        </TableCell>
                                     </TableRow>
                                 ))
                             }
@@ -218,6 +237,17 @@ export function TabelaAtividades({ dados }: any) {
                                         onSuccess={() => {
                                             setOpen(false)
                                             setTarefaSelecionada(null)
+                                        }}
+                                    />
+                                )}
+                            </Dialog>
+                            <Dialog open={openUsuario} onOpenChange={setOpenUsuario}>
+                                {usuarioDescricao && (
+                                    <FindUserId
+                                        dados={usuarioDescricao}
+                                        onSuccess={() => {
+                                            setOpenUsuario(false)
+                                            setUsuarioDescricao(null)
                                         }}
                                     />
                                 )}

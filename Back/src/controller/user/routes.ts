@@ -10,6 +10,7 @@ import { updatePasswordController } from "./updatePassword.ts";
 import { MediaController } from "../MediaController.ts";
 import { updateAvatarUrl } from "./updateAvataUrl.ts";
 import { findUserController } from "./findUserController.ts";
+import { findUserByIdController } from "./findUserByIdController.ts";
 
 const file = new MediaController()
 
@@ -116,5 +117,15 @@ export async function userRoutes(app: FastifyInstance) {
     }
   }, async (request, reply) => {
     return findUserController(request, reply);
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().get('/findid/:id', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['User'],
+      summary: 'Busca todos usuarios pelo id.',
+    }
+  }, async (request, reply) => {
+    return findUserByIdController(request, reply);
   })
 }
