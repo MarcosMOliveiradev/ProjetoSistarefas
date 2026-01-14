@@ -1,6 +1,7 @@
 import type { ContagemTotal, CountCodigo, CountDepartment, Meses, TopFiveCod, TotalTarefas } from "../../DTOs/countDepartmentDTO.ts";
 import type { tarefas, tarefasDTO } from "../../DTOs/TarefasDTO.ts";
 import type { Tarefas } from "../entities/tarefa.ts";
+import type { SearchType } from "../useCase/tarefas/searchTarefas.ts";
 
 export interface IUpdataTarefas {
   id: string
@@ -20,6 +21,8 @@ export abstract class TarefasRepository {
   abstract listTarefas(data: string, userId: string): Promise<tarefasDTO[]>
   abstract listTarefasByDateInterval(startDate: string, endDate: string, userId: string): Promise<tarefasDTO[]>
   abstract deleteTarefa(id: string, ativado: boolean, userId: string): Promise<void>
+
+  abstract searchTarefasByType(type: SearchType, value: string | number, userId?: string): Promise<tarefasDTO[]>
 
   abstract updateTarefa(data: IUpdataTarefas): Promise<void>
 

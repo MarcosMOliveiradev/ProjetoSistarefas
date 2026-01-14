@@ -6,6 +6,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { CriarAtividadeButton } from "@/components/criarAtividadeButton";
 import { useState } from "react";
 import type { tarefasDTO } from "@/dtos/tarefasDTO";
+import { SearchTarefas } from "@/components/searchTarefas";
 
 export function Atividades() {
     const [tarefas, setTarefas] = useState<tarefasDTO[]>([])
@@ -16,6 +17,8 @@ export function Atividades() {
                 <div className="flex justify-between items-center mr-8">
                     {/* Componente que filtra data */}
                     <DataPicker onDadosTarefas={setTarefas} />
+
+                    <SearchTarefas onDadosTarefas={setTarefas}/>
 
                     {/* Componente pra criar atividade */}
                     <Dialog>
