@@ -13,3 +13,13 @@ export type userDTO = {
         userId: string
     }
 }
+
+export type usersDTO = {
+    id: string;
+    name: string;
+    matricula: number;
+    turno: "MANHA" | "TARDE" | "INTEGRAL" | null;
+    ativado: boolean;
+    avatarUrl: string | null;
+    role: "COMPRAS" | "ALMOXARIFADO" | "SECRETARIA" | "FINANCEIRO" | "DP" | "INFORMATICA" | "PONTO" | "SEMAC" | "SEMAL" | "PCM" | "PJA" | "OUTROS" | "TODOS";
+}
