@@ -67,11 +67,21 @@ export class PresencaDrizzleRepository extends PresencaRepository {
   }
 
   async findByUserAndPeriod(userId: string, inicio: Date, fim: Date): Promise<Presenca[]> {
-    const rows = await db.select().from(schema.presenca).where(and(
+    const rows = await db.select({
+      id: schema.presenca.id,
+      userId: schema.presenca.userId,
+      usuario: schema.user.name,
+      matricula: schema.user.matricula,
+      data: schema.presenca.data,
+      tipoEsperado: schema.presenca.tipoEsperado,
+      status: schema.presenca.status,
+      horaEntrada: schema.presenca.horaEntrada,
+      origem: schema.presenca.origem
+    }).from(schema.presenca).where(and(
       eq(schema.presenca.userId, userId),
       gte(schema.presenca.data, toDateOnly(inicio)),
       lte(schema.presenca.data, toDateOnly(fim))
-    ))
+    )).innerJoin(schema.user, eq(schema.user.id, schema.presenca.userId))
 
     return rows
   }

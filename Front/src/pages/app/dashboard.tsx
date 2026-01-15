@@ -12,7 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
 import type { atividadesDTO } from "@/dtos/atividadesDTOS"
-import type { userDTO } from "@/dtos/userDto"
+import type { userDTO, usersDTO } from "@/dtos/userDto"
 import { useAuth } from "@/hooks/useAuth"
 import { api } from "@/lib/axios"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
@@ -49,7 +49,7 @@ export function Dashboard() {
     setUsuarioSelecionado(user.user.id)
   }, [user.user.id])
 
-  const { data: listUsuarios } = useQuery({
+  const { data: listUsuarios } = useQuery<usersDTO[]>({
     queryKey: ['findUser'],
     queryFn: () => findUser(),
     enabled: user.user_roles.role === 'INFORMATICA'
@@ -79,7 +79,7 @@ const { data: topFiveActivet, isLoading: topActivetIsLoading } = useQuery({
   queryFn: () => topAtividade(usuarioSelecionado),
 })
 
-const { data: totalMesAMes, isLoading: totalMesesIsLoading } = useQuery({
+const { data: totalMesAMes, isLoading: totalMesesIsLoading } = useQuery<any[]>({
   queryKey: ["totalMeses", usuarioSelecionado],
   queryFn: () => totalMeses(usuarioSelecionado),
 })
@@ -105,11 +105,21 @@ const dadosMeses = totalMesAMes
   
   const porcentagem = Math.round((totalUsuario / totalGeral) * 100)
 
-  function getPrimeiroESegundoNome(nome: string) {
-    if (!nome) return ""
-    const partes = nome.trim().split(" ").filter(Boolean)
-    return partes.slice(0, 2).join(" ")
+function getPrimeiroESegundoNome(nomeCompleto: string) {
+  if (!nomeCompleto) return ""
+
+  const partes = nomeCompleto.trim().split(/\s+/)
+
+  if (partes.length === 1) return partes[0]
+
+  const conectores = ["de", "do", "da", "dos", "das"]
+
+  if (conectores.includes(partes[1].toLowerCase()) && partes.length >= 3) {
+    return `${partes[0]} ${partes[1]} ${partes[2]}`
   }
+
+  return `${partes[0]} ${partes[1]}`
+}
 
   return (
     <div className={`pl-[1.5rem] ${user.user_roles.role === "INFORMATICA" ? "ml-[13rem]" : ""} flex flex-col`}>
@@ -118,11 +128,11 @@ const dadosMeses = totalMesAMes
           <ScrollArea className="h-[90vh]">
             <h2 className="text-xl font-semibold mb-4">Usuários</h2>
 
-            {listUsuarios.map(u => (
+            {listUsuarios?.map(u => (
               <button
                 key={u.id}
                 onClick={() => setUsuarioSelecionado(u.id)}
-                className={` cursor-pointer p-2 rounded text-left hover:bg-slate-700 
+                className={`w-full cursor-pointer p-2 rounded text-left hover:bg-slate-700 
                   ${usuarioSelecionado === u.id ? "bg-slate-700" : ""}`}
               >
                 {getPrimeiroESegundoNome(u.name)}

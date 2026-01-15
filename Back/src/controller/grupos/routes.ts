@@ -14,6 +14,7 @@ import { encerraVinculoUsuarioController } from "./encerraVinculoUsuarioControll
 import { trocarVinculoUsuarioController } from "./trocarVinculoUsarionController.ts";
 import { findPresencaUserController } from "./findPresencaUserController.ts";
 import { updateStatusController } from "./updateStatusController.ts";
+import { findPresencaByPeriodController } from "./findPresencaByPeriodController.ts";
 
 export async function routesGrupos(app: FastifyInstance) {
     app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -165,5 +166,20 @@ export async function routesGrupos(app: FastifyInstance) {
     }
     }, async (request, reply) => {
         return updateStatusController(request, reply)
+    })
+
+    app.withTypeProvider<ZodTypeProvider>().post('/findbyperiod', {
+    onRequest: [verifyJwt],
+    schema: {
+        tags: ['Grupos'],
+        summary: 'Busca presenças por período',
+        body: z.object({
+            userId: z.string(),
+            inicio: z.coerce.date(),
+            fim: z.coerce.date()
+        })
+    }
+    }, async (request, reply) => {
+        return findPresencaByPeriodController(request, reply)
     })
 }

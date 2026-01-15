@@ -7,7 +7,17 @@ const chartConfig = {
     color: "#239151",
   }
 }
+function ordenarPorMesAno(dados: any[]) {
+  return [...dados].sort((a, b) => {
+    const [mesA, anoA] = a.mes.split("/").map(Number)
+    const [mesB, anoB] = b.mes.split("/").map(Number)
 
+    const dataA = new Date(anoA, mesA - 1)
+    const dataB = new Date(anoB, mesB - 1)
+
+    return dataA.getTime() - dataB.getTime()
+  })
+}
 
 export function ChartLin({ totalMesAMes }: any) {
   if (!totalMesAMes || totalMesAMes.length === 0) {
@@ -17,6 +27,9 @@ export function ChartLin({ totalMesAMes }: any) {
       </div>
     )
   }
+
+  const dadosOrdenados = ordenarPorMesAno(totalMesAMes)
+
   return (
     <div className="w-[95%] h-[35rem] shadow-xl/50 ">
       <h2 className="text-2xl ml-4 font-semibold mb-2 text-muted-foreground">
@@ -26,7 +39,7 @@ export function ChartLin({ totalMesAMes }: any) {
       <ChartContainer className="w-full h-full" config={chartConfig}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
-            data={totalMesAMes}
+            data={dadosOrdenados}
             margin={{ top: 20, right: 20, left: 10, bottom: 40 }}
           >
             {/* grade */}
