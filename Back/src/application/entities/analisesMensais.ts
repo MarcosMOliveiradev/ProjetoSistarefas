@@ -7,6 +7,7 @@ export interface IAnaliseMensal {
   ano: number;
   diasEsperados: number;
   diasCumpridos: number;
+  teveAtraso: boolean;
   geradoEm: Date;
 }
 
@@ -24,7 +25,7 @@ export class AnalisesMensais {
     this.props = { ...props };
 
     this._percentual = this.calcularPercentual();
-    this._selo = this.calcularSelo(this._percentual);
+    this._selo = this.calcularSelo(this._percentual, props.teveAtraso);
   }
 
   private validarMes(mes: number) {
@@ -48,8 +49,11 @@ export class AnalisesMensais {
     );
   }
 
-  private calcularSelo(percentual: number): seloEnum {
-    if (percentual === 100) return seloEnum.DOURADO;
+  private calcularSelo(
+    percentual: number,
+    teveAtraso: boolean
+  ): seloEnum {
+    if (percentual === 100 && !teveAtraso) return seloEnum.DOURADO;
     if (percentual >= 76) return seloEnum.VERDE;
     return seloEnum.VERMELHO;
   }

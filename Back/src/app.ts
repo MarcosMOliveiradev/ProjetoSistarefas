@@ -24,6 +24,7 @@ import { feedbackRoutes } from './controller/feedback/routes.ts';
 import { routesGrupos } from './controller/grupos/routes.ts';
 import "./application/useCase/grupos/function/criaPresencaJob.ts"
 import "./application/useCase/grupos/function/fechaPresencaJob.ts"
+import { analiseRoute } from './controller/analiseMensal/route.ts';
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -105,5 +106,9 @@ app.register(mediaRoutes, {
 
 app.register(routesGrupos, {
     prefix: '/grupos'
+})
+
+app.register(analiseRoute, {
+    prefix: '/analise'
 })
 
