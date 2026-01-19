@@ -18,6 +18,7 @@ import { api } from "@/lib/axios"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Clock, FileCheck } from "lucide-react"
 import { useEffect, useState } from "react"
+import profile from "../../assets/PROFILE.png"
 
 export function Dashboard() {
   const [dados, setDados] = useState<atividadesDTO[]>([])
@@ -122,9 +123,9 @@ function getPrimeiroESegundoNome(nomeCompleto: string) {
 }
 
   return (
-    <div className={`pl-[1.5rem] ${user.user_roles.role === "INFORMATICA" ? "ml-[13rem]" : ""} flex flex-col`}>
+    <div className={`pl-[1rem] ${user.user_roles.role === "INFORMATICA" ? "ml-[13rem]" : ""} flex flex-col`}>
       {user.user_roles.role === "INFORMATICA" && (
-        <div className="w-[13rem] rounded-r-2xl h-full fixed left-0 bg-slate-900 text-white p-4 flex flex-col gap-2">
+        <div className="w-[13rem] rounded-r-2xl h-full fixed left-0 bg-slate-900 text-white p-2 flex flex-col gap-2">
           <ScrollArea className="h-[90vh]">
             <h2 className="text-xl font-semibold mb-4">Usuários</h2>
 
@@ -132,10 +133,13 @@ function getPrimeiroESegundoNome(nomeCompleto: string) {
               <button
                 key={u.id}
                 onClick={() => setUsuarioSelecionado(u.id)}
-                className={`w-full cursor-pointer p-2 rounded text-left hover:bg-slate-700 
+                className={`w-full cursor-pointer p-2 rounded text-left hover:bg-slate-700 flex items-center gap-2
                   ${usuarioSelecionado === u.id ? "bg-slate-700" : ""}`}
               >
-                {getPrimeiroESegundoNome(u.name)}
+                <>
+                  <img className="w-8 h-8 rounded-full object-cover" src={u.avatarUrl ?? profile} />
+                  {getPrimeiroESegundoNome(u.name)}
+                </>
               </button>
             ))}
           </ScrollArea>

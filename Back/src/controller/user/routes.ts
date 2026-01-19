@@ -11,6 +11,7 @@ import { MediaController } from "../MediaController.ts";
 import { updateAvatarUrl } from "./updateAvataUrl.ts";
 import { findUserController } from "./findUserController.ts";
 import { findUserByIdController } from "./findUserByIdController.ts";
+import { updateUserController } from "./updateUserController.ts";
 
 const file = new MediaController()
 
@@ -127,5 +128,21 @@ export async function userRoutes(app: FastifyInstance) {
     }
   }, async (request, reply) => {
     return findUserByIdController(request, reply);
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().post('/updateuser', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['User'],
+      summary: 'Atualiza as informações de um usuario',
+      body: z.object({
+        id: z.string(),
+        name: z.string().optional(),
+        password: z.string().optional(),
+        ativado: z.boolean().optional()
+      })
+    }
+  }, async (request, reply) => {
+    return updateUserController(request, reply);
   })
 }

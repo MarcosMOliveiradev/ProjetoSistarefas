@@ -164,7 +164,7 @@ export function TabelaAtividades({ dados }: any) {
                                 <TableHead className="w-[60px] text-sm text-center text-muted-foreground">TERMINO</TableHead>
                                 <TableHead className="w-[60px] text-sm text-center text-muted-foreground">Nº ATENTIMENTO</TableHead>
                                 <TableHead className="w-[10px] text-sm text-center text-muted-foreground">APAGAR</TableHead>
-                                <TableHead className="w-[10px] text-sm text-center text-muted-foreground">EDITRA</TableHead>
+                                <TableHead className="w-[10px] text-sm text-center text-muted-foreground">EDITAR</TableHead>
                                 <TableHead className="w-[10px] text-sm text-center text-muted-foreground">USUARIO</TableHead>
                             </TableRow>
                         </TableHeader>

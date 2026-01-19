@@ -15,6 +15,7 @@ import { trocarVinculoUsuarioController } from "./trocarVinculoUsarionController
 import { findPresencaUserController } from "./findPresencaUserController.ts";
 import { updateStatusController } from "./updateStatusController.ts";
 import { findPresencaByPeriodController } from "./findPresencaByPeriodController.ts";
+import { findUserGrupController } from "./findUserGrupController.ts";
 
 export async function routesGrupos(app: FastifyInstance) {
     app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -181,5 +182,15 @@ export async function routesGrupos(app: FastifyInstance) {
     }
     }, async (request, reply) => {
         return findPresencaByPeriodController(request, reply)
+    })
+
+    app.withTypeProvider<ZodTypeProvider>().get('/find/:id', {
+    onRequest: [verifyJwt],
+    schema: {
+        tags: ['Grupos'],
+        summary: 'Busca grupo do usuario',
+    }
+    }, async (request, reply) => {
+        return findUserGrupController(request, reply)
     })
 }

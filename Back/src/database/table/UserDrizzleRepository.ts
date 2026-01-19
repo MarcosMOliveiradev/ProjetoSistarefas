@@ -1,5 +1,5 @@
 import { User } from "../../application/entities/User.ts";
-import { UserRepository } from "../../application/repositories/UserRepository.ts";
+import { UserRepository, type IUpdateUser } from "../../application/repositories/UserRepository.ts";
 import { db } from "../connection.ts";
 import { schema } from "../drizzle/index.ts";
 import type { userRoleDTO, Users } from "../../DTOs/UserRoleDTO.ts";
@@ -8,6 +8,14 @@ import { eq } from "drizzle-orm";
 import { turnoEnum } from "../../application/entities/Roles.ts";
 
 export class UserDrizzleRepository extends UserRepository {
+    async updateUser(dados: IUpdateUser): Promise<void> {
+        await db.update(schema.user).set({
+            name: dados.name,
+            password: dados.password,
+            ativado: dados.ativado,
+            updatedAt: new Date()
+        }).where(eq(schema.user.id, dados.id))
+    }
     async updateTurno(userId: string, turno: turnoEnum): Promise<void> {
         await db.update(schema.user).set({turno, updatedAt: new Date}).where(eq(schema.user.id, userId))
     }
