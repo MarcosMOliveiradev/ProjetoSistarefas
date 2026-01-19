@@ -18,6 +18,10 @@ import profile from "../../assets/PROFILE.png"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { updateAvatar } from "@/api/updataAvata"
 import { getProfile } from "@/api/profile"
+import { findUser } from "@/api/findUser"
+import type { usersDTO } from "@/dtos/userDto"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { UpdateUser } from "@/components/UpdateUser"
 
 const updateSchema = z.object({
   nome: z.string().optional(),
@@ -29,11 +33,19 @@ const updateSchema = z.object({
 })
 
 export function Profile() {
+  const [usuarioOpen, setUsuarioOpen] = useState(false)
 
   const { data: user } = useQuery({
     queryKey: ['profile'],
     queryFn: getProfile,
   })
+
+  const { data: listUsuarios } = useQuery<usersDTO[]>({
+    queryKey: ['findUser'],
+    queryFn: () => findUser(),
+    enabled: user?.user_roles.role === 'INFORMATICA'
+  })
+  const [usuarioSelecionado, setUsuarioSelecionado] = useState<string | null>(null)
 
   const nomeSeparado = user?.user.name.split(" ")
 
@@ -95,6 +107,22 @@ export function Profile() {
     }
   }
 
+  function getPrimeiroESegundoNome(nomeCompleto: string) {
+    if (!nomeCompleto) return ""
+
+    const partes = nomeCompleto.trim().split(/\s+/)
+
+    if (partes.length === 1) return partes[0]
+
+    const conectores = ["de", "do", "da", "dos", "das"]
+
+    if (conectores.includes(partes[1].toLowerCase()) && partes.length >= 3) {
+      return `${partes[0]} ${partes[1]} ${partes[2]}`
+    }
+
+    return `${partes[0]} ${partes[1]}`
+  }
+
   return (
 
     <div className="grid grid-cols-[20%_1fr] h-[90vh]">
@@ -135,18 +163,54 @@ export function Profile() {
         </div>
         {
           user?.user_roles.role === "INFORMATICA" ?
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button className="w-[15rem] h-[3rem] mt-4 text-[20px] bg-slate-700 hover:bg-slate-400 cursor-pointer">Criar novo usuario</Button>
-                </DialogTrigger>
-                <DialogContent>
-                    <CriarUsuarioButton/>
-                </DialogContent>
-            </Dialog>
+            <>
+              <Dialog>
+                  <DialogTrigger asChild>
+                      <Button className="w-[15rem] h-[3rem] mt-4 text-[20px] bg-slate-700 hover:bg-slate-400 cursor-pointer">Criar novo usuario</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                      <CriarUsuarioButton/>
+                  </DialogContent>
+              </Dialog>
+
+              <ScrollArea className="h-[20rem] w-[90%] p-4 m-4 rounded-2xl bg-slate-900">
+                <h2 className="text-xl font-semibold mb-4">Usuários</h2>
+    
+                {listUsuarios?.map(u => (
+                      <button
+                        key={u.id}
+                        onClick={() => {
+                          setUsuarioSelecionado(u.id)
+                          setUsuarioOpen(true)
+                        }}
+                        className={`w-full cursor-pointer p-2 rounded text-left hover:bg-slate-700 flex items-center gap-2
+                          ${usuarioSelecionado === u.id ? "bg-slate-700" : ""}`}
+                      >
+                        <>
+                          <img className="w-8 h-8 rounded-full object-cover" src={u.avatarUrl ?? profile} />
+                          {getPrimeiroESegundoNome(u.name)}
+                        </>
+                      </button>
+                  
+                ))}
+              </ScrollArea>
+
+            </>
             : <></>
         }
         
       </div>
+      <Dialog open={usuarioOpen} onOpenChange={setUsuarioOpen}>
+        {usuarioSelecionado && (
+          <UpdateUser 
+            id={usuarioSelecionado}
+            onSuccess={() => {
+              setUsuarioOpen(false)
+              setUsuarioSelecionado(null)
+            }}
+          ></UpdateUser>
+        )}
+      </Dialog>
 
       <div className="flex flex-col justify-center items-center">
         <Form {...form}>
