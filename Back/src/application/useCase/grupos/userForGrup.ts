@@ -14,7 +14,7 @@ export class UserForGrup {
   async execute({ userId, dataInicio, grupoId, dataFim }: IUserForGrup) {
     
     const vinculoAtivo = await this.repository.findGrupoAtivo(userId, dataInicio)
-    if(vinculoAtivo) {
+    if(vinculoAtivo?.dataFim === null || vinculoAtivo?.dataFim === undefined) {
       throw new Error("Usuario já tem vinculo ativo!")
     }
 

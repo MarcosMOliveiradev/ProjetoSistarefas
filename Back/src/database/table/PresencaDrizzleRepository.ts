@@ -62,7 +62,7 @@ export class PresencaDrizzleRepository extends PresencaRepository {
     })
   }
 
-  async findByPendente(status: statusPresencaEnum): Promise<Presenca[]> {
+  async findByPendente(status: statusPresencaEnum, inicio: Date, fim: Date): Promise<Presenca[]> {
     const pendente = await db.select({
       id: schema.presenca.id,
       userId: schema.presenca.userId,
@@ -73,7 +73,14 @@ export class PresencaDrizzleRepository extends PresencaRepository {
       status: schema.presenca.status,
       horaEntrada: schema.presenca.horaEntrada,
       origem: schema.presenca.origem
-    }).from(schema.presenca).innerJoin(schema.user, eq(schema.user.id, schema.presenca.userId)).where(eq(schema.presenca.status, status))
+    }).from(schema.presenca)
+      .innerJoin(schema.user, eq(schema.user.id, schema.presenca.userId))
+      .where(and(
+        eq(schema.presenca.status, status),
+        gte(schema.presenca.data, toDateOnly(inicio)),
+        lte(schema.presenca.data, toDateOnly(fim))
+      )
+      )
 
     return pendente
   }

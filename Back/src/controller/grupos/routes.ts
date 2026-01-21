@@ -96,6 +96,8 @@ export async function routesGrupos(app: FastifyInstance) {
             summary: 'Lista a presença por status',
             body: z.object({
                 status: z.enum(statusPresencaEnum),
+                inicio: z.coerce.date(),
+                fim: z.coerce.date(),
             })
         }
     }, async (request, reply) => {

@@ -3,12 +3,14 @@ import type { PresencaRepository } from "../../repositories/PresencaRepository.t
 
 interface IStatusRequest {
   status: statusPresencaEnum
+  inicio: Date
+  fim: Date
 }
 export class FindPresencaByStatus{
   constructor (private repository: PresencaRepository) {}
 
-  async execute({ status }: IStatusRequest) {
-    const pendente = this.repository.findByPendente(status)
+  async execute({ status, fim, inicio }: IStatusRequest) {
+    const pendente = this.repository.findByPendente(status, inicio, fim)
 
     return pendente
   }

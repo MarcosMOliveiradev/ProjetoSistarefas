@@ -8,15 +8,17 @@ export async function findPresencaByStatusController(
   reply: FastifyReply
 ) {
   const statusSchema = z.object({
-    status: z.enum(statusPresencaEnum)
+    status: z.enum(statusPresencaEnum),
+    inicio: z.coerce.date(),
+    fim: z.coerce.date(),
   })
 
-  const { status } = statusSchema.parse(request.body)
+  const { status, inicio, fim } = statusSchema.parse(request.body)
 
   try {
     
     const presencaBySchema = makeFindPresencaByStatus()
-    const find = await presencaBySchema.execute({ status })
+    const find = await presencaBySchema.execute({ status, inicio, fim })
 
     return reply.status(200).send(find)
 
