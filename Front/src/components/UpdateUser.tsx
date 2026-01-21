@@ -92,8 +92,8 @@ const updateUserProps = z.object({
         password: undefined,
         confirmPassword: undefined,
         ativado: user.user.ativado,
-        grupoName: grupo.nome,
-        inicio: grupo.dataInicio
+        grupoName: grupo.props.nome,
+        inicio: grupo.props.dataInicio
       })
     }
   }, [id, user, grupo, form])
