@@ -11,9 +11,8 @@ export class EncerrarVinculoUsuarioGrupo {
   ) {}
 
   async execute({ userId, dataFim }: EncerrarVinculoRequest) {
-    const vinculoAtivo = await this.userGrupoRepository.findGrupoAtivo(
-      userId,
-      dataFim
+    const vinculoAtivo = await this.userGrupoRepository.findGrupoAtivoDoUsuario(
+      userId
     )
 
     if (!vinculoAtivo) {

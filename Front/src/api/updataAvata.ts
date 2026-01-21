@@ -15,7 +15,6 @@ export async function updateAvatar(file: File) {
   })
 
   toast.success("Avatar atualizado!")
-  console.log(response.data)
 
   return response.data.user.avatarUrl
 }

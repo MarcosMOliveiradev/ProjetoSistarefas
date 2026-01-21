@@ -1,4 +1,4 @@
-import { and, eq, gte, isNull, lte, or } from "drizzle-orm";
+import { and, desc, eq, gte, isNull, lte, or } from "drizzle-orm";
 import type { UserGrupos } from "../../application/entities/userGrupos.ts";
 import { UserGrupoRepository } from "../../application/repositories/UserGrupoRepository.ts";
 import { db } from "../connection.ts";
@@ -28,16 +28,12 @@ export class UserGrupoDrizzleRepository extends UserGrupoRepository {
     const [row] = await db
     .select()
     .from(schema.userGrupos)
-    .where(
-      and(
-        eq(schema.userGrupos.userId, userId),
-        lte(schema.userGrupos.dataInicio, toDateOnly(date)),
-        or(
-          isNull(schema.userGrupos.dataFim),
-          gte(schema.userGrupos.dataFim, toDateOnly(date))
-        )
-      )
-    );
+    .where(and(
+      eq(schema.userGrupos.userId, userId),
+      lte(schema.userGrupos.dataInicio, toDateOnly(date)))
+    ).orderBy(
+      desc(schema.userGrupos.dataInicio)
+    ).limit(1);
 
     if(!row) return null
 
@@ -58,11 +54,12 @@ export class UserGrupoDrizzleRepository extends UserGrupoRepository {
     const [row] = await db
     .select()
     .from(schema.userGrupos)
-    .where(
-      and(
-        eq(schema.userGrupos.userId, userId)
-      )
-    );
+    .where(and(
+      eq(schema.userGrupos.userId, userId),
+      isNull(schema.userGrupos.dataFim)
+      )).orderBy(
+        desc(schema.userGrupos.dataInicio)
+      ).limit(1);
 
     if(!row) return null
 

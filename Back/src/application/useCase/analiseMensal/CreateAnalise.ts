@@ -28,7 +28,6 @@ export class CreateAnalise {
     const presencaMensal = await this.presencaRepository.countDiasCumpridos(userId, mes, ano);
     const presencas = await this.presencaRepository.findResumoMesal(userId, mes, ano);
 
-    console.log(presencaMensal, presencas);
     if(!presencaMensal || !presencas) {
       throw new Error("Nenhum registro de presença encontrado para este usuário e período.");
     }
