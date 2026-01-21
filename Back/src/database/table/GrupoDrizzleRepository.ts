@@ -31,7 +31,14 @@ export class GrupoDrizzleRepository extends GrupoRepository {
 
     if(!row) return null
     
-    return row
+    return Grupo.restore({
+      id: row.id,
+      nome: row.nome,
+      dataInicio: row.dataInicio,
+      dataFim: row.dataFim,
+      diasEmpresa: row.diasEmpresa,
+      diasInstituicao: row.diasInstituicao
+    })
   }
 
   async findAtivoByDate(date: Date): Promise<Grupo[]> {
