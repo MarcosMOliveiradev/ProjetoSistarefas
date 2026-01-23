@@ -57,6 +57,12 @@ export function MenuButton() {
                         </Button>
                     </DropdownMenuItem>
 
+                    <DropdownMenuItem asChild>
+                        <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
+                            <Link to={"/sobre"}>SOBRE</Link>
+                        </Button>
+                    </DropdownMenuItem>
+
                     {user?.user_roles.role !== "INFORMATICA" ? 
                         <></> :
                         <>

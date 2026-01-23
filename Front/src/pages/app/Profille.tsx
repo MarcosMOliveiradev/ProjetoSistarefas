@@ -22,6 +22,7 @@ import { findUser } from "@/api/findUser"
 import type { usersDTO } from "@/dtos/userDto"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { UpdateUser } from "@/components/UpdateUser"
+import { Helmet } from "react-helmet-async"
 
 const updateSchema = z.object({
   nome: z.string().optional(),
@@ -126,6 +127,7 @@ export function Profile() {
   return (
 
     <div className="grid grid-cols-[20%_1fr] h-[90vh]">
+      <Helmet title="Profile"/>
       <div className="flex flex-col items-center col-[20rem] border-r-2 border-muted-foreground">
         <div className="w-[15rem] h-[18rem] bg-white rounded-lg shadow-xl/30 flex justify-center items-center flex-col gap-2">
         <>

@@ -12,6 +12,7 @@ import { Dashboard } from "./app/dashboard";
 import { GerenciarGrupos } from "./app/GerenciarGrupos";
 import { GerenciaPresenca } from "./app/GerenciaPresenca";
 import { ConsultarPresenca } from "./app/consultarPresenca";
+import { Sobre } from "./app/Sobre";
 
 export function AppRoutes() {
     const { token, isLoadingUserStorageData } = useAuth()
@@ -39,6 +40,7 @@ export function AppRoutes() {
                             <Route path="/feedback" element={<FeedbackRelatorio/>} />
                             <Route path="/gerenciargrupo" element={<GerenciarGrupos/>}/>
                             <Route path="/gerenciarpresenca" element={<GerenciaPresenca/>}/>
+                            <Route path="/sobre" element={<Sobre />}/>
                             <Route path="/dash" element={<Dashboard/>} />
                             <Route path="/consultar" element={<ConsultarPresenca/>} />
                         </Route>

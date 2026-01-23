@@ -9,9 +9,13 @@ export class FecharPresencasPendentes {
   ) {}
 
   async execute(data: Date) {
+    const inicio = new Date()
+    const fim = new Date()
     const pendentes =
       await this.presencaRepository.findByPendente(
-        statusPresencaEnum.PENDENTE
+        statusPresencaEnum.PENDENTE,
+        inicio,
+        fim
       );
 
     for (const presenca of pendentes) {
