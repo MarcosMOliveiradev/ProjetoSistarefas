@@ -4,8 +4,7 @@ import { findAnaliseForUser } from "../findAnaliseForUser.ts";
 
 export function makeFindAnaliseUser() {
   const analiseRepository = new AnaliseMensalDrizzleRepository()
-  const presencaRepositoy = new PresencaDrizzleRepository()
-  const findAnaliseUser = new findAnaliseForUser(analiseRepository, presencaRepositoy)
+  const findAnaliseUser = new findAnaliseForUser(analiseRepository)
 
   return findAnaliseUser
 }

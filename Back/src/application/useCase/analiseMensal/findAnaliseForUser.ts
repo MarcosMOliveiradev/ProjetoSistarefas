@@ -3,28 +3,17 @@ import type { AnaliseMensalRepository } from "../../repositories/AnaliseMensalRe
 import type { PresencaRepository } from "../../repositories/PresencaRepository.ts";
 
 interface IAnaliseProps {
-  userId: string,
-  mes: number,
-  ano: number
+  userId: string
 }
 
 export class findAnaliseForUser {
   constructor (
-    private analiseRepository: AnaliseMensalRepository,
-    private presencaRepository: PresencaRepository
+    private analiseRepository: AnaliseMensalRepository
   ) {}
 
-  async execute({ userId, mes, ano }: IAnaliseProps) {
-    const presenca = await this.presencaRepository.findResumoMesal(userId, mes, ano)
-
-    let falta = 0;
-    presenca.map((p) => {
-      if(p.status === statusPresencaEnum.FALTA) {
-        falta++
-      }
-    })
+  async execute({ userId }: IAnaliseProps) {
     const analise = await this.analiseRepository.findHistoricoUsuario(userId)
-
-    return {analise, falta}
+    
+    return analise
   }
 }
