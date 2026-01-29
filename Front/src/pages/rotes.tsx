@@ -13,6 +13,7 @@ import { GerenciarGrupos } from "./app/GerenciarGrupos";
 import { GerenciaPresenca } from "./app/GerenciaPresenca";
 import { ConsultarPresenca } from "./app/consultarPresenca";
 import { Sobre } from "./app/Sobre";
+import { AnaliseMensal } from "./app/analiseMensal";
 
 export function AppRoutes() {
     const { token, isLoadingUserStorageData } = useAuth()
@@ -43,6 +44,7 @@ export function AppRoutes() {
                             <Route path="/sobre" element={<Sobre />}/>
                             <Route path="/dash" element={<Dashboard/>} />
                             <Route path="/consultar" element={<ConsultarPresenca/>} />
+                            <Route path="/analise" element={<AnaliseMensal/>} />
                         </Route>
                          <Route path="*" element={<Navigate to="/" replace />} />
                     </>
