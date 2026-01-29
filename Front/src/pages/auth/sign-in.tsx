@@ -53,7 +53,7 @@ export function SignIn() {
                   <FormItem>
                     <FormLabel className="text-[1.5rem]">Matricula</FormLabel>
                     <FormControl>
-                      <Input id="matriculaBody" placeholder="Matricula" {...field}/>
+                      <Input id="matriculaBody" autoFocus={true} placeholder="Matricula" {...field}/>
                     </FormControl>
                   </FormItem>
                 )}
