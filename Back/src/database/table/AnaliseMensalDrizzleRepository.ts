@@ -5,6 +5,13 @@ import { db } from "../connection.ts";
 import { schema } from "../drizzle/index.ts";
 
 export class AnaliseMensalDrizzleRepository extends AnaliseMensalRepository {
+  async countAnalise(usuarioId: string): Promise<{ total: number; }> {
+    const [total] = await db.select({
+      total: sql<number>`COUNT(*)`
+    }).from(schema.analisesMensais).where(eq(schema.analisesMensais.usuarioId, usuarioId))
+
+    return total
+  }
   async findAnaliseComAtrasos(usuarioId: string, mes: number, ano: number): Promise<AnalisesMensais> {
     const [row] = await db
     .select({
