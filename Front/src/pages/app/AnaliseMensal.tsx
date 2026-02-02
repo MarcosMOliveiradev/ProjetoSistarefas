@@ -1,9 +1,11 @@
 import { findUser } from "@/api/findUser"
+import { CriarSelo } from "@/components/CriarSelo"
+import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Spinner } from "@/components/ui/spinner"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import type { analiseDTO } from "@/dtos/analiseDTO"
-import type { userDTO } from "@/dtos/userDto"
+import type { userDTO, usersDTO } from "@/dtos/userDto"
 import { api } from "@/lib/axios"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
@@ -12,6 +14,7 @@ import { PiMedalFill } from "react-icons/pi"
 
 export function AnaliseMensal() {
   const [usuarioSelecionado, setUsuarioSelecionado] = useState<string | null>(null)
+  const [criarSelo, setCriarSelo] = useState<usersDTO[] | null>(null)
 
   // Buscar dados do usuário logado
   const queryClient = useQueryClient()
@@ -84,21 +87,32 @@ export function AnaliseMensal() {
     <div className="m-10 h-[80%]">
       <Helmet title="Feedback"/>
       {isInformatica && (
-        <div className="w-[20rem] mb-4">
-          <label className="text-sm font-medium">Selecionar usuário</label>
+        <div className="flex justify-around items-center">
+          <div className="w-[20rem] mb-4">
+            <label className="text-sm font-medium">Selecionar usuário</label>
 
-          <select
-            className="w-full border p-2 rounded"
-            value={usuarioSelecionado ?? ""}
-            onChange={(e) => setUsuarioSelecionado(e.target.value)}
+            <select
+              className="w-full border p-2 rounded"
+              value={usuarioSelecionado ?? ""}
+              onChange={(e) => setUsuarioSelecionado(e.target.value)}
+            >
+              <option value="">Selecione um usuário</option>
+              {usuarios?.map((u: any) => (
+                <option key={u.id} value={u.id}>
+                  {u.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <Button
+            size="sm"
+            variant="outline"
+            className="bg-slate-700 text-white px-3 py-1 hover:bg-slate-500 hover:text-white cursor-pointer rounded-b-sm"
+            onClick={() => setCriarSelo(usuarios)}
           >
-            <option value="">Selecione um usuário</option>
-            {usuarios?.map((u: any) => (
-              <option key={u.id} value={u.id}>
-                {u.name}
-              </option>
-            ))}
-          </select>
+            CRIAR SELO
+          </Button>
         </div>
       )}
 
@@ -148,19 +162,26 @@ export function AnaliseMensal() {
                     dados.selo
                   }
                 </TableCell>
-                <TableCell>
+                {/* <TableCell>
                   <button
                     className="bg-slate-700 text-white px-3 py-1 rounded hover:bg-slate-500"
                     onClick={() => handleBaixarPdf(dados.mes, dados.ano)}
                   >
                     Baixar PDF
                   </button>
-                </TableCell>
+                </TableCell> */}
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </ScrollArea>
+
+      {criarSelo && (
+        <CriarSelo
+          user={criarSelo}
+          onClose={() => setCriarSelo(null)}
+        />
+      )}
     </div>
   )
 }
