@@ -1,5 +1,7 @@
 import { findUser } from "@/api/findUser"
+import { AtualizarStatusPresencaDialog } from "@/components/AtualizarStatusPresencaDialog"
 import { DataPicker, type dataPickerSchema } from "@/components/Calendar"
+import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Spinner } from "@/components/ui/spinner"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -12,6 +14,8 @@ import type z from "zod"
 
 export function ConsultarPresenca() {
   const [usuarioSelecionado, setUsuarioSelecionado] = useState<string | null>(null)
+  const [presencaSelecionada, setPresencaSelecionada] =
+      useState<presecaDTOS | null>(null)
   const [periodo, setPeriodo] = useState<z.infer<typeof dataPickerSchema>>({
     dateRage: {
       from: new Date(),
@@ -118,11 +122,30 @@ export function ConsultarPresenca() {
                   {dados.horaEntrada ?? "—"}
                 </TableCell>
                 <TableCell>{dados.origem}</TableCell>
+                {isInformatica && (
+                  <TableCell>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setPresencaSelecionada(dados)}
+                    >
+                      Alterar status
+                    </Button>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </ScrollArea>
+
+      {/* DIALOG */}
+      {presencaSelecionada && (
+        <AtualizarStatusPresencaDialog
+          presenca={presencaSelecionada}
+          onClose={() => setPresencaSelecionada(null)}
+        />
+      )}
     </div>
   )
 }
