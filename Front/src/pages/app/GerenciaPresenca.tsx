@@ -81,6 +81,12 @@ const dadosOrdenados = useMemo(() => {
 
       return sortDir === "asc" ? d1 - d2 : d2 - d1
     }
+    if (sortCol === "tipo") {
+      const d1 = new Date(a.data).getTime()
+      const d2 = new Date(b.data).getTime()
+
+      return sortDir === "asc" ? d1 - d2 : d2 - d1
+    }
 
     return 0
   })
@@ -188,7 +194,10 @@ const dadosOrdenados = useMemo(() => {
                 className="text-center cursor-pointer"
                 onClick={() => handleSort("data")}
               >Data {sortCol === "data" && (sortDir === "asc" ? "▲" : "▼")} </TableHead>
-              <TableHead className="text-center">Tipo</TableHead>
+              <TableHead 
+                className="text-center cursor-pointer"
+                onClick={() => handleSort("tipo")}
+              >Tipo</TableHead>
               <TableHead className="text-center">Status</TableHead>
               <TableHead className="text-center">Hora Entrada</TableHead>
               <TableHead className="text-center">Origem</TableHead>
