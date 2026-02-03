@@ -3,94 +3,201 @@ import { seloEnum } from "./Roles.ts";
 
 export interface IAnaliseMensal {
   usuarioId: string;
-  mes: number;     // 1 a 12
+
+  mes: number;
   ano: number;
-  diasEsperados: number;
-  diasCumpridos: number;
-  teveAtraso: boolean;
+
+  diasEsperadosEmpresa: number;
+  diasEsperadosInstituicao: number;
+
+  diasCumpridosEmpresa: number;
+  diasCumpridosInstituicao: number;
+
+  atrasos: number;
+
   geradoEm: Date;
 }
 
 export class AnalisesMensais {
-  private props: IAnaliseMensal;
-  private _id: string;
-  private _percentual: number;
-  private _selo: seloEnum;
+  private props: IAnaliseMensal
+  private _id: string
+
+  private _percentualEmpresa: number
+  private _percentualInstituicao: number
+  private _selo: seloEnum
 
   constructor(props: IAnaliseMensal) {
-    this.validarMes(props.mes);
-    this.validarDias(props.diasEsperados, props.diasCumpridos);
+    this.validarMes(props.mes)
 
-    this._id = createId();
-    this.props = { ...props };
+    this.validarDias(
+      props.diasEsperadosEmpresa,
+      props.diasCumpridosEmpresa,
+      "Empresa"
+    )
 
-    this._percentual = this.calcularPercentual();
-    this._selo = this.calcularSelo(this._percentual, props.teveAtraso);
+    this.validarDias(
+      props.diasEsperadosInstituicao,
+      props.diasCumpridosInstituicao,
+      "Instituição"
+    )
+
+    this.validarAtrasos(props.atrasos)
+
+    this._id = createId()
+    this.props = { ...props }
+
+    // percentuais separados
+    this._percentualEmpresa = this.calcularPercentual(
+      props.diasCumpridosEmpresa,
+      props.diasEsperadosEmpresa
+    )
+
+    this._percentualInstituicao = this.calcularPercentual(
+      props.diasCumpridosInstituicao,
+      props.diasEsperadosInstituicao
+    )
+
+    // selo global
+    this._selo = this.calcularSelo()
   }
+
+  // ------------------------------
+  // ✅ Validações
+  // ------------------------------
 
   private validarMes(mes: number) {
     if (mes < 1 || mes > 12) {
-      throw new Error("Mês inválido");
+      throw new Error("Mês inválido")
     }
   }
 
-  private validarDias(esperados: number, cumpridos: number) {
-    if (esperados <= 0) {
-      throw new Error("Dias esperados deve ser maior que zero");
+  private validarDias(
+    esperados: number,
+    cumpridos: number,
+    tipo: string
+  ) {
+    if (esperados < 0) {
+      throw new Error(`Dias esperados (${tipo}) não pode ser negativo`)
     }
-    if (cumpridos < 0 || cumpridos > esperados) {
-      throw new Error("Dias cumpridos inválidos");
+
+    if (cumpridos < 0) {
+      throw new Error(`Dias cumpridos (${tipo}) não pode ser negativo`)
+    }
+
+    if (cumpridos > esperados) {
+      throw new Error(
+        `Dias cumpridos (${tipo}) não pode ser maior que dias esperados`
+      )
     }
   }
 
-  private calcularPercentual(): number {
-    return Number(
-      ((this.props.diasCumpridos / this.props.diasEsperados) * 100).toFixed(2)
-    );
+  private validarAtrasos(atrasos: number) {
+    if (atrasos < 0) {
+      throw new Error("Atrasos não pode ser negativo")
+    }
   }
 
-  private calcularSelo(
-    percentual: number,
-    teveAtraso: boolean
-  ): seloEnum {
-    if (percentual === 100 && !teveAtraso) return seloEnum.DOURADO;
-    if (percentual >= 76) return seloEnum.VERDE;
-    return seloEnum.VERMELHO;
+  // ------------------------------
+  // ✅ Cálculos
+  // ------------------------------
+
+  private calcularPercentual(cumpridos: number, esperados: number): number {
+    if (esperados === 0) return 0
+
+    return Number(((cumpridos / esperados) * 100).toFixed(2))
   }
+
+  private calcularPercentualGlobal(): number {
+    const totalEsperado =
+      this.props.diasEsperadosEmpresa +
+      this.props.diasEsperadosInstituicao
+
+    const totalCumprido =
+      this.props.diasCumpridosEmpresa +
+      this.props.diasCumpridosInstituicao
+
+    return this.calcularPercentual(totalCumprido, totalEsperado)
+  }
+
+  private calcularSelo(): seloEnum {
+    const percentualGlobal = this.calcularPercentualGlobal()
+
+    // regra:
+    // dourado = 100% e sem atrasos
+    if (percentualGlobal === 100 && this.props.atrasos === 0) {
+      return seloEnum.DOURADO
+    }
+
+    // verde = acima de 75%
+    if (percentualGlobal >= 76) {
+      return seloEnum.VERDE
+    }
+
+    // vermelho = abaixo disso
+    return seloEnum.VERMELHO
+  }
+
+  // ------------------------------
+  // ✅ Getters públicos
+  // ------------------------------
 
   public get id() {
-    return this._id;
+    return this._id
   }
 
   public get usuarioId() {
-    return this.props.usuarioId;
+    return this.props.usuarioId
   }
 
   public get mes() {
-    return this.props.mes;
+    return this.props.mes
   }
 
   public get ano() {
-    return this.props.ano;
+    return this.props.ano
   }
 
-  public get diasEsperados() {
-    return this.props.diasEsperados;
+  // ---- Empresa
+
+  public get diasEsperadosEmpresa() {
+    return this.props.diasEsperadosEmpresa
   }
 
-  public get diasCumpridos() {
-    return this.props.diasCumpridos;
+  public get diasCumpridosEmpresa() {
+    return this.props.diasCumpridosEmpresa
   }
 
-  public get percentual() {
-    return this._percentual;
+  public get percentualEmpresa() {
+    return this._percentualEmpresa
   }
+
+  // ---- Instituição
+
+  public get diasEsperadosInstituicao() {
+    return this.props.diasEsperadosInstituicao
+  }
+
+  public get diasCumpridosInstituicao() {
+    return this.props.diasCumpridosInstituicao
+  }
+
+  public get percentualInstituicao() {
+    return this._percentualInstituicao
+  }
+
+  // ---- Atrasos
+
+  public get atrasos() {
+    return this.props.atrasos
+  }
+
+  // ---- Global
 
   public get selo() {
-    return this._selo;
+    return this._selo
   }
 
   public get geradoEm() {
-    return this.props.geradoEm;
+    return this.props.geradoEm
   }
 }

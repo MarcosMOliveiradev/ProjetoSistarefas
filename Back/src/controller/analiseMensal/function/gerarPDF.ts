@@ -72,8 +72,10 @@ export function gerarPdfAnaliseDesempenho({
       "\n",
       {
         ul: [
-          `Você frenquêntou ${analise.diasEsperados} de um total de ${analise.diasCumpridos} espedados, e ficou com um percentual de frenquência ${analise.percentual}%`,
-          `Teve ${analise.faltas} faltas`,
+          `Você frenquêntou ${analise.diasCumpridosEmpresa} de um total de ${analise.diasEsperadosEmpresa} espedados na empresa, e ficou com um percentual de frenquência ${analise.percentualEmpresa}%`,
+          `Você frenquêntou ${analise.percentualIntituicao} de um total de ${analise.diasEsperadosInstituicao} espedados na instituição, e ficou com um percentual de frenquência ${analise.percentualIntituicao}%`,
+          `Teve um total de  ${analise.diasEsperadosEmpresa - analise.diasCumpridosEmpresa} faltas na empresa e
+          um total de ${analise.diasEsperadosInstituicao - analise.percentualIntituicao} faltas na instituição`,
           `Tece ${analise.atrasos} Atrasos`,
         ],
       },

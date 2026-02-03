@@ -123,10 +123,13 @@ export function AnaliseMensal() {
             <TableRow>
               <TableHead className="text-center">Mês</TableHead>
               <TableHead className="text-center">Ano</TableHead>
-              <TableHead className="text-center">Dias Esperados</TableHead>
-              <TableHead className="text-center">Dias cumpridos</TableHead>
+              <TableHead className="text-center">Dias Esperados empresa</TableHead>
+              <TableHead className="text-center">Dias cumpridos empresa</TableHead>
+              <TableHead className="text-center">Dias Esperados instituição</TableHead>
+              <TableHead className="text-center">Dias cumpridos instituição</TableHead>
               <TableHead className="text-center">Atrasos</TableHead>
-              <TableHead className="text-center">% Percentual</TableHead>
+              <TableHead className="text-center">% participação na empresa</TableHead>
+              <TableHead className="text-center">% participação na instituição</TableHead>
               <TableHead className="text-center">Selos</TableHead>
             </TableRow>
           </TableHeader>
@@ -148,10 +151,13 @@ export function AnaliseMensal() {
               >
                 <TableCell>{dados.mes}</TableCell>
                 <TableCell>{dados.ano}</TableCell>
-                <TableCell>{dados.diasEsperados}</TableCell>
-                <TableCell>{dados.diasCumpridos}</TableCell>
+                <TableCell>{dados.diasEsperadosEmpresa}</TableCell>
+                <TableCell>{dados.diasCumpridosEmpresa}</TableCell>
+                <TableCell>{dados.diasEsperadosInstituicao}</TableCell>
+                <TableCell>{dados.diasCumpridosInstituicao}</TableCell>
                 <TableCell>{dados.atrasos}</TableCell>
-                <TableCell>{dados.percentual}</TableCell>
+                <TableCell>{dados.percentualEmpresa}</TableCell>
+                <TableCell>{dados.percentualIntituicao}</TableCell>
                 <TableCell className={ `flex justify-center gap-4
                   ${dados.selo === "VERDE" ? ' text-green-800' 
                   : dados.selo === "VERMELHO" ? 'text-red-800' 

@@ -74,7 +74,7 @@ export class UserDrizzleRepository extends UserRepository {
             avatarUrl: schema.user.avatarUrl,
             role: schema.userRoles.role
         }).from(schema.user).innerJoin(schema.userRoles, eq(schema.user.id, schema.userRoles.userId))
-        .where(eq(schema.user.ativado, true));
+        .where(eq(schema.user.ativado, true)).orderBy(schema.user.name);
         return users
     }
 
