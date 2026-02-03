@@ -67,7 +67,7 @@ export class TarefasDrizzleRepository extends TarefasRepository {
       return { total: 0 }
     }
 
-    return total
+    return total ?? {total: 0}
   }
 
   async qtdMeses(userId: string): Promise<Meses[] | null> {

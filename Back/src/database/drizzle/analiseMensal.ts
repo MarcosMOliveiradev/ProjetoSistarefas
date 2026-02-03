@@ -10,14 +10,21 @@ export const analisesMensais = pgTable("analises_mensais", {
     .references(() => user.id)
     .notNull(),
 
-  mes: integer("mes").notNull(), // 1-12
+  mes: integer("mes").notNull(),
   ano: integer("ano").notNull(),
 
-  diasEsperados: integer("dias_esperados").notNull(),
-  diasCumpridos: integer("dias_cumpridos").notNull(),
-  percentual: numeric("percentual", { precision: 5, scale: 2 }).notNull(),
+  diasEsperadosEmpresa: integer("dias_esperados_empresa").notNull(),
+  diasEsperadosInstituicao: integer("dias_esperados_instituicao").notNull(),
+
+  diasCumpridosEmpresa: integer("dias_cumpridos_empresa").notNull(),
+  diasCumpridosInstituicao: integer("dias_cumpridos_instituicao").notNull(),
+
+  atrasos: integer("atrasos").notNull().default(0),
+
+  percentualEmpresa: numeric("percentual_empresa", { precision: 5, scale: 2 }).notNull(),
+  percentualIntituicao: numeric("percentual_intituicao", { precision: 5, scale: 2 }).notNull(),
 
   selo: seloEnum("selo").notNull(),
 
   geradoEm: timestamp("gerado_em").defaultNow(),
-});
+})

@@ -13,77 +13,42 @@ export class AnaliseMensalDrizzleRepository extends AnaliseMensalRepository {
     return total
   }
   async findAnaliseComAtrasos(usuarioId: string, mes: number, ano: number): Promise<AnalisesMensais> {
-    const [row] = await db
-    .select({
-      id: schema.analisesMensais.id,
-      mes: schema.analisesMensais.mes,
-      ano: schema.analisesMensais.ano,
-      diasEsperados: schema.analisesMensais.diasEsperados,
-      diasCumpridos: schema.analisesMensais.diasCumpridos,
-      percentual: schema.analisesMensais.percentual,
-      selo: schema.analisesMensais.selo,
-      faltas: sql<number>`
-        COUNT(
-          CASE 
-            WHEN ${schema.presenca.status} = 'FALTA' 
-            THEN 1 
-          END
-        )
-      `.as('falta'),
-      atrasos: sql<number>`
-        COUNT(
-          CASE 
-            WHEN ${schema.presenca.status} = 'ATRASADO' 
-            THEN 1 
-          END
-        )
-      `.as('atrasos'),
-    })
+     const [row] = await db
+    .select()
     .from(schema.analisesMensais)
-    .innerJoin(
-      schema.presenca,
-      eq(schema.analisesMensais.usuarioId, schema.presenca.userId)
-    )
     .where(
       and(
         eq(schema.analisesMensais.usuarioId, usuarioId),
         eq(schema.analisesMensais.mes, mes),
-        eq(schema.analisesMensais.ano, ano),
-        sql`
-          EXTRACT(MONTH FROM ${schema.presenca.data}) = ${schema.analisesMensais.mes}
-          AND EXTRACT(YEAR FROM ${schema.presenca.data}) = ${schema.analisesMensais.ano}
-        `
+        eq(schema.analisesMensais.ano, ano)
       )
     )
-    .groupBy(
-      schema.analisesMensais.id,
-      schema.analisesMensais.mes,
-      schema.analisesMensais.ano,
-      schema.analisesMensais.diasEsperados,
-      schema.analisesMensais.diasCumpridos,
-      schema.analisesMensais.percentual,
-      schema.analisesMensais.selo
-    )
-    .orderBy(
-      schema.analisesMensais.ano,
-      schema.analisesMensais.mes
-    )
-    
-    return row
-  }
 
-  async create(analise: AnalisesMensais): Promise<void> {
-    await db.insert(schema.analisesMensais).values({
-      ano: analise.ano,
-      usuarioId: analise.usuarioId,
-      mes: analise.mes,
-      diasEsperados: analise.diasEsperados,
-      diasCumpridos: analise.diasCumpridos,
-      percentual: analise.percentual.toFixed(2),
-      selo: analise.selo,
-      geradoEm: analise.geradoEm
-    })
+  return row ?? null
   }
+async create(analise: AnalisesMensais): Promise<void> {
+  await db.insert(schema.analisesMensais).values({
+    id: analise.id,
+
+    usuarioId: analise.usuarioId,
+    mes: analise.mes,
+    ano: analise.ano,
+
+    diasEsperadosEmpresa: analise.diasEsperadosEmpresa,
+    diasEsperadosInstituicao: analise.diasEsperadosInstituicao,
+
+    diasCumpridosEmpresa: analise.diasCumpridosEmpresa,
+    diasCumpridosInstituicao: analise.diasCumpridosInstituicao,
+
+    atrasos: analise.atrasos,
+
+    percentualEmpresa: analise.percentualEmpresa.toFixed(2),
+    percentualIntituicao: analise.percentualInstituicao.toFixed(2),
+
+    selo: analise.selo,
+    geradoEm: analise.geradoEm,
+  })
+}
   async findByUserAndPeriod(userId: string, mes: number, ano: number): Promise<AnalisesMensais | null> {
     const [row] = await db.select()
       .from(schema.analisesMensais)
@@ -101,52 +66,15 @@ export class AnaliseMensalDrizzleRepository extends AnaliseMensalRepository {
     return row
   }
   async findHistoricoUsuario(userId: string): Promise<AnalisesMensais[]> {
-  const rows = await db
-    .select({
-      id: schema.analisesMensais.id,
-      mes: schema.analisesMensais.mes,
-      ano: schema.analisesMensais.ano,
-      diasEsperados: schema.analisesMensais.diasEsperados,
-      diasCumpridos: schema.analisesMensais.diasCumpridos,
-      percentual: schema.analisesMensais.percentual,
-      selo: schema.analisesMensais.selo,
-      atrasos: sql<number>`
-        COUNT(
-          CASE 
-            WHEN ${schema.presenca.status} = 'ATRASADO' 
-            THEN 1 
-          END
-        )
-      `.as('atrasos'),
-    })
+  const row = await db
+    .select()
     .from(schema.analisesMensais)
-    .innerJoin(
-      schema.presenca,
-      eq(schema.analisesMensais.usuarioId, schema.presenca.userId)
-    )
     .where(
       and(
         eq(schema.analisesMensais.usuarioId, userId),
-        sql`
-          EXTRACT(MONTH FROM ${schema.presenca.data}) = ${schema.analisesMensais.mes}
-          AND EXTRACT(YEAR FROM ${schema.presenca.data}) = ${schema.analisesMensais.ano}
-        `
       )
     )
-    .groupBy(
-      schema.analisesMensais.id,
-      schema.analisesMensais.mes,
-      schema.analisesMensais.ano,
-      schema.analisesMensais.diasEsperados,
-      schema.analisesMensais.diasCumpridos,
-      schema.analisesMensais.percentual,
-      schema.analisesMensais.selo
-    )
-    .orderBy(
-      schema.analisesMensais.ano,
-      schema.analisesMensais.mes
-    )
 
-  return rows
-}
+  return row ?? null
+  }
 }

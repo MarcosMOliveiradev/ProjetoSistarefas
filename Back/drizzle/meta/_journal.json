@@ -22,6 +22,20 @@
       "when": 1766518571923,
       "tag": "0002_chunky_garia",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1770123139466,
+      "tag": "0003_blushing_sprite",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1770123767860,
+      "tag": "0004_mysterious_peter_parker",
+      "breakpoints": true
     }
   ]
 }
