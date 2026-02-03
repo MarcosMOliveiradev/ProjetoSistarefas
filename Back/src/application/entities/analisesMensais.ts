@@ -122,18 +122,32 @@ export class AnalisesMensais {
   private calcularSelo(): seloEnum {
     const percentualGlobal = this.calcularPercentualGlobal()
 
-    // regra:
-    // dourado = 100% e sem atrasos
-    if (percentualGlobal === 100 && this.props.atrasos === 0) {
+    // percentuais separados
+    const empresa = this._percentualEmpresa
+    const instituicao = this._percentualInstituicao
+
+    // 🔴 Regra nova:
+    // se qualquer um dos dois ficar em 75% ou menos → vermelho direto
+    if (empresa <= 75 || instituicao <= 75) {
+      return seloEnum.VERMELHO
+    }
+
+    // 🟡 dourado = 100% em tudo e sem atrasos
+    if (
+      percentualGlobal === 100 &&
+      empresa === 100 &&
+      instituicao === 100 &&
+      this.props.atrasos === 0
+    ) {
       return seloEnum.DOURADO
     }
 
-    // verde = acima de 75%
+    // 🟢 verde = acima de 75% em ambos
     if (percentualGlobal >= 76) {
       return seloEnum.VERDE
     }
 
-    // vermelho = abaixo disso
+    // fallback
     return seloEnum.VERMELHO
   }
 

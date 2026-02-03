@@ -3,7 +3,6 @@ import type { AnaliseMensalRepository } from "../../repositories/AnaliseMensalRe
 import type { GrupoRepository } from "../../repositories/GrupoRepository.ts";
 import type { PresencaRepository } from "../../repositories/PresencaRepository.ts";
 import type { UserGrupoRepository } from "../../repositories/UserGrupoRepository.ts";
-import { calcularDiasEsperados } from "./function/calcularDiasEsperados.ts";
 
 interface IGeraAnaliseMensalRequest {
   userId: string;
@@ -18,8 +17,8 @@ export class CreateAnalise {
     private analiseMensalRepository: AnaliseMensalRepository,
     private presencaRepository: PresencaRepository
   ) {}
-
-    async execute({ userId, mes, ano }: IGeraAnaliseMensalRequest) {
+  async execute({ userId, mes, ano }: IGeraAnaliseMensalRequest) {
+    // 1. Verificar se já existe análise
     const analiseExistente =
       await this.analiseMensalRepository.findByUserAndPeriod(userId, mes, ano)
 
@@ -27,6 +26,7 @@ export class CreateAnalise {
       throw new Error("Análise mensal já existe para este usuário e período.")
     }
 
+    // 2. Buscar presenças do mês
     const presencas =
       await this.presencaRepository.findResumoMesal(userId, mes, ano)
 
@@ -34,33 +34,21 @@ export class CreateAnalise {
       throw new Error("Nenhum registro de presença encontrado.")
     }
 
-    // ✅ atrasos
+    // 3. Contar atrasos
     const atrasos = presencas.filter(p =>
       p.status === "ATRASADO"
     ).length
 
-    // ✅ grupo ativo
-    const grupoUser =
-      await this.userGrupoRepository.findGrupoAtivoDoUsuario(userId)
+    // 4. Calcular dias esperados REAIS (somente dias existentes no banco)
+    const diasEsperadosEmpresa = presencas.filter(p =>
+      p.tipoEsperado === "EMPRESA"
+    ).length
 
-    if (!grupoUser) {
-      throw new Error("Usuário não está associado a nenhum grupo ativo.")
-    }
+    const diasEsperadosInstituicao = presencas.filter(p =>
+      p.tipoEsperado === "INSTITUICAO"
+    ).length
 
-    const grupo =
-      await this.grupoRepository.findById(grupoUser.grupoId)
-
-    if (!grupo) {
-      throw new Error("Grupo associado ao usuário não encontrado.")
-    }
-
-    // ✅ dias esperados separados
-    const diasEsperados = calcularDiasEsperados(grupo, mes, ano)
-
-    const diasEsperadosEmpresa = diasEsperados.diasEmpresa
-    const diasEsperadosInstituicao = diasEsperados.diasInstituicao
-
-    // ✅ dias cumpridos separados
+    // 5. Calcular dias cumpridos
     const diasCumpridosEmpresa = presencas.filter(p =>
       p.tipoEsperado === "EMPRESA" &&
       (p.status === "PRESENTE" || p.status === "ATRASADO")
@@ -71,23 +59,24 @@ export class CreateAnalise {
       (p.status === "PRESENTE" || p.status === "ATRASADO")
     ).length
 
-    // ✅ criar análise nova
+    // 6. Criar análise mensal
     const analise = new AnalisesMensais({
-    usuarioId: userId,
-    mes,
-    ano,
+      usuarioId: userId,
+      mes,
+      ano,
 
-    diasEsperadosEmpresa: diasEsperados.diasEmpresa,
-    diasEsperadosInstituicao: diasEsperados.diasInstituicao,
+      diasEsperadosEmpresa,
+      diasEsperadosInstituicao,
 
-    diasCumpridosEmpresa: diasCumpridosEmpresa,
-    diasCumpridosInstituicao: diasCumpridosInstituicao,
+      diasCumpridosEmpresa,
+      diasCumpridosInstituicao,
 
-    atrasos: atrasos,
+      atrasos,
 
-    geradoEm: new Date(),
-  })
+      geradoEm: new Date(),
+    })
 
+    // 7. Salvar no banco
     await this.analiseMensalRepository.create(analise)
   }
 }
