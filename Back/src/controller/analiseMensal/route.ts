@@ -6,6 +6,7 @@ import { createAnaliseMensalController } from "./CreateAnaliseMensalController.t
 import { findAnaliseMensalController } from "./findAnaliseMensalController.ts";
 import { analiseForPdfController } from "./analiseForPdfController.ts";
 import { countAnaliseController } from "./countAnaliseController.ts";
+import { findAnaliseForPeriodController } from "./findAnaliseForPeriodController.ts";
 
 export async function analiseRoute(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -27,7 +28,7 @@ export async function analiseRoute(app: FastifyInstance) {
         onRequest: [verifyJwt],
         schema: {
           tags: ['Analise Mensal'],
-          summary: 'Cria a análise mensal',
+          summary: 'Lista analises de um usuario',
           body: z.object({
               userId: z.string()
           })
@@ -52,15 +53,29 @@ export async function analiseRoute(app: FastifyInstance) {
   })
 
   app.withTypeProvider<ZodTypeProvider>().post('/count', {
-        onRequest: [verifyJwt],
-        schema: {
-          tags: ['Analise Mensal'],
-          summary: 'Conta a quantidade de analises mensais',
-          body: z.object({
-            usuarioId: z.string()
-          })
-        }
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['Analise Mensal'],
+      summary: 'Conta a quantidade de analises mensais',
+      body: z.object({
+        usuarioId: z.string()
+      })
+    }
   }, async (request, reply) => {
-      return countAnaliseController(request, reply)
+    return countAnaliseController(request, reply)
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().post('/findAnalises', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['Analise Mensal'],
+      summary: 'Lista as analises por periodo',
+      body: z.object({
+        mes: z.number(),
+        ano: z.number()
+      })
+    }
+  }, async (request, reply) => {
+    return findAnaliseForPeriodController(request, reply)
   })
 }

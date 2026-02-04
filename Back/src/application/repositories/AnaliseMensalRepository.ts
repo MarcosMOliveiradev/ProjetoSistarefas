@@ -6,4 +6,5 @@ export abstract class AnaliseMensalRepository {
   abstract findHistoricoUsuario(userId: string): Promise<AnalisesMensais[]>
   abstract findAnaliseComAtrasos(usuarioId: string, mes: number, ano: number): Promise<AnalisesMensais>
   abstract countAnalise(usuarioId: string): Promise<{total: number}>
+  abstract findAnaliseForPeriod(mes: number, ano: number): Promise<AnalisesMensais[]>
 }
