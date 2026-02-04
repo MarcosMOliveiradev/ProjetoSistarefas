@@ -1,86 +1,63 @@
-import { findUser } from "@/api/findUser"
-import { CriarSelo } from "@/components/CriarSelo"
 import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Spinner } from "@/components/ui/spinner"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import type { analiseDTO } from "@/dtos/analiseDTO"
-import type { userDTO, usersDTO } from "@/dtos/userDto"
+import type { analisesDTO } from "@/dtos/analiseDTO"
+import type { userDTO } from "@/dtos/userDto"
 import { api } from "@/lib/axios"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { Helmet } from "react-helmet-async"
+import { useForm } from "react-hook-form"
 import { PiMedalFill } from "react-icons/pi"
+import z from "zod"
 
-export function AnaliseMensal() {
-  const [usuarioSelecionado, setUsuarioSelecionado] = useState<string | null>(null)
-  const [criarSelo, setCriarSelo] = useState<usersDTO[] | null>(null)
+const criarSeloSchema = z.object({
+  mes: z.coerce.number().min(1).max(12),
+  ano: z.coerce.number().min(2024),
+})
+
+export function AnalisesMensais() {
+  const form = useForm<z.infer<typeof criarSeloSchema>>({
+    resolver: zodResolver(criarSeloSchema),
+    defaultValues: {
+      mes: new Date().getMonth(),
+      ano: new Date().getFullYear(),
+    },
+  })
+
+  const [periodo, setPeriodo] = useState<z.infer<typeof criarSeloSchema>>({
+    mes: new Date().getMonth() + 1,
+    ano: new Date().getFullYear()
+  })
 
   // Buscar dados do usuário logado
   const queryClient = useQueryClient()
   const user = queryClient.getQueryData<userDTO>(['profile'])
 
-  // Buscar todos os usuários para o select
-  const {data: usuarios} = useQuery({
-    queryKey: ['usuarios'],
-    queryFn: findUser,
-  })
-
   // Definir o userId a ser consultado
   const isInformatica = user?.user_roles.role === "INFORMATICA"
-  const userIdConsulta = isInformatica
-  ? usuarioSelecionado
-  : user?.user.id
 
-  const { data: analise, isFetching } = useQuery<analiseDTO[]>({
+  const { data: analises, isPending } = useQuery<analisesDTO[]>({
       queryKey: [
         "analise",
-        userIdConsulta
+        periodo.mes,
+        periodo.ano
       ],
-      queryFn: async () => {
-        const { data } = await api.post("/analise/find", {
-          userId: userIdConsulta,
+      queryFn:  async () => {
+        const { data } = await api.post("/analise/findAnalises", {
+          mes: periodo.mes,
+          ano: periodo.ano
         })
         return data
-      },
-      enabled:
-        !!userIdConsulta
+      }
     })
 
-  async function handleBaixarPdf(mes: number, ano: number) {
-    if (!userIdConsulta) return
-    
-    try {
-      const response = await api.post(
-        "/analise/pdf",
-        {
-          userId: userIdConsulta,
-          mes,
-          ano,
-        },
-        {
-          responseType: "blob", // 🔥 IMPORTANTE
-        }
-      )
-
-      // Criar arquivo PDF no navegador
-      const blob = new Blob([response.data], {
-        type: "application/pdf",
-      })
-
-      // Criar link temporário
-      const url = URL.createObjectURL(blob)
-
-      const link = document.createElement("a")
-      link.href = url
-      link.download = `selo-${mes}-${ano}.pdf`
-      link.click()
-
-      // Limpa memória
-      window.URL.revokeObjectURL(url)
-    } catch (err) {
-      alert("Erro ao gerar PDF")
-    }
+  function onSubmit(data: z.infer<typeof criarSeloSchema>) {
+    setPeriodo(data)
   }
 
   return (
@@ -88,31 +65,57 @@ export function AnaliseMensal() {
       <Helmet title="Feedback"/>
       {isInformatica && (
         <div className="flex justify-around items-center">
-          <div className="w-[20rem] mb-4">
-            <label className="text-sm font-medium">Selecionar usuário</label>
-
-            <select
-              className="w-full border p-2 rounded"
-              value={usuarioSelecionado ?? ""}
-              onChange={(e) => setUsuarioSelecionado(e.target.value)}
-            >
-              <option value="">Selecione um usuário</option>
-              {usuarios?.map((u: any) => (
-                <option key={u.id} value={u.id}>
-                  {u.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <Button
-            size="sm"
-            variant="outline"
-            className="bg-slate-700 text-white px-3 py-1 hover:bg-slate-500 hover:text-white cursor-pointer rounded-b-sm"
-            onClick={() => setCriarSelo(usuarios)}
-          >
-            CRIAR SELO
-          </Button>
+           <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="grid grid-cols-2 gap-4"
+              >
+                {/* MÊS */}
+                <FormField
+                  name="mes"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Mês</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Selecione o mês"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+    
+                {/* ANO */}
+                <FormField
+                  name="ano"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Ano</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Selecione o ano"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+    
+                {/* BOTÃO */}
+                <Button
+                  type="submit"
+                  className="col-span-2 cursor-pointer"
+                  disabled={isPending}
+                >
+                  {isPending ? "Criando..." : "Salvar"}
+                </Button>
+              </form>
+            </Form>
         </div>
       )}
 
@@ -121,6 +124,8 @@ export function AnaliseMensal() {
         <Table className="min-w-[1100px] text-xs sm:text-sm">
           <TableHeader>
             <TableRow>
+              <TableHead className="text-center">Nome</TableHead>
+              <TableHead className="text-center">Matricula</TableHead>
               <TableHead className="text-center">Mês</TableHead>
               <TableHead className="text-center">Ano</TableHead>
               <TableHead className="text-center">Dias Esperados empresa</TableHead>
@@ -135,8 +140,8 @@ export function AnaliseMensal() {
           </TableHeader>
 
           <TableBody>
-            {isFetching && <Spinner />}
-            {analise?.length === 0 && (
+            {isPending && <Spinner />}
+            {analises?.length === 0 && (
               <TableRow>
                 <TableCell colSpan={8} className="text-center">
                   Nenhuma presença encontrada
@@ -144,11 +149,13 @@ export function AnaliseMensal() {
               </TableRow>
             )}
 
-            {analise?.map((dados) => (
+            {analises?.map((dados) => (
               <TableRow
                 key={dados.id}
                 className="text-center"
               >
+                <TableCell className="text-left ml-4">{dados.usuario}</TableCell>
+                <TableCell>{dados.matricula}</TableCell>
                 <TableCell>{dados.mes}</TableCell>
                 <TableCell>{dados.ano}</TableCell>
                 <TableCell>{dados.diasEsperadosEmpresa}</TableCell>
@@ -168,26 +175,11 @@ export function AnaliseMensal() {
                     dados.selo
                   }
                 </TableCell>
-                {/* <TableCell>
-                  <button
-                    className="bg-slate-700 text-white px-3 py-1 rounded hover:bg-slate-500"
-                    onClick={() => handleBaixarPdf(dados.mes, dados.ano)}
-                  >
-                    Baixar PDF
-                  </button>
-                </TableCell> */}
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </ScrollArea>
-
-      {criarSelo && (
-        <CriarSelo
-          user={criarSelo}
-          onClose={() => setCriarSelo(null)}
-        />
-      )}
     </div>
   )
 }

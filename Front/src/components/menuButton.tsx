@@ -75,6 +75,11 @@ export function MenuButton() {
                         <>
                             <DropdownMenuItem asChild>
                                 <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
+                                    <Link to={"/analises"}>RELATÓRIO DE SELOS</Link>
+                                </Button>
+                            </DropdownMenuItem>                        
+                            <DropdownMenuItem asChild>
+                                <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
                                     <Link to={"/gerenciargrupo"}>GERENCIAR GRUPO</Link>
                                 </Button>
                             </DropdownMenuItem>
