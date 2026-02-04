@@ -60,6 +60,22 @@ export function AnalisesMensais() {
     setPeriodo(data)
   }
 
+  function getPrimeiroESegundoNome(nomeCompleto: string) {
+    if (!nomeCompleto) return ""
+
+    const partes = nomeCompleto.trim().split(/\s+/)
+
+    if (partes.length === 1) return partes[0]
+
+    const conectores = ["de", "do", "da", "dos", "das"]
+
+    if (conectores.includes(partes[1].toLowerCase()) && partes.length >= 3) {
+      return `${partes[0]} ${partes[1]} ${partes[2]}`
+    }
+
+    return `${partes[0]} ${partes[1]}`
+  }
+
   return (
     <div className="m-10 h-[80%]">
       <Helmet title="Feedback"/>
@@ -120,22 +136,23 @@ export function AnalisesMensais() {
       )}
 
       <h1>Consultar Selos</h1>
-      <ScrollArea className="h-[60%] border rounded overflow-x-auto">
-        <Table className="min-w-[1100px] text-xs sm:text-sm">
+      <ScrollArea className="h-[60%] border rounded">
+        <div className="w-full overflow-x-auto">
+        <Table className="min-w-[1000px] text-xs sm:text-sm">
           <TableHeader>
             <TableRow>
-              <TableHead className="text-center">Nome</TableHead>
-              <TableHead className="text-center">Matricula</TableHead>
-              <TableHead className="text-center">Mês</TableHead>
-              <TableHead className="text-center">Ano</TableHead>
-              <TableHead className="text-center">Dias Esperados empresa</TableHead>
-              <TableHead className="text-center">Dias cumpridos empresa</TableHead>
-              <TableHead className="text-center">Dias Esperados instituição</TableHead>
-              <TableHead className="text-center">Dias cumpridos instituição</TableHead>
-              <TableHead className="text-center">Atrasos</TableHead>
-              <TableHead className="text-center">% participação na empresa</TableHead>
-              <TableHead className="text-center">% participação na instituição</TableHead>
-              <TableHead className="text-center">Selos</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Nome</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Mat</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Mês</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Ano</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Dias esp. E</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Dias cum. E</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Dias esp Inst</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Dias cum Inst</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Atrasos</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">% participação E</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">% participação I</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Selos</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -154,23 +171,26 @@ export function AnalisesMensais() {
                 key={dados.id}
                 className="text-center"
               >
-                <TableCell className="text-left ml-4">{dados.usuario}</TableCell>
-                <TableCell>{dados.matricula}</TableCell>
-                <TableCell>{dados.mes}</TableCell>
-                <TableCell>{dados.ano}</TableCell>
-                <TableCell>{dados.diasEsperadosEmpresa}</TableCell>
-                <TableCell>{dados.diasCumpridosEmpresa}</TableCell>
-                <TableCell>{dados.diasEsperadosInstituicao}</TableCell>
-                <TableCell>{dados.diasCumpridosInstituicao}</TableCell>
-                <TableCell>{dados.atrasos}</TableCell>
-                <TableCell>{dados.percentualEmpresa}</TableCell>
-                <TableCell>{dados.percentualIntituicao}</TableCell>
-                <TableCell className={ `flex justify-center gap-4
+                <TableCell className="text-left ml-4">{getPrimeiroESegundoNome(dados.usuario)}</TableCell>
+                <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.matricula}</TableCell>
+                <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.mes}</TableCell>
+                <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.ano}</TableCell>
+                <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.diasEsperadosEmpresa}</TableCell>
+                <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.diasCumpridosEmpresa}</TableCell>
+                <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.diasEsperadosInstituicao}</TableCell>
+                <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.diasCumpridosInstituicao}</TableCell>
+                <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.atrasos}</TableCell>
+                <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.percentualEmpresa}</TableCell>
+                <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.percentualIntituicao}</TableCell>
+                <TableCell className={ `flex justify-center gap-4 text-xs sm:text-sm px-2 sm:px-4
                   ${dados.selo === "VERDE" ? ' text-green-800' 
                   : dados.selo === "VERMELHO" ? 'text-red-800' 
                   : dados.selo === "DOURADO" ? 'text-gold' : ''}`
                 }>
-                  <PiMedalFill  className="w-[1rem] h-[1rem] m-0 p fill-gold" />
+                  <PiMedalFill  className={`w-[1rem] h-[1rem] m-0
+                    ${dados.selo === "VERDE" ? ' text-green-800' 
+                    : dados.selo === "VERMELHO" ? 'text-red-800' 
+                    : dados.selo === "DOURADO" ? 'text-gold' : ''}`} />
                   {
                     dados.selo
                   }
@@ -179,6 +199,7 @@ export function AnalisesMensais() {
             ))}
           </TableBody>
         </Table>
+        </div>
       </ScrollArea>
     </div>
   )
