@@ -1,6 +1,6 @@
 {
   "name": "@sistearefas/back",
-  "version": "2.2.8",
+  "version": "2.2.9",
   "description": "Novo modelo de sistarefas",
   "type": "module",
   "scripts": {

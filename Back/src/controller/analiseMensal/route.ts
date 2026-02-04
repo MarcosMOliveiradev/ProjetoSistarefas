@@ -52,14 +52,11 @@ export async function analiseRoute(app: FastifyInstance) {
       return analiseForPdfController(request, reply)
   })
 
-  app.withTypeProvider<ZodTypeProvider>().post('/count', {
+  app.withTypeProvider<ZodTypeProvider>().get('/count/:usuarioId', {
     onRequest: [verifyJwt],
     schema: {
       tags: ['Analise Mensal'],
       summary: 'Conta a quantidade de analises mensais',
-      body: z.object({
-        usuarioId: z.string()
-      })
     }
   }, async (request, reply) => {
     return countAnaliseController(request, reply)

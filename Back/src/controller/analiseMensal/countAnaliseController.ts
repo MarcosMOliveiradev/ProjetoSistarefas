@@ -10,7 +10,7 @@ export async function countAnaliseController(
     usuarioId: z.string()
   })
 
-  const { usuarioId } = countSchema.parse(request.body)
+  const { usuarioId } = countSchema.parse(request.params)
 
   try {
 
