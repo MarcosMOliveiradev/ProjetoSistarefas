@@ -3,6 +3,7 @@ import type { AnalisesMensais } from "../../application/entities/analisesMensais
 import { AnaliseMensalRepository } from "../../application/repositories/AnaliseMensalRepository.ts";
 import { db } from "../connection.ts";
 import { schema } from "../drizzle/index.ts";
+import { seloEnum } from "../../application/entities/Roles.ts";
 
 export class AnaliseMensalDrizzleRepository extends AnaliseMensalRepository {
   async findAnaliseForPeriod(mes: number, ano: number): Promise<AnalisesMensais[]> {
@@ -31,12 +32,48 @@ export class AnaliseMensalDrizzleRepository extends AnaliseMensalRepository {
 
     return row
   }
-  async countAnalise(usuarioId: string): Promise<{ total: number; }> {
-    const [total] = await db.select({
-      total: sql<number>`COUNT(*)`
-    }).from(schema.analisesMensais).where(eq(schema.analisesMensais.usuarioId, usuarioId))
+  async countAnalise(usuarioId: string): Promise<{
+    total: number
+    mesAtual: boolean
+  }> {
+    const hoje = new Date()
 
-    return total
+    // ✅ mês analisado = mês anterior
+    let mesReferencia = hoje.getMonth() // Janeiro = 0
+    let anoReferencia = hoje.getFullYear()
+
+    // Caso especial: Janeiro → volta para Dezembro do ano anterior
+    if (mesReferencia === 0) {
+      mesReferencia = 12
+      anoReferencia--
+    }
+
+    // Caso normal: Fevereiro vira Janeiro, Março vira Fevereiro...
+    // getMonth() já retorna o mês atual - 1 automaticamente
+
+    const [row] = await db
+      .select({
+        total: sql<number>`COUNT(*)`,
+
+        mesAtual: sql<boolean>`
+          BOOL_OR(
+            ${schema.analisesMensais.mes} = ${mesReferencia}
+            AND ${schema.analisesMensais.ano} = ${anoReferencia}
+          )
+        `
+      })
+      .from(schema.analisesMensais)
+      .where(
+        and(
+          eq(schema.analisesMensais.usuarioId, usuarioId),
+          eq(schema.analisesMensais.selo, seloEnum.DOURADO)
+        )
+      )
+
+    return {
+      total: row?.total ?? 0,
+      mesAtual: row?.mesAtual ?? false
+    }
   }
   async findAnaliseComAtrasos(usuarioId: string, mes: number, ano: number): Promise<AnalisesMensais> {
      const [row] = await db
