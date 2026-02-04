@@ -124,13 +124,13 @@ export function AnaliseMensal() {
               <TableRow>
                 <TableHead className="text-center text-xs sm:text-sm">Mês</TableHead>
                 <TableHead className="text-center text-xs sm:text-sm">Ano</TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">Dias esp. E</TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">Dias cump. E</TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">Dias esp Inst</TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">Dias cump Inst</TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">Atrasos</TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">% participação E</TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">% participação I</TableHead>
+                <TableHead className="text-center text-xs sm:text-sm">Presença E.</TableHead>
+                <TableHead className="text-center text-xs sm:text-sm">Faltas E.</TableHead>
+                <TableHead className="text-center text-xs sm:text-sm">Atrasos E.</TableHead>
+                <TableHead className="text-center text-xs sm:text-sm">% participação E.</TableHead>
+                <TableHead className="text-center text-xs sm:text-sm">Presença I.</TableHead>
+                <TableHead className="text-center text-xs sm:text-sm">Faltas I.</TableHead>
+                <TableHead className="text-center text-xs sm:text-sm">% participação I.</TableHead>
                 <TableHead className="text-center text-xs sm:text-sm">Selos</TableHead>
               </TableRow>
             </TableHeader>
@@ -152,12 +152,12 @@ export function AnaliseMensal() {
                 >
                   <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.mes}</TableCell>
                   <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.ano}</TableCell>
-                  <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.diasEsperadosEmpresa}</TableCell>
                   <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.diasCumpridosEmpresa}</TableCell>
-                  <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.diasEsperadosInstituicao}</TableCell>
-                  <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.diasCumpridosInstituicao}</TableCell>
+                  <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.diasEsperadosEmpresa - dados.diasCumpridosEmpresa}</TableCell>
                   <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.atrasos}</TableCell>
                   <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.percentualEmpresa}</TableCell>
+                  <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.diasCumpridosInstituicao}</TableCell>
+                  <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.diasEsperadosInstituicao- dados.diasCumpridosInstituicao}</TableCell>
                   <TableCell className="text-xs sm:text-sm px-2 sm:px-4">{dados.percentualIntituicao}</TableCell>
                   <TableCell className={ `flex justify-center gap-4 text-xs sm:text-sm px-2 sm:px-4
                     ${dados.selo === "VERDE" ? ' text-green-800' 
