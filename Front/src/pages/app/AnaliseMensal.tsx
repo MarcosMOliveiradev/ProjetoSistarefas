@@ -32,9 +32,9 @@ export function AnaliseMensal() {
   ? usuarioSelecionado
   : user?.user.id
 
-  const { data: analise, isFetching } = useQuery<analiseDTO[]>({
+  const { data: analise, isPending } = useQuery<analiseDTO[]>({
       queryKey: [
-        "analise",
+        "analises",
         userIdConsulta
       ],
       queryFn: async () => {
@@ -47,41 +47,41 @@ export function AnaliseMensal() {
         !!userIdConsulta
     })
 
-  async function handleBaixarPdf(mes: number, ano: number) {
-    if (!userIdConsulta) return
+  // async function handleBaixarPdf(mes: number, ano: number) {
+  //   if (!userIdConsulta) return
     
-    try {
-      const response = await api.post(
-        "/analise/pdf",
-        {
-          userId: userIdConsulta,
-          mes,
-          ano,
-        },
-        {
-          responseType: "blob", // 🔥 IMPORTANTE
-        }
-      )
+  //   try {
+  //     const response = await api.post(
+  //       "/analise/pdf",
+  //       {
+  //         userId: userIdConsulta,
+  //         mes,
+  //         ano,
+  //       },
+  //       {
+  //         responseType: "blob", // 🔥 IMPORTANTE
+  //       }
+  //     )
 
-      // Criar arquivo PDF no navegador
-      const blob = new Blob([response.data], {
-        type: "application/pdf",
-      })
+  //     // Criar arquivo PDF no navegador
+  //     const blob = new Blob([response.data], {
+  //       type: "application/pdf",
+  //     })
 
-      // Criar link temporário
-      const url = URL.createObjectURL(blob)
+  //     // Criar link temporário
+  //     const url = URL.createObjectURL(blob)
 
-      const link = document.createElement("a")
-      link.href = url
-      link.download = `selo-${mes}-${ano}.pdf`
-      link.click()
+  //     const link = document.createElement("a")
+  //     link.href = url
+  //     link.download = `selo-${mes}-${ano}.pdf`
+  //     link.click()
 
-      // Limpa memória
-      window.URL.revokeObjectURL(url)
-    } catch (err) {
-      alert("Erro ao gerar PDF")
-    }
-  }
+  //     // Limpa memória
+  //     window.URL.revokeObjectURL(url)
+  //   } catch (err) {
+  //     alert("Erro ao gerar PDF")
+  //   }
+  // }
 
   return (
     <div className="m-10 h-[80%]">
@@ -136,7 +136,7 @@ export function AnaliseMensal() {
             </TableHeader>
 
             <TableBody>
-              {isFetching && <Spinner />}
+              {isPending && <Spinner />}
               {analise?.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={8} className="text-center">
