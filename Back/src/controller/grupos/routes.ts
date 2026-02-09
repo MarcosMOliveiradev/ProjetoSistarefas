@@ -25,11 +25,20 @@ export async function routesGrupos(app: FastifyInstance) {
             summary: 'Cria o grupo',
             body: z.object({
                 nome: z.string(),
-                diasEmpresa: z.array(z.number().int().min(0).max(6)),
-                diasInstituicao: z.array(z.number().int().min(0).max(6)),
+            
+                diasEmpresa: z
+                  .array(z.number().int().min(0).max(6))
+                  .optional()
+                  .default([]),
+            
+                diasInstituicao: z
+                  .array(z.number().int().min(0).max(6))
+                  .optional()
+                  .default([]),
+            
                 dataInicio: z.coerce.date(),
-                dataFim: z.coerce.date().optional()
-            })
+                dataFim: z.coerce.date().optional(),
+              })
          }
     }, async (request, reply) => {
         return createGruposCroller(request, reply)

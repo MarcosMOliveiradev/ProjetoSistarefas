@@ -20,26 +20,64 @@ const diasSemana = [
   { label: "Sábado", value: 6 },
 ]
 
-const criarGruposSchema = z.object({
-     nome: z.string(),
+const criarGruposSchema = z
+  .object({
+    nome: z.string(),
+
     diasEmpresa: z.array(z.number().int().min(0).max(6)),
     diasInstituicao: z.array(z.number().int().min(0).max(6)),
+
     dataInicio: z.date(),
-    dataFim: z.date().optional()
-}).refine(
+    dataFim: z.date().optional(),
+  })
+  // ❌ não pode ter sobreposição
+  .refine(
     (data) =>
-        data.diasEmpresa.every(
+      data.diasEmpresa.every(
         (dia) => !data.diasInstituicao.includes(dia)
-        ),
+      ),
     {
-        message: "Um dia não pode ser Empresa e Instituição ao mesmo tempo",
-        path: ["diasInstituicao"],
+      message: "Um dia não pode ser Empresa e Instituição ao mesmo tempo",
+      path: ["diasInstituicao"],
     }
-)
+  )
+  // ❌ não pode os dois vazios
+  .refine(
+    (data) =>
+      data.diasEmpresa.length > 0 || data.diasInstituicao.length > 0,
+    {
+      message:
+        "O grupo precisa ter pelo menos dias na empresa ou na instituição",
+      path: ["diasEmpresa"],
+    }
+  )
+  // ⚠️ se um estiver vazio, o outro precisa ter 5 dias
+  .refine(
+    (data) => {
+      if (data.diasEmpresa.length === 0) {
+        return data.diasInstituicao.length === 5
+      }
+
+      if (data.diasInstituicao.length === 0) {
+        return data.diasEmpresa.length === 5
+      }
+
+      return true
+    },
+    {
+      message:
+        "Se um tipo não tiver dias, o outro deve conter exatamente 5 dias",
+      path: ["diasEmpresa"],
+    }
+  )
 
 export function CriarGrupos() {
     const form = useForm<z.infer<typeof criarGruposSchema>>({
         resolver: zodResolver(criarGruposSchema),
+        defaultValues: {
+            diasEmpresa: [],
+            diasInstituicao: [],
+        },
     })
 
     async function onSubmit({nome, dataInicio, diasEmpresa, diasInstituicao}: z.infer<typeof criarGruposSchema>) {

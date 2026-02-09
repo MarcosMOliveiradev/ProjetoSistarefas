@@ -5,8 +5,8 @@ export const grupos = pgTable("grupos", {
   id: text("id").$defaultFn(() => createId()).primaryKey(),
   nome: text("nome").notNull(),
 
-  diasEmpresa: integer("dias_empresa").array().notNull(),
-  diasInstituicao: integer("dias_instituicao").array().notNull(),
+  diasEmpresa: integer("dias_empresa").array(),
+  diasInstituicao: integer("dias_instituicao").array(),
 
   dataInicio: date("data_inicio").notNull(),
   dataFim: date("data_fim")
