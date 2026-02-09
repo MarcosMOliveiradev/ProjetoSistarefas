@@ -12,14 +12,14 @@ export class UserForGrup {
   constructor(private repository: UserGrupoRepository) {}
 
   async execute({ userId, dataInicio, grupoId, dataFim }: IUserForGrup) {
-    
     const vinculoAtivo = await this.repository.findGrupoAtivo(userId, dataInicio)
-    if(vinculoAtivo?.dataFim === null || vinculoAtivo?.dataFim === undefined) {
-      throw new Error("Usuario já tem vinculo ativo!")
+
+    if (vinculoAtivo && !vinculoAtivo.dataFim) {
+      throw new Error("Usuário já tem vínculo ativo!")
     }
 
     if (dataFim && dataFim < dataInicio) {
-      throw new Error("Data fim não pode ser menor que a data de início");
+      throw new Error("Data fim não pode ser menor que a data de início")
     }
 
     const vinculo = new UserGrupos({
