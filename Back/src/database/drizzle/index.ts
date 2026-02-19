@@ -11,6 +11,8 @@ import { grupos } from './grupos.ts'
 import { userGrupos } from './user_grupo.ts'
 import { presenca } from './presenca.ts'
 import { analisesMensais } from './analiseMensal.ts'
+import { kanban, kanbanStatusEnum } from './kanbanAtividades.ts'
+import { kanbanColaboradores } from './kanbanColaboradores.ts'
 
 export const schema = {
     user,
@@ -36,4 +38,7 @@ export const schema = {
     userGrupos,
     presenca,
     analisesMensais,
+    kanban,
+    kanbanColaboradores,
+    kanbanStatusEnum
 }

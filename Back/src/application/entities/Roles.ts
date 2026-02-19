@@ -43,3 +43,10 @@ export enum seloEnum  {
   VERMELHO = 'VERMELHO',
   DOURADO = 'DOURADO'
 }
+
+export enum kanbanStatusEnum {
+  TODO = "TODO",
+  IN_PROGRESS = "IN_PROGRESS",
+  DONE = "DONE",
+  CANCELED = "CANCELED"
+}

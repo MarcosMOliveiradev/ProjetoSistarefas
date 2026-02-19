@@ -43,6 +43,20 @@
       "when": 1770639645863,
       "tag": "0005_red_red_wolf",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1771508861164,
+      "tag": "0006_damp_karnak",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1771519164107,
+      "tag": "0007_real_toad_men",
+      "breakpoints": true
     }
   ]
 }

@@ -11,17 +11,28 @@ Em resumo, o SisTarefas não apenas simplifica o registro e acompanhamento das a
 
 </br>
 
-## Tecnologia
+## Tecnologias utilizadas
 
 Foram utilizado nesse projeto as seguintes tecnologias:
 
-- TypeScript
-- nodeJs
-- Fastify
-- prisma
-- SQLite
-- Zod
-- JWT
+* Back-end
+  - TypeScript
+  - NodeJs
+  - Fastify
+  - Swagger
+  - Drizzle
+  - Postgresql
+  - Zod
+  - JWT
+  - PdfMaker
+
+* Front-end
+  - React
+  - Vite
+  - Shadcn
+  - Tanstack
+  - Tailwindcss
+  - Zod
 
 
 </br>
@@ -32,12 +43,16 @@ Foram utilizado nesse projeto as seguintes tecnologias:
 - [x] Criar authenticator de usuario;
 - [x] Deve ser possível listar as tarefas por dia;
 - [x] Deve ser possível gerar relatório em PDF;
-- [x] Usuario padrao deve ser capaz de criar listas de atividade;
-- [ ] Usuario ADM deve ser capaz de criar novas tarefas, e adicionar novos setores;
-- [x] Usuario ADM deve ser capaz de criar novos usuario e permições;
-- [ ] Usuario ADM deve ser capaz de vizualizar contagem geral da atividade feitas por cada usuario padrão;
-- TODO:[ ] Controle de erros da aplicação;
-- TODO:[ ] Testes;
+- [x] Usuario PJA deve ser capaz de criar e lista atividades;
+- [x] Usuario INFORMATICA deve ser capaz de criar novas tarefas, adicionar novos setores, criar novos usuarios, etc...;
+- [x] Usuario INFORMATICA deve ser capaz de vizualizar contagem geral da atividade feitas por cada usuario PJA;
+- [x] Usuario INFORMATICA deve ser capaz de pesquisar as atividades feitas por qualquer usuario PJA;
+- [x] Usuario PJA deve ser capaz de pesquisar as atividades feitas por ele mesmo;
+- [ ] Criar no fronte formaluario para cadastro de novos codigos de atividades;
+- [x] Usuario PJA pode ver suas analises de desempenho mês a mês;
+- [x] Ao efetuar loguin regstrar presença na tabela de presencas
+- [x] Usuario INFORMATICA pode criar grupos e vincular a usuarios, iniciando o processo de presenca para a analise de desempenho;
 
-TODO: O usuario administrador deve ser capas de gerar uma contagem de quantas atividade cada usuario fez no mês e no geral
-TODO: terminar teste de token
+### Porximas atualizações
+* Kambam e métodos ágeis
+  - [ ] Criar tabela de kambam
