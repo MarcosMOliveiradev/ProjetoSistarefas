@@ -31,6 +31,8 @@ export class KanbanDrizzleRepository extends KanbanRepository {
       criadoEm: schema.kanban.criadoEm,
       iniciadoPor: schema.kanban.iniciadoPor,
       iniciadoEm: schema.kanban.iniciadoEm,
+      finalizadoPor: schema.kanban.finalizadoPor,
+      finalizadoEm: schema.kanban.finalizadoEm,
       canceladoPor: schema.kanban.canceladoPor,
       canceladoEm: schema.kanban.canceladoEm,
       motivoCancelamento: schema.kanban.motivoCancelamento,
@@ -84,6 +86,8 @@ export class KanbanDrizzleRepository extends KanbanRepository {
       criadoEm: schema.kanban.criadoEm,
       iniciadoPor: schema.kanban.iniciadoPor,
       iniciadoEm: schema.kanban.iniciadoEm,
+      finalizadoPor: schema.kanban.finalizadoPor,
+      finalizadoEm: schema.kanban.finalizadoEm,
       canceladoPor: schema.kanban.canceladoPor,
       canceladoEm: schema.kanban.canceladoEm,
       motivoCancelamento: schema.kanban.motivoCancelamento,
@@ -139,6 +143,8 @@ export class KanbanDrizzleRepository extends KanbanRepository {
       criadoEm: schema.kanban.criadoEm,
       iniciadoPor: schema.kanban.iniciadoPor,
       iniciadoEm: schema.kanban.iniciadoEm,
+      finalizadoPor: schema.kanban.finalizadoPor,
+      finalizadoEm: schema.kanban.finalizadoEm,
       canceladoPor: schema.kanban.canceladoPor,
       canceladoEm: schema.kanban.canceladoEm,
       motivoCancelamento: schema.kanban.motivoCancelamento,
@@ -210,13 +216,63 @@ export class KanbanDrizzleRepository extends KanbanRepository {
       }).onConflictDoNothing();
     })
   }
+
   async finish(id: string, userId: string): Promise<void> {
-    throw new Error("Method not implemented.");
+    await db.transaction(async (tx) => {
+      const update = await tx.update(schema.kanban).set({
+        status: "DONE",
+        finalizadoPor: sql`COALESCE(${schema.kanban.iniciadoPor}, ${userId})`,
+        finalizadoEm: sql`COALESCE(${schema.kanban.iniciadoEm}, NOW())`
+      }).where(and(
+        eq(schema.kanban.id, id),
+        inArray(schema.kanban.status, ["TODO", "IN_PROGRESS"])
+      )).returning({ status: schema.kanban.status });
+
+      if ( update.length === 0 ) {
+        throw new Error("Não foi possível finalizar: Kanban não encontrado ou já encerrado.");
+      }
+    })
   }
+
   async cancel(id: string, userId: string, motivo?: string | null): Promise<void> {
-    throw new Error("Method not implemented.");
+    await db.transaction(async (tx) => {
+      const updated = await tx
+        .update(schema.kanban)
+        .set({
+          status: "CANCELED",
+
+          canceladoPor: userId,
+          canceladoEm: sql`NOW()`,
+          motivoCancelamento: motivo ?? null,
+
+          // ✅ coerência: ao cancelar não pode ficar finalizado
+          finalizadoPor: null,
+          finalizadoEm: null,
+        })
+        .where(
+          and(
+            eq(schema.kanban.id, id),
+            // ❌ não deixa cancelar se já estiver DONE
+            inArray(schema.kanban.status, ["TODO", "IN_PROGRESS"])
+          )
+        )
+        .returning({ id: schema.kanban.id });
+
+      if (updated.length === 0) {
+        throw new Error(
+          "Não foi possível cancelar: Kanban não encontrado ou já finalizado."
+        );
+      }
+    });
   }
   async delete(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
+    const result = await db
+      .delete(schema.kanban)
+      .where(eq(schema.kanban.id, id))
+      .returning({ id: schema.kanban.id });
+
+    if (result.length === 0) {
+      throw new Error("Kanban não encontrado.");
+    }
   }
 }

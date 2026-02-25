@@ -8,6 +8,9 @@ import { findKanbanByIdController } from "./findKanbanByIdController.ts";
 import { findKanbanByStatusController } from "./findKanbanByStatus.ts";
 import { updateKanbanDetailsController } from "./updateKanbanDetailsController.ts";
 import { startKanbanController } from "./startKanbanController.ts";
+import { finishKanbanController } from "./finishKanbanController.ts";
+import { cancelKanbanController } from "./cancelKanbanController.ts";
+import { deleteKanbanController } from "./deleteKanbanController.ts";
 
 export function kanbanRoute(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -83,5 +86,47 @@ export function kanbanRoute(app: FastifyInstance) {
     }
   }, async (request, reply) => {
     return startKanbanController(request, reply)
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().patch('/finish', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['kanban'],
+      description: "atualiza o status do kanban para finish",
+      body: z.object({
+        id: z.string(),
+        userId: z.string()
+      })
+    }
+  }, async (request, reply) => {
+    return finishKanbanController(request, reply)
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().patch('/cancel', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['kanban'],
+      description: "atualiza o status do kanban para cancel",
+      body: z.object({
+        id: z.string(),
+        userId: z.string(),
+        motivo: z.string().optional()
+      })
+    }
+  }, async (request, reply) => {
+    return cancelKanbanController(request, reply)
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().delete('/delete', {
+    onRequest: [verifyJwt],
+    schema: {
+      tags: ['kanban'],
+      description: "Deleta um kanban",
+      body: z.object({
+        id: z.string()
+      })
+    }
+  }, async (request, reply) => {
+    return deleteKanbanController(request, reply)
   })
 }

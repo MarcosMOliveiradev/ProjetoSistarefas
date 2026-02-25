@@ -16,6 +16,8 @@ export async function startKanbanController(
   try {
     const startKanban = makeStartKanban()
      await startKanban.execute({ id, userId })
+
+     return reply.status(200)
   } catch (err) {
     return reply.status(400).send({message: err})
   }
