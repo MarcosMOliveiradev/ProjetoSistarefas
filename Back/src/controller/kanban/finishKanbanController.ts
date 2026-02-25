@@ -8,10 +8,10 @@ export async function finishKanbanController(
 ) {
   const startKanbanSchema = z.object({
     id: z.string(),
-    userId: z.string()
   })
-
-  const { id, userId } = startKanbanSchema.parse(request.body)
+  
+  const userId = request.user.sub
+  const { id } = startKanbanSchema.parse(request.body)
 
   try {
     const finishKanban = makeFinishKanban()

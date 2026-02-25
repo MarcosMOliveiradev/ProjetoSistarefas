@@ -94,7 +94,7 @@ const dadosOrdenados = useMemo(() => {
 
   return (
     <div className="m-10 h-[80%]">
-      <Helmet title="Presenças" />
+      <Helmet title="GERENCIAR PRESENÇA" />
 
       <h2 className="text-xl font-semibold mb-6">
         Gerenciamento de Presenças

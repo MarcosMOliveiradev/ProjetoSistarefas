@@ -7,7 +7,7 @@ export function Video() {
     let video = "http://localhost:3333/uploads/057814-teste.mp4"
     return (
         <div className="flex gap-4 ">
-            <Helmet title="Lista de Video" />
+            <Helmet title="LISTA DE VIDEOS" />
             <div className="w-1/4 items-center flex flex-col gap-4">
                 <div className="text-2xl font-bold">Categoria</div>
                 <div>

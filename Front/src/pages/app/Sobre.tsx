@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 export function Sobre() {
   return (
     <div className="flex flex-col items-center gap-8 px-4 py-8">
-      <Helmet title="Sobre" />
+      <Helmet title="SOBRE" />
 
       {/* Título principal */}
       <h2 className="font-bold text-3xl text-center">

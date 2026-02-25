@@ -4,6 +4,7 @@ import type { kanbanStatusEnum } from "../../application/entities/Roles.ts";
 import { KanbanRepository } from "../../application/repositories/kanbanRepository.ts";
 import { db } from "../connection.ts";
 import { schema } from "../drizzle/index.ts";
+import { alias } from "drizzle-orm/pg-core";
 
 function toDateOnly(date: Date): string {
   return date.toISOString().split("T")[0];
@@ -21,173 +22,237 @@ export class KanbanDrizzleRepository extends KanbanRepository {
       criadoEm: toDateOnly(kanban.criadoEm)
     })
   }
-  async find(): Promise<Kanban[]> {
-    const kanban = await db.select({
-      id: schema.kanban.id,
-      titulo: schema.kanban.titulo,
-      status: schema.kanban.status,
-      descricao: schema.kanban.descricao,
-      criadoPor: schema.kanban.criadoPor,
-      criadoEm: schema.kanban.criadoEm,
-      iniciadoPor: schema.kanban.iniciadoPor,
-      iniciadoEm: schema.kanban.iniciadoEm,
-      finalizadoPor: schema.kanban.finalizadoPor,
-      finalizadoEm: schema.kanban.finalizadoEm,
-      canceladoPor: schema.kanban.canceladoPor,
-      canceladoEm: schema.kanban.canceladoEm,
-      motivoCancelamento: schema.kanban.motivoCancelamento,
 
-      // ✅ array de colaboradores [{id, name}, ...]
-      colaboradores: sql<
-        Array<{ id: string; name: string }>
-      >`
-        COALESCE(
-          json_agg(
-            DISTINCT jsonb_build_object(
-              'id', ${schema.user.id},
-              'name', ${schema.user.name}
-            )
-          ) FILTER (WHERE ${schema.user.id} IS NOT NULL),
-          '[]'::json
-        )
-      `.as("colaboradores"),
-    })
-    .from(schema.kanban)
-    .leftJoin(
-      schema.kanbanColaboradores,
-      eq(schema.kanbanColaboradores.kanbanId, schema.kanban.id)
-    )
-    .leftJoin(
-      schema.user,
-      eq(schema.user.id, schema.kanbanColaboradores.userId)
-    ).groupBy(
-      schema.kanban.id,
-      schema.kanban.titulo,
-      schema.kanban.descricao,
-      schema.kanban.criadoPor,
-      schema.kanban.criadoEm,
-      schema.kanban.iniciadoPor,
-      schema.kanban.iniciadoEm,
-      schema.kanban.canceladoPor,
-      schema.kanban.canceladoEm,
-      schema.kanban.motivoCancelamento
-    );
-    
-    return kanban
+  async find(): Promise<Kanban[]> {
+    const criador = alias(schema.user, "criador");
+    const iniciador = alias(schema.user, "iniciador");
+    const finalizador = alias(schema.user, "finalizador");
+    const cancelador = alias(schema.user, "cancelador");
+
+    // ⚠️ este alias é só para join dos colaboradores
+    const colabUser = alias(schema.user, "colab_user");
+
+    const kanban = await db
+      .select({
+        id: schema.kanban.id,
+        titulo: schema.kanban.titulo,
+        status: schema.kanban.status,
+        descricao: schema.kanban.descricao,
+
+        criadoPor: criador.name,
+        criadoEm: schema.kanban.criadoEm,
+
+        iniciadoPor: iniciador.name,
+        iniciadoEm: schema.kanban.iniciadoEm,
+
+        finalizadoPor: finalizador.name,
+        finalizadoEm: schema.kanban.finalizadoEm,
+
+        canceladoPor: cancelador.name,
+        canceladoEm: schema.kanban.canceladoEm,
+        motivoCancelamento: schema.kanban.motivoCancelamento,
+
+        colaboradores: sql<Array<{ id: string; name: string; matricula: number }>>`
+          COALESCE(
+            json_agg(
+              DISTINCT jsonb_build_object(
+                'id', ${colabUser.id},
+                'name', ${colabUser.name},
+                'matricula', ${colabUser.matricula}
+              )
+            ) FILTER (WHERE ${colabUser.id} IS NOT NULL),
+            '[]'::json
+          )
+        `.as("colaboradores"),
+      })
+      .from(schema.kanban)
+
+      .leftJoin(criador, eq(criador.id, schema.kanban.criadoPor))
+      .leftJoin(iniciador, eq(iniciador.id, schema.kanban.iniciadoPor))
+      .leftJoin(finalizador, eq(finalizador.id, schema.kanban.finalizadoPor))
+      .leftJoin(cancelador, eq(cancelador.id, schema.kanban.canceladoPor))
+
+      .leftJoin(
+        schema.kanbanColaboradores,
+        eq(schema.kanbanColaboradores.kanbanId, schema.kanban.id)
+      )
+      .leftJoin(colabUser, eq(colabUser.id, schema.kanbanColaboradores.userId))
+
+      .groupBy(
+        schema.kanban.id,
+        schema.kanban.titulo,
+        schema.kanban.status,
+        schema.kanban.descricao,
+        schema.kanban.criadoEm,
+        schema.kanban.iniciadoEm,
+        schema.kanban.finalizadoEm,
+        schema.kanban.canceladoEm,
+        schema.kanban.motivoCancelamento,
+
+        criador.name,
+        iniciador.name,
+        finalizador.name,
+        cancelador.name
+      );
+
+    return kanban;
   }
 
   async findById(id: string): Promise<Kanban | null> {
-    const [kanban] = await db.select({
-      id: schema.kanban.id,
-      titulo: schema.kanban.titulo,
-      status: schema.kanban.status,
-      descricao: schema.kanban.descricao,
-      criadoPor: schema.kanban.criadoPor,
-      criadoEm: schema.kanban.criadoEm,
-      iniciadoPor: schema.kanban.iniciadoPor,
-      iniciadoEm: schema.kanban.iniciadoEm,
-      finalizadoPor: schema.kanban.finalizadoPor,
-      finalizadoEm: schema.kanban.finalizadoEm,
-      canceladoPor: schema.kanban.canceladoPor,
-      canceladoEm: schema.kanban.canceladoEm,
-      motivoCancelamento: schema.kanban.motivoCancelamento,
+    const criador = alias(schema.user, "criador");
+    const iniciador = alias(schema.user, "iniciador");
+    const finalizador = alias(schema.user, "finalizador");
+    const cancelador = alias(schema.user, "cancelador");
 
-      // ✅ array de colaboradores [{id, name}, ...]
-      colaboradores: sql<
-        Array<{ id: string; name: string }>
-      >`
-        COALESCE(
-          json_agg(
-            DISTINCT jsonb_build_object(
-              'id', ${schema.user.id},
-              'name', ${schema.user.name}
-            )
-          ) FILTER (WHERE ${schema.user.id} IS NOT NULL),
-          '[]'::json
-        )
-      `.as("colaboradores"),
-    })
-    .from(schema.kanban)
-    .where(eq(schema.kanban.id, id))
-    .leftJoin(
-      schema.kanbanColaboradores,
-      eq(schema.kanbanColaboradores.kanbanId, schema.kanban.id)
-    )
-    .leftJoin(
-      schema.user,
-      eq(schema.user.id, schema.kanbanColaboradores.userId)
-    ).groupBy(
-      schema.kanban.id,
-      schema.kanban.titulo,
-      schema.kanban.descricao,
-      schema.kanban.criadoPor,
-      schema.kanban.criadoEm,
-      schema.kanban.iniciadoPor,
-      schema.kanban.iniciadoEm,
-      schema.kanban.canceladoPor,
-      schema.kanban.canceladoEm,
-      schema.kanban.motivoCancelamento
-    );
+    // ⚠️ este alias é só para join dos colaboradores
+    const colabUser = alias(schema.user, "colab_user");
 
-    if(!kanban) return null;
+    const [kanban] = await db
+      .select({
+        id: schema.kanban.id,
+        titulo: schema.kanban.titulo,
+        status: schema.kanban.status,
+        descricao: schema.kanban.descricao,
 
-    return kanban
+        criadoPor: criador.name,
+        criadoEm: schema.kanban.criadoEm,
+
+        iniciadoPor: iniciador.name,
+        iniciadoEm: schema.kanban.iniciadoEm,
+
+        finalizadoPor: finalizador.name,
+        finalizadoEm: schema.kanban.finalizadoEm,
+
+        canceladoPor: cancelador.name,
+        canceladoEm: schema.kanban.canceladoEm,
+        motivoCancelamento: schema.kanban.motivoCancelamento,
+
+        colaboradores: sql<Array<{ id: string; name: string; matricula: number }>>`
+          COALESCE(
+            json_agg(
+              DISTINCT jsonb_build_object(
+                'id', ${colabUser.id},
+                'name', ${colabUser.name},
+                'matricula', ${colabUser.matricula}
+              )
+            ) FILTER (WHERE ${colabUser.id} IS NOT NULL),
+            '[]'::json
+          )
+        `.as("colaboradores"),
+      })
+      .from(schema.kanban)
+      .where(eq(schema.kanban.id, id))
+
+      .leftJoin(criador, eq(criador.id, schema.kanban.criadoPor))
+      .leftJoin(iniciador, eq(iniciador.id, schema.kanban.iniciadoPor))
+      .leftJoin(finalizador, eq(finalizador.id, schema.kanban.finalizadoPor))
+      .leftJoin(cancelador, eq(cancelador.id, schema.kanban.canceladoPor))
+
+      .leftJoin(
+        schema.kanbanColaboradores,
+        eq(schema.kanbanColaboradores.kanbanId, schema.kanban.id)
+      )
+      .leftJoin(colabUser, eq(colabUser.id, schema.kanbanColaboradores.userId))
+
+      .groupBy(
+        schema.kanban.id,
+        schema.kanban.titulo,
+        schema.kanban.status,
+        schema.kanban.descricao,
+        schema.kanban.criadoEm,
+        schema.kanban.iniciadoEm,
+        schema.kanban.finalizadoEm,
+        schema.kanban.canceladoEm,
+        schema.kanban.motivoCancelamento,
+
+        criador.name,
+        iniciador.name,
+        finalizador.name,
+        cancelador.name
+      );
+
+      if(!kanban) return null
+
+    return kanban;
   }
   async findStatus(status: kanbanStatusEnum): Promise<Kanban[]> {
-    const kanban = await db.select({
-      id: schema.kanban.id,
-      titulo: schema.kanban.titulo,
-      status: schema.kanban.status,
-      descricao: schema.kanban.descricao,
-      criadoPor: schema.kanban.criadoPor,
-      criadoEm: schema.kanban.criadoEm,
-      iniciadoPor: schema.kanban.iniciadoPor,
-      iniciadoEm: schema.kanban.iniciadoEm,
-      finalizadoPor: schema.kanban.finalizadoPor,
-      finalizadoEm: schema.kanban.finalizadoEm,
-      canceladoPor: schema.kanban.canceladoPor,
-      canceladoEm: schema.kanban.canceladoEm,
-      motivoCancelamento: schema.kanban.motivoCancelamento,
+     const criador = alias(schema.user, "criador");
+    const iniciador = alias(schema.user, "iniciador");
+    const finalizador = alias(schema.user, "finalizador");
+    const cancelador = alias(schema.user, "cancelador");
 
-      // ✅ array de colaboradores [{id, name}, ...]
-      colaboradores: sql<
-        Array<{ id: string; name: string }>
-      >`
-        COALESCE(
-          json_agg(
-            DISTINCT jsonb_build_object(
-              'id', ${schema.user.id},
-              'name', ${schema.user.name}
-            )
-          ) FILTER (WHERE ${schema.user.id} IS NOT NULL),
-          '[]'::json
-        )
-      `.as("colaboradores"),
-    })
-    .from(schema.kanban)
-    .where(eq(schema.kanban.status, status))
-    .leftJoin(
-      schema.kanbanColaboradores,
-      eq(schema.kanbanColaboradores.kanbanId, schema.kanban.id)
-    )
-    .leftJoin(
-      schema.user,
-      eq(schema.user.id, schema.kanbanColaboradores.userId)
-    ).groupBy(
-      schema.kanban.id,
-      schema.kanban.titulo,
-      schema.kanban.descricao,
-      schema.kanban.criadoPor,
-      schema.kanban.criadoEm,
-      schema.kanban.iniciadoPor,
-      schema.kanban.iniciadoEm,
-      schema.kanban.canceladoPor,
-      schema.kanban.canceladoEm,
-      schema.kanban.motivoCancelamento
-    );
+    // ⚠️ este alias é só para join dos colaboradores
+    const colabUser = alias(schema.user, "colab_user");
 
-    return kanban
+    const [kanban] = await db
+      .select({
+        id: schema.kanban.id,
+        titulo: schema.kanban.titulo,
+        status: schema.kanban.status,
+        descricao: schema.kanban.descricao,
+
+        criadoPor: criador.name,
+        criadoEm: schema.kanban.criadoEm,
+
+        iniciadoPor: iniciador.name,
+        iniciadoEm: schema.kanban.iniciadoEm,
+
+        finalizadoPor: finalizador.name,
+        finalizadoEm: schema.kanban.finalizadoEm,
+
+        canceladoPor: cancelador.name,
+        canceladoEm: schema.kanban.canceladoEm,
+        motivoCancelamento: schema.kanban.motivoCancelamento,
+
+        colaboradores: sql<Array<{ id: string; name: string; matricula: number }>>`
+          COALESCE(
+            json_agg(
+              DISTINCT jsonb_build_object(
+                'id', ${colabUser.id},
+                'name', ${colabUser.name},
+                'matricula', ${colabUser.matricula}
+              )
+            ) FILTER (WHERE ${colabUser.id} IS NOT NULL),
+            '[]'::json
+          )
+        `.as("colaboradores"),
+      })
+      .from(schema.kanban)
+      .where(eq(schema.kanban.status, status))
+
+      .leftJoin(criador, eq(criador.id, schema.kanban.criadoPor))
+      .leftJoin(iniciador, eq(iniciador.id, schema.kanban.iniciadoPor))
+      .leftJoin(finalizador, eq(finalizador.id, schema.kanban.finalizadoPor))
+      .leftJoin(cancelador, eq(cancelador.id, schema.kanban.canceladoPor))
+
+      .leftJoin(
+        schema.kanbanColaboradores,
+        eq(schema.kanbanColaboradores.kanbanId, schema.kanban.id)
+      )
+      .leftJoin(colabUser, eq(colabUser.id, schema.kanbanColaboradores.userId))
+
+      .groupBy(
+        schema.kanban.id,
+        schema.kanban.titulo,
+        schema.kanban.status,
+        schema.kanban.descricao,
+        schema.kanban.criadoEm,
+        schema.kanban.iniciadoEm,
+        schema.kanban.finalizadoEm,
+        schema.kanban.canceladoEm,
+        schema.kanban.motivoCancelamento,
+
+        criador.name,
+        iniciador.name,
+        finalizador.name,
+        cancelador.name
+      );
+
+      if(!kanban) return null
+
+    return kanban;
   }
+
   async updateDetails(id: string, data: { titulo?: string; descricao?: string; codAtividades?: number; }): Promise<void> {
     await db.update(schema.kanban).set({
       titulo: data.titulo,

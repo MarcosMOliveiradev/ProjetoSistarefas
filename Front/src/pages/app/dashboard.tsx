@@ -19,6 +19,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Clock, FileCheck } from "lucide-react"
 import { useEffect, useState } from "react"
 import profile from "../../assets/PROFILE.png"
+import { Helmet } from "react-helmet-async"
 
 export function Dashboard() {
   const [dados, setDados] = useState<atividadesDTO[]>([])
@@ -124,6 +125,7 @@ function getPrimeiroESegundoNome(nomeCompleto: string) {
 
   return (
     <div className={`pl-[1rem] ${user.user_roles.role === "INFORMATICA" ? "ml-[13rem]" : ""} flex flex-col`}>
+      <Helmet title="DASHBOARD"/>
       {user.user_roles.role === "INFORMATICA" && (
         <div className="w-[13rem] rounded-r-2xl h-full fixed left-0 bg-slate-900 text-white p-2 flex flex-col gap-2">
           <ScrollArea className="h-[90vh]">

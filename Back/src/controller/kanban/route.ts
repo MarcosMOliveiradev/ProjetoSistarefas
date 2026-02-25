@@ -94,8 +94,7 @@ export function kanbanRoute(app: FastifyInstance) {
       tags: ['kanban'],
       description: "atualiza o status do kanban para finish",
       body: z.object({
-        id: z.string(),
-        userId: z.string()
+        id: z.string()
       })
     }
   }, async (request, reply) => {

@@ -37,8 +37,6 @@ export function CriarSelo({ onClose, user }: Props) {
         throw new Error("Selecione um usuário")
       }
 
-      console.log(dados)
-
       await api.post("/analise/create", {
         userId: usuarioSelecionado,
         mes: dados.mes,

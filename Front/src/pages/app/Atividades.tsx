@@ -12,7 +12,7 @@ export function Atividades() {
     const [tarefas, setTarefas] = useState<tarefasDTO[]>([])
     return (
         <div >
-            <Helmet title="Atividades"/>
+            <Helmet title="ATIVIDADES"/>
             <div>
                 <div className="flex justify-between items-center mr-8">
                     {/* Componente que filtra data */}

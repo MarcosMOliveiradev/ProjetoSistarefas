@@ -5,12 +5,6 @@ export async function findAllKanbanController(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const userRole = request.user.role
-
-  if(userRole !== "INFORMATICA") {
-    return reply.status(400).send({ message: 'Você não tem permissão para executar essa função'})
-  }
-
   try {
     const findAllKanban = makeFindAllKanban()
     const kanban = await findAllKanban.execute()
