@@ -1,4 +1,4 @@
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, eq, inArray, ne, or, sql } from "drizzle-orm";
 import { Kanban } from "../../application/entities/kanban.ts";
 import type { kanbanStatusEnum } from "../../application/entities/Roles.ts";
 import { KanbanRepository } from "../../application/repositories/kanbanRepository.ts";
@@ -32,12 +32,15 @@ export class KanbanDrizzleRepository extends KanbanRepository {
     // ⚠️ este alias é só para join dos colaboradores
     const colabUser = alias(schema.user, "colab_user");
 
+    const hojeSP = sql`(NOW() AT TIME ZONE 'America/Sao_Paulo')::date`;
+
     const kanban = await db
       .select({
         id: schema.kanban.id,
         titulo: schema.kanban.titulo,
         status: schema.kanban.status,
         descricao: schema.kanban.descricao,
+        codAtividades: schema.kanban.codAtividades,
 
         criadoPor: criador.name,
         criadoEm: schema.kanban.criadoEm,
@@ -66,6 +69,15 @@ export class KanbanDrizzleRepository extends KanbanRepository {
         `.as("colaboradores"),
       })
       .from(schema.kanban)
+      .where(
+        or(
+          ne(schema.kanban.status, "DONE"),
+          and(
+            eq(schema.kanban.status, "DONE"),
+            sql`${schema.kanban.finalizadoEm}::date = CURRENT_DATE`
+          )
+        )
+      )
 
       .leftJoin(criador, eq(criador.id, schema.kanban.criadoPor))
       .leftJoin(iniciador, eq(iniciador.id, schema.kanban.iniciadoPor))
@@ -113,6 +125,7 @@ export class KanbanDrizzleRepository extends KanbanRepository {
         titulo: schema.kanban.titulo,
         status: schema.kanban.status,
         descricao: schema.kanban.descricao,
+        codAtividades: schema.kanban.codAtividades,
 
         criadoPor: criador.name,
         criadoEm: schema.kanban.criadoEm,
@@ -175,6 +188,7 @@ export class KanbanDrizzleRepository extends KanbanRepository {
 
     return kanban;
   }
+
   async findStatus(status: kanbanStatusEnum): Promise<Kanban[]> {
      const criador = alias(schema.user, "criador");
     const iniciador = alias(schema.user, "iniciador");
@@ -184,12 +198,13 @@ export class KanbanDrizzleRepository extends KanbanRepository {
     // ⚠️ este alias é só para join dos colaboradores
     const colabUser = alias(schema.user, "colab_user");
 
-    const [kanban] = await db
+    const kanban = await db
       .select({
         id: schema.kanban.id,
         titulo: schema.kanban.titulo,
         status: schema.kanban.status,
         descricao: schema.kanban.descricao,
+        codAtividades: schema.kanban.codAtividades,
 
         criadoPor: criador.name,
         criadoEm: schema.kanban.criadoEm,
@@ -260,26 +275,40 @@ export class KanbanDrizzleRepository extends KanbanRepository {
       codAtividades: data.codAtividades,
     }).where(eq(schema.kanban.id, id))
   }
+
   async start(id: string, userId: string): Promise<void> {
     await db.transaction(async (tx) => {
-      const update = await tx.update(schema.kanban).set({
-        status: "IN_PROGRESS",
-        iniciadoPor: sql`COALESCE(${schema.kanban.iniciadoPor}, ${userId})`,
-        iniciadoEm: sql`COALESCE(${schema.kanban.iniciadoEm}, NOW())`
-      }).where(and(
-        eq(schema.kanban.id, id),
-        inArray(schema.kanban.status, ["TODO", "IN_PROGRESS"])
-      )).returning({ status: schema.kanban.status });
+      const updated = await tx
+        .update(schema.kanban)
+        .set({
+          status: "IN_PROGRESS",
 
-      if ( update.length === 0 ) {
-        throw new Error("Não foi possível iniciar: Kanban não encontrado ou já encerrado.");
+          // primeiro iniciador apenas
+          iniciadoPor: sql`COALESCE(${schema.kanban.iniciadoPor}, ${userId})`,
+          iniciadoEm: sql`COALESCE(${schema.kanban.iniciadoEm}, NOW())`,
+
+          // ✅ se estava DONE e reabriu, limpa finalização
+          finalizadoPor: null,
+          finalizadoEm: null,
+        })
+        .where(
+          and(
+            eq(schema.kanban.id, id),
+            // ✅ agora aceita DONE também
+            inArray(schema.kanban.status, ["TODO", "IN_PROGRESS", "DONE"])
+          )
+        )
+        .returning({ id: schema.kanban.id });
+
+      if (updated.length === 0) {
+        throw new Error("Não foi possível iniciar: Kanban não encontrado.");
       }
 
-      await tx.insert(schema.kanbanColaboradores).values({
-        kanbanId: id,
-        userId
-      }).onConflictDoNothing();
-    })
+      await tx
+        .insert(schema.kanbanColaboradores)
+        .values({ kanbanId: id, userId })
+        .onConflictDoNothing();
+    });
   }
 
   async finish(id: string, userId: string): Promise<void> {
@@ -330,6 +359,7 @@ export class KanbanDrizzleRepository extends KanbanRepository {
       }
     });
   }
+
   async delete(id: string): Promise<void> {
     const result = await db
       .delete(schema.kanban)

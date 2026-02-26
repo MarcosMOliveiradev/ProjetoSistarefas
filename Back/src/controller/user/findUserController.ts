@@ -5,10 +5,10 @@ export async function findUserController(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const userRole = request.user.role
-  if(userRole !== 'INFORMATICA') {
-    return reply.status(403).send({ message: 'Acesso negado' })
-  }
+  // const userRole = request.user.role
+  // if(userRole !== 'INFORMATICA') {
+  //   return reply.status(403).send({ message: 'Acesso negado' })
+  // }
 
   try {
     const findUser = makeFindUser()

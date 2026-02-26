@@ -46,6 +46,7 @@ export function Profile() {
     queryFn: () => findUser(),
     enabled: user?.user_roles.role === 'INFORMATICA'
   })
+  
   const [usuarioSelecionado, setUsuarioSelecionado] = useState<string | null>(null)
 
   const nomeSeparado = user?.user.name.split(" ")

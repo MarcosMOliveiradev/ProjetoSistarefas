@@ -3,6 +3,7 @@ export type KanbanDTO = {
   titulo: string;
   status: "TODO" | "IN_PROGRESS" | "DONE" | "CANCELED";
   descricao: string;
+  codAtividades: number | null;
   criadoPor: string | null;
   criadoEm: string;
   iniciadoPor: string | null;
@@ -15,6 +16,6 @@ export type KanbanDTO = {
   colaboradores: {
       id: string;
       name: string;
-      matricula: number
+      matricula: number;
   }[];
 }

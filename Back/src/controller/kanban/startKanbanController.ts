@@ -17,7 +17,7 @@ export async function startKanbanController(
     const startKanban = makeStartKanban()
      await startKanban.execute({ id, userId })
 
-     return reply.status(200)
+     return reply.status(200).send({message: "Atualizado"})
   } catch (err) {
     return reply.status(400).send({message: err})
   }

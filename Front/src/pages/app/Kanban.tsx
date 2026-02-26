@@ -1,7 +1,6 @@
 import { getProfile } from "@/api/profile";
 import { CriarKanban } from "@/components/CriarKanban";
 import { KanbanColumn } from "@/components/KanbanColumn";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import type { KanbanDTO } from "@/dtos/kanbanDTO";
 import { api } from "@/lib/axios";
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
@@ -35,7 +34,8 @@ export function Kanban() {
 
   const finishMutation = useMutation({
     mutationFn: async (id: string) => api.patch(`/kanban/finish`, {
-      id
+      id,
+      userId: user?.user.id
     }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["kanban"] }),
   });
@@ -58,7 +58,7 @@ export function Kanban() {
     if (fromStatus === toStatus) return;
 
     // bloqueios
-    if (fromStatus === "DONE") return;
+    // if (fromStatus === "DONE") return;
     if (fromStatus === "IN_PROGRESS" && toStatus === "TODO") return;
 
     // optimistic UI
@@ -95,15 +95,15 @@ export function Kanban() {
         <CriarKanban />
       </div>
 
-      <ScrollArea className="h-[85vh]">
+      <div className="h-[85vh]">
         <DndContext onDragEnd={onDragEnd}>
           <div className="grid grid-cols-3 gap-4 mt-4">
             <KanbanColumn id="TODO" title="A FAZER" items={todo} />
-            <KanbanColumn id="IN_PROGRESS" title="EM PROGRESSO" items={inProgress} />
+            <KanbanColumn id="IN_PROGRESS" title="EM ANDAMENTO" items={inProgress} />
             <KanbanColumn id="DONE" title="CONCLUÍDO" items={done} />
           </div>
         </DndContext>
-      </ScrollArea>
+      </div>
     </div>
   );
 }
