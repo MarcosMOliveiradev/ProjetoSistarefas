@@ -15,6 +15,7 @@ import { ConsultarPresenca } from "./app/consultarPresenca";
 import { Sobre } from "./app/Sobre";
 import { AnaliseMensal } from "./app/analiseMensal";
 import { AnalisesMensais } from "./app/analisesMensais";
+import { Kanban } from "./app/Kanban";
 
 export function AppRoutes() {
     const { token, isLoadingUserStorageData } = useAuth()
@@ -47,6 +48,7 @@ export function AppRoutes() {
                             <Route path="/consultar" element={<ConsultarPresenca/>} />
                             <Route path="/analise" element={<AnaliseMensal/>} />
                             <Route path="/analises" element={<AnalisesMensais/>} />
+                            <Route path="/kanban" element={<Kanban/>} />
                         </Route>
                          <Route path="*" element={<Navigate to="/" replace />} />
                     </>

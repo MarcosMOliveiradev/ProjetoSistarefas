@@ -140,7 +140,7 @@ export function FeedbackRelatorio() {
 
   return (
     <div className="w-[100vw] h-[80vh] flex flex-col justify-center items-center gap-4">
-      <Helmet title="Feedback"/>
+      <Helmet title="FEEDBACK"/>
 
       <div>
         <div className="font-medium text-[1.5rem] mb-[1rem]">Relatório de feedback</div>

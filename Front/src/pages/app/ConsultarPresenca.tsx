@@ -10,6 +10,7 @@ import type { userDTO } from "@/dtos/userDto"
 import { api } from "@/lib/axios"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
+import { Helmet } from "react-helmet-async"
 import type z from "zod"
 
 export function ConsultarPresenca() {
@@ -63,6 +64,7 @@ export function ConsultarPresenca() {
 
   return (
     <div className="m-10 h-[80%]">
+      <Helmet title="CONSULTAR PRESENÇA"/>
       <DataPicker onDadosTarefas={setPeriodo} />
       {isInformatica && (
         <div className="w-[20rem] mb-4">

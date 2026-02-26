@@ -46,6 +46,7 @@ export function Profile() {
     queryFn: () => findUser(),
     enabled: user?.user_roles.role === 'INFORMATICA'
   })
+  
   const [usuarioSelecionado, setUsuarioSelecionado] = useState<string | null>(null)
 
   const nomeSeparado = user?.user.name.split(" ")
@@ -127,7 +128,7 @@ export function Profile() {
   return (
 
     <div className="grid grid-cols-[20%_1fr] h-[90vh]">
-      <Helmet title="Profile"/>
+      <Helmet title="PROFILE"/>
       <div className="flex flex-col items-center col-[20rem] border-r-2 border-muted-foreground">
         <div className="w-[15rem] h-[18rem] bg-white rounded-lg shadow-xl/30 flex justify-center items-center flex-col gap-2">
         <>

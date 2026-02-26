@@ -25,6 +25,7 @@ import { routesGrupos } from './controller/grupos/routes.ts';
 import "./application/useCase/grupos/function/criaPresencaJob.ts"
 import "./application/useCase/grupos/function/fechaPresencaJob.ts"
 import { analiseRoute } from './controller/analiseMensal/route.ts';
+import { kanbanRoute } from './controller/kanban/route.ts';
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -110,5 +111,9 @@ app.register(routesGrupos, {
 
 app.register(analiseRoute, {
     prefix: '/analise'
+})
+
+app.register(kanbanRoute, {
+    prefix: '/kanban'
 })
 

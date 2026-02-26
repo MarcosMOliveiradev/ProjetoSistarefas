@@ -9,7 +9,7 @@ export function GerenciarGrupos() {
 
     return (
         <div className="m-10">
-            <Helmet title="Grupos"/>
+            <Helmet title="GERENCIAR GRUPO"/>
             <div className="flex flex-col items-end">
                 <Dialog>
                     <DialogTrigger asChild>

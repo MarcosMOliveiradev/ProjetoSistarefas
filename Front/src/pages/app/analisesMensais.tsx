@@ -78,7 +78,7 @@ export function AnalisesMensais() {
 
   return (
     <div className="m-10 h-[80%]">
-      <Helmet title="Feedback"/>
+      <Helmet title="ANALISES MENSAIS"/>
       {isInformatica && (
         <div className="flex justify-around items-center">
            <Form {...form}>

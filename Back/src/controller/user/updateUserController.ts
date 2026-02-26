@@ -23,7 +23,7 @@ export async function updateUserController(
 
   try {
     const updateUser = makeUpdateUser()
-    await updateUser.execute({ id, ativado, name, password })
+    await updateUser.execute({ id, ativado, name, senha: password })
 
     return reply.status(200).send({ message: 'Usuario atualizado' })
   } catch (err) {
