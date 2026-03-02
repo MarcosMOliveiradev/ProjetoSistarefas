@@ -37,7 +37,7 @@ app.setValidatorCompiler(validatorCompiler)
 
 app.register(fastifyCors, {
     origin:'*',
-    methods: ["GET", "POST", "PUT", "PATCH"]
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"]
 })
 
 app.register(fastifyCookie)

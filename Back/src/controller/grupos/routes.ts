@@ -16,6 +16,7 @@ import { findPresencaUserController } from "./findPresencaUserController.ts";
 import { updateStatusController } from "./updateStatusController.ts";
 import { findPresencaByPeriodController } from "./findPresencaByPeriodController.ts";
 import { findUserGrupController } from "./findUserGrupController.ts";
+import { deleteGrupoController } from "./deleteGrupoController.ts";
 
 export async function routesGrupos(app: FastifyInstance) {
     app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -203,5 +204,15 @@ export async function routesGrupos(app: FastifyInstance) {
     }
     }, async (request, reply) => {
         return findUserGrupController(request, reply)
+    })
+
+    app.withTypeProvider<ZodTypeProvider>().delete('/delete/:id', {
+    onRequest: [verifyJwt],
+    schema: {
+        tags: ['Grupos'],
+        summary: 'Deleta um grupo',
+    }
+    }, async (request, reply) => {
+        return deleteGrupoController(request, reply)
     })
 }
