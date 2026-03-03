@@ -120,36 +120,34 @@ export class AnalisesMensais {
   }
 
   private calcularSelo(): seloEnum {
-    const percentualGlobal = this.calcularPercentualGlobal()
+  const percentualGlobal = this.calcularPercentualGlobal()
 
-    // percentuais separados
-    const empresa = this._percentualEmpresa
-    const instituicao = this._percentualInstituicao
+  const temEmpresa = this.props.diasEsperadosEmpresa > 0
+  const temInstituicao = this.props.diasEsperadosInstituicao > 0
 
-    // 🔴 Regra nova:
-    // se qualquer um dos dois ficar em 75% ou menos → vermelho direto
-    if (empresa <= 75 || instituicao <= 75) {
-      return seloEnum.VERMELHO
-    }
+  const empresa = this._percentualEmpresa
+  const instituicao = this._percentualInstituicao
 
-    // 🟡 dourado = 100% em tudo e sem atrasos
-    if (
-      percentualGlobal === 100 &&
-      empresa === 100 &&
-      instituicao === 100 &&
-      this.props.atrasos === 0
-    ) {
-      return seloEnum.DOURADO
-    }
-
-    // 🟢 verde = acima de 75% em ambos
-    if (percentualGlobal >= 76) {
-      return seloEnum.VERDE
-    }
-
-    // fallback
+  // ✅ Regra do vermelho: só aplica se aquele tipo existir no mês
+  if ((temEmpresa && empresa <= 74.99) || (temInstituicao && instituicao <= 74.99)) {
     return seloEnum.VERMELHO
   }
+
+  // ✅ Dourado: 100% em tudo que EXISTE e sem atrasos
+  const empresaOk = !temEmpresa || empresa === 100
+  const instituicaoOk = !temInstituicao || instituicao === 100
+
+  if (empresaOk && instituicaoOk && percentualGlobal === 100 && this.props.atrasos === 0) {
+    return seloEnum.DOURADO
+  }
+
+  // ✅ Verde: acima de 75% no global (e já garantimos que não caiu no vermelho acima)
+  if (percentualGlobal >= 76) {
+    return seloEnum.VERDE
+  }
+
+  return seloEnum.VERMELHO
+}
 
   // ------------------------------
   // ✅ Getters públicos

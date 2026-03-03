@@ -85,15 +85,15 @@ const updateUserProps = z.object({
   }
 
   useEffect(() => {
-    if(user && grupo) {
+    if(user) {
       form.reset({
         name: user.user.name,
         matricula: user.user.matricula,
         password: undefined,
         confirmPassword: undefined,
         ativado: user.user.ativado,
-        grupoName: grupo.props.nome,
-        inicio: grupo.props.dataInicio
+        grupoName: grupo?.props.nome ?? "-",
+        inicio: grupo?.props.dataInicio ?? "-"
       })
     }
   }, [id, user, grupo, form])

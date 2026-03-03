@@ -6,4 +6,5 @@ export abstract class GrupoRepository {
   abstract find(): Promise<Grupo[]>
   abstract findAtivoByDate(date: Date): Promise<Grupo[]>;
   abstract update(grupo: Grupo): Promise<void>;
+  abstract delete(id: string): Promise<void>;
 }

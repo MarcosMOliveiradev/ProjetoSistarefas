@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns"
 
 import { 
+    Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
@@ -22,6 +23,7 @@ import { AppErrors } from "@/lib/appErrors";
 import { toast } from "sonner";
 import { api } from "@/lib/axios";
 import { useEffect } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 function getHoraAtual() {
     const agora = new Date();
@@ -67,7 +69,13 @@ const criarAtividadeSchema = z.object({
     path: ["data"]
 })
 
-export function CriarAtividadeButton() {
+interface Props {
+    open: boolean
+    onClose: (v: boolean) => void
+}
+
+export function CriarAtividadeButton({ onClose, open }: Props) {
+    const queryClient = useQueryClient();
 
     const form = useForm<z.infer<typeof criarAtividadeSchema>>({
         resolver: zodResolver(criarAtividadeSchema),
@@ -109,11 +117,10 @@ export function CriarAtividadeButton() {
         return () => document.removeEventListener("keydown", handleShortcut);
     }, [form]);
 
-    async function onSubmit(dados: z.infer<typeof criarAtividadeSchema>) {
-        const dataB = new Date(dados.data).toLocaleDateString("pt-BR");
-      
-        try {
-            const response = await api.post('/tarefas/create', {
+    const criarAtividades = useMutation({
+        mutationFn: async (dados: z.infer<typeof criarAtividadeSchema>) => {
+            const dataB = new Date(dados.data).toLocaleDateString("pt-BR");
+            await api.post('/tarefas/create', {
                 data: dataB,
                 item: parseInt(dados.item),
                 codAtividade: parseInt(dados.codAtividade),
@@ -123,143 +130,161 @@ export function CriarAtividadeButton() {
                 hTerminoController: dados.hTerminoController,
                 nAtendimento: parseInt(dados.nAtendimento)
             })
+        },
 
-            if(response.status === 201) {
-                window.location.reload()
-            }
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ["atividades"] })
+
+            toast.success("Atividade criada")
+        }
+    })
+
+    const onSubmit = async (dados: z.infer<typeof criarAtividadeSchema>) => {
+        try {
+            await criarAtividades.mutateAsync(dados)
+            form.reset()
+            onClose(false)
         } catch (err) {
             const isAppError = err instanceof AppErrors
-            const title = isAppError ? err.message : "Não foi possivel carregar as informações, por favor informe ao administrador!" 
+            const title = isAppError ? err.message : "Não foi possivel carregar as informações, por favor informe ao administrador!"
 
             toast.error(title)
         }
-    }
+    } 
 
     return (
-        <DialogContent className="flex flex-col bg-muted min-w-[35rem] md:min-w-[45rem] md:h-[20rem] gap-10 items-center content-center text-muted-foreground ">
-            <DialogHeader>
-                <DialogTitle className="font-bold font-sans text-[1.5rem]">Criar Nova Atividade</DialogTitle>
-            </DialogHeader>
-            <Form {...form}>
-                <form className="grid grid-cols-3 gap-4 md:grid-cols-4" onSubmit={form.handleSubmit(onSubmit)}>
-                    
-                   <FormField
-                        control={form.control}
-                        name="data"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                                <FormLabel>Data</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="date"
-                                        className="w-full bg-muted"
-                                        value={field.value ? format(field.value, "yyyy-MM-dd") : ""}
-                                        onChange={(e) => {
-                                            const dateStr = e.target.value;
-                                            const date = dateStr ? new Date(dateStr + "T00:00:00") : undefined;
-                                            field.onChange(date);
-                                        }}
-                                    />
-                                </FormControl>
-                                <FormMessage className="text-center"/>
-                            </FormItem>
-                        )}
-                    />
+        <Dialog open={open} onOpenChange={onClose}>
+            <DialogContent className="flex flex-col bg-muted min-w-[35rem] md:min-w-[45rem] md:h-[20rem] gap-10 items-center content-center text-muted-foreground ">
+                <DialogHeader>
+                    <DialogTitle className="font-bold font-sans text-[1.5rem]">Criar Nova Atividade</DialogTitle>
+                </DialogHeader>
+                <Form {...form}>
+                    <form className="grid grid-cols-3 gap-4 md:grid-cols-4" onSubmit={form.handleSubmit(onSubmit)}>
+                        
+                    <FormField
+                            control={form.control}
+                            name="data"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>Data</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="date"
+                                            className="w-full bg-muted"
+                                            value={field.value ? format(field.value, "yyyy-MM-dd") : ""}
+                                            onChange={(e) => {
+                                                const dateStr = e.target.value;
+                                                const date = dateStr ? new Date(dateStr + "T00:00:00") : undefined;
+                                                field.onChange(date);
+                                            }}
+                                        />
+                                    </FormControl>
+                                    <FormMessage className="text-center"/>
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        name="item"
-                        control={form.control}
-                        render={({ field}) => (
-                            <FormItem>
-                                <FormLabel>Item</FormLabel>
-                                <FormControl>
-                                    <Input id="item" placeholder="Item" {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
+                        <FormField
+                            name="item"
+                            control={form.control}
+                            render={({ field}) => (
+                                <FormItem>
+                                    <FormLabel>Item</FormLabel>
+                                    <FormControl>
+                                        <Input id="item" placeholder="Item" {...field} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        name="codAtividade"
-                        control={form.control}
-                        render={({ field}) => (
-                            <FormItem>
-                                <FormLabel>Cód. Atividades</FormLabel>
-                                <FormControl>
-                                    <Input id="codAtividade" placeholder="Cód. Atividades" {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        name="idDocumento"
-                        control={form.control}
-                        render={({ field}) => (
-                            <FormItem>
-                                <FormLabel>Id Documento</FormLabel>
-                                <FormControl>
-                                    <Input id="idDocumento" placeholder="Id Documento" {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
+                        <FormField
+                            name="codAtividade"
+                            control={form.control}
+                            render={({ field}) => (
+                                <FormItem>
+                                    <FormLabel>Cód. Atividades</FormLabel>
+                                    <FormControl>
+                                        <Input id="codAtividade" placeholder="Cód. Atividades" {...field} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            name="idDocumento"
+                            control={form.control}
+                            render={({ field}) => (
+                                <FormItem>
+                                    <FormLabel>Id Documento</FormLabel>
+                                    <FormControl>
+                                        <Input id="idDocumento" placeholder="Id Documento" {...field} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        name="qtdFolha"
-                        control={form.control}
-                        render={({ field}) => (
-                            <FormItem>
-                                <FormLabel>Quantidade de folhas</FormLabel>
-                                <FormControl>
-                                    <Input id="qtdFolha" placeholder="Quantidade de folhas" {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
+                        <FormField
+                            name="qtdFolha"
+                            control={form.control}
+                            render={({ field}) => (
+                                <FormItem>
+                                    <FormLabel>Quantidade de folhas</FormLabel>
+                                    <FormControl>
+                                        <Input id="qtdFolha" placeholder="Quantidade de folhas" {...field} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        name="hInicioController"
-                        control={form.control}
-                        render={({ field}) => (
-                            <FormItem>
-                                <FormLabel>H. Ínicio</FormLabel>
-                                <FormControl>
-                                    <Input id="hInicioController" placeholder="H. Ínicio" {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        name="hTerminoController"
-                        control={form.control}
-                        render={({ field}) => (
-                            <FormItem>
-                                <FormLabel>H. Término</FormLabel>
-                                <FormControl>
-                                    <Input id="hTerminoController" placeholder="H. Término" {...field} />
-                                </FormControl>
-                                <FormMessage className="text-center"/>
-                            </FormItem>
-                        )}
-                    />
+                        <FormField
+                            name="hInicioController"
+                            control={form.control}
+                            render={({ field}) => (
+                                <FormItem>
+                                    <FormLabel>H. Ínicio</FormLabel>
+                                    <FormControl>
+                                        <Input id="hInicioController" placeholder="H. Ínicio" {...field} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            name="hTerminoController"
+                            control={form.control}
+                            render={({ field}) => (
+                                <FormItem>
+                                    <FormLabel>H. Término</FormLabel>
+                                    <FormControl>
+                                        <Input id="hTerminoController" placeholder="H. Término" {...field} />
+                                    </FormControl>
+                                    <FormMessage className="text-center"/>
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        name="nAtendimento"
-                        control={form.control}
-                        render={({ field}) => (
-                            <FormItem>
-                                <FormLabel>Nº Atendimento</FormLabel>
-                                <FormControl>
-                                    <Input id="nAtendimento" placeholder="Nº Atendimento" {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-                    <div className="grid col-start-2 col-span-2 md:col-start-3 justify-end">
-                        <Button className="w-[10rem] bg-slate-700 hover:bg-slate-400" type="submit">SALVAR</Button>
-                    </div>
-                </form>
-            </Form>
-        </DialogContent>
+                        <FormField
+                            name="nAtendimento"
+                            control={form.control}
+                            render={({ field}) => (
+                                <FormItem>
+                                    <FormLabel>Nº Atendimento</FormLabel>
+                                    <FormControl>
+                                        <Input id="nAtendimento" placeholder="Nº Atendimento" {...field} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                        <div className="grid col-start-2 col-span-2 md:col-start-3 justify-end">
+                            <Button 
+                                className="w-[10rem] bg-slate-700 hover:bg-slate-400" 
+                                type="submit"
+                                disabled={criarAtividades.isPending}
+                            >
+                                {criarAtividades.isPending ? "Criando..." : "SALVAR"}
+                            </Button>
+                        </div>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
     )
 }

@@ -10,6 +10,7 @@ import { SearchTarefas } from "@/components/searchTarefas";
 
 export function Atividades() {
     const [tarefas, setTarefas] = useState<tarefasDTO[]>([])
+    const [open, setOpen] = useState(false)
     return (
         <div >
             <Helmet title="ATIVIDADES"/>
@@ -21,12 +22,21 @@ export function Atividades() {
                     <SearchTarefas onDadosTarefas={setTarefas}/>
 
                     {/* Componente pra criar atividade */}
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button className="w-[8rem] cursor-pointer bg-slate-500 hover:bg-slate-400 text-muted" variant={"outline"}>Criar</Button>
-                        </DialogTrigger>
-                            <CriarAtividadeButton />
-                    </Dialog>
+                    <Button
+                        className="w-[8rem] cursor-pointer bg-slate-500 hover:bg-slate-400 text-muted"
+                        variant={"outline"}
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            setOpen(true)
+                        }}
+                    >
+                        Criar
+                    </Button>
+
+                    <CriarAtividadeButton
+                        open={open}
+                        onClose={setOpen}
+                    />
                 </div>
                 
                 {/* Componente de renderização de tarefas  */}

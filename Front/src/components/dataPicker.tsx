@@ -25,9 +25,10 @@ import { cn } from "@/lib/utils"
 import { AppErrors } from "@/lib/appErrors"
 import { toast } from "sonner"
 import { api } from "@/lib/axios"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useAuth } from "@/hooks/useAuth"
 import type { tarefasDTO } from "@/dtos/tarefasDTO"
+import { useQuery } from "@tanstack/react-query"
 
 
 const dataPickerSchema = z.object({
@@ -36,6 +37,25 @@ const dataPickerSchema = z.object({
         to: z.date()
     }),
 })
+
+type DataPickerSchema = z.infer<typeof dataPickerSchema>;
+
+function toBR(d: Date) {
+  return d.toLocaleDateString("pt-BR");
+}
+
+async function fetchTarefas(from: Date, to: Date) {
+  const startDate = toBR(from);
+  const endDate = toBR(to);
+
+  if (startDate === endDate) {
+    const { data } = await api.post("/tarefas/listaTarefas", { dataB: startDate });
+    return data.tarefas;
+  }
+
+  const { data } = await api.post("/tarefas/listbyinterval", { startDate, endDate });
+  return data.tarefas;
+}
 
 export function DataPicker({ onDadosTarefas }: any) {
     const { user } = useAuth()
@@ -49,35 +69,36 @@ export function DataPicker({ onDadosTarefas }: any) {
         }
     })
 
-    async function onSubmit(data: z.infer<typeof dataPickerSchema>) {
-        const startDate = new Date(data.dateRage.from).toLocaleDateString('pt-BR')
-        const endDate = new Date(data.dateRage.to).toLocaleDateString('pt-BR');
+    const [rangeKey, setRangeKey] = useState(() => {
+        const now = new Date();
+        return { from: now, to: now };
+    });
 
-        if(startDate === endDate) {
-            try {
-                const { data } = await api.post<tarefasDTO>('/tarefas/listaTarefas', {dataB: startDate})
+    const query = useQuery({
+        queryKey: ["atividades", toBR(rangeKey.from), toBR(rangeKey.to)],
+        queryFn: () => fetchTarefas(rangeKey.from, rangeKey.to),
+        staleTime: 0,
+    });
 
-                onDadosTarefas(data.tarefas)
-            } catch (err) {
-               const isAppError = err instanceof AppErrors
-               const title = isAppError ? err.message : "Não foi possivel carregar as informações, por favor informe ao administrador!" 
+    useEffect(() => {
+        if (!query.data) return;
+        onDadosTarefas(query.data);
+    }, [query.data]);
 
-               toast.error(title)
-            }
-        } else {
-            try {
-                const tarefas = await api.post('/tarefas/listbyinterval', {startDate, endDate})
-
-                onDadosTarefas(tarefas.data.tarefas)
-            } catch (err) {
-               const isAppError = err instanceof AppErrors
-               const title = isAppError ? err.message : "Não foi possivel carregar as informações, por favor informe ao administrador!" 
-
-               toast.error(title)
-            }
-        }
-        
+    async function onSubmit(values: DataPickerSchema) {
+        setRangeKey(values.dateRage);
+        // não precisa chamar refetch aqui porque a queryKey muda e ele refaz sozinho
     }
+
+    useEffect(() => {
+        if (!query.isError) return;
+        const err = query.error as any;
+        const msg =
+        err instanceof AppErrors
+            ? err.message
+            : err?.response?.data?.message ?? err?.message ?? "Erro ao carregar tarefas";
+        toast.error(msg);
+    }, [query.isError, query.error])
 
     async function geraPDF(data: z.infer<typeof dataPickerSchema>) {
         const startDate = new Date(data.dateRage.from).toLocaleDateString("pt-BR");
@@ -168,7 +189,13 @@ export function DataPicker({ onDadosTarefas }: any) {
                             </FormItem>
                         )}
                     />
-                    <Button className="hover:bg-muted w-[8rem] hover:text-muted-foreground hover:border-muted-foreground hover:border-2 bg-cyan-700 cursor-pointer" type="submit">Filtrar</Button>
+                    <Button 
+                        className="hover:bg-muted w-[8rem] hover:text-muted-foreground hover:border-muted-foreground hover:border-2 bg-cyan-700 cursor-pointer" 
+                        type="submit"
+                        disabled={query.isFetching}
+                    >
+                        {query.isFetching ? "Carregando..." : "FILTRAR"}
+                    </Button>
                     <Button className="cursor-pointer w-[8rem] bg-slate-700 hover:bg-slate-400" onClick={() => geraPDF({dateRage: form.getValues("dateRage")})}>GERAR PDF</Button>
                 </form>
             </Form>
