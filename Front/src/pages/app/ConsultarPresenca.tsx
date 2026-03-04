@@ -9,14 +9,18 @@ import type { presecaDTOS } from "@/dtos/presencaDTOS"
 import type { userDTO } from "@/dtos/userDto"
 import { api } from "@/lib/axios"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { Helmet } from "react-helmet-async"
 import type z from "zod"
 
 export function ConsultarPresenca() {
+  const [getPresencas, setPresencas] = useState<presecaDTOS[]>([])
   const [usuarioSelecionado, setUsuarioSelecionado] = useState<string | null>(null)
   const [presencaSelecionada, setPresencaSelecionada] =
-      useState<presecaDTOS | null>(null)
+    useState<presecaDTOS | null>(null)
+  const [sortCol, setSortCol] = useState<string | null>(null);
+  const [sortDir, setSortDir] = useState<"asc" | "desc" | null>(null);
+
   const [periodo, setPeriodo] = useState<z.infer<typeof dataPickerSchema>>({
     dateRage: {
       from: new Date(),
@@ -54,13 +58,57 @@ export function ConsultarPresenca() {
         inicio: periodo.dateRage.from,
         fim: periodo.dateRage.to,
       })
-      return data
+      setPresencas(data)
     },
     enabled:
       !!userIdConsulta &&
       !!periodo.dateRage.from &&
       !!periodo.dateRage.to,
   })
+
+  function handleSort(col: string) {
+    if (sortCol !== col) {
+      // primeira vez clicando → ASC
+      setSortCol(col);
+      setSortDir("asc");
+      return;
+    }
+
+    if (sortDir === "asc") {
+      // segunda vez → DESC
+      setSortDir("desc");
+      return;
+    }
+
+    if (sortDir === "desc") {
+      // terceira vez → remove ordenação
+      setSortCol(null);
+      setSortDir(null);
+      return;
+    }
+  }
+
+  const dadosOrdenados = useMemo(() => {
+    if (!sortCol || !sortDir) return [...getPresencas]
+
+    return [...getPresencas].sort((a, b) => {
+      let result = 0
+
+      if (sortCol === "data") {
+        result = new Date(a.data).getTime() - new Date(b.data).getTime()
+      }
+
+      if (sortCol === "tipo") {
+        result = (a.tipoEsperado ?? "").localeCompare(b.tipoEsperado ?? "")
+      }
+
+      if (sortCol === "status") {
+        result = a.status.localeCompare(b.status)
+      }
+
+      return sortDir === "asc" ? result : -result
+    })
+  }, [getPresencas, sortCol, sortDir])
 
   return (
     <div className="m-10 h-[80%]">
@@ -92,9 +140,24 @@ export function ConsultarPresenca() {
             <TableRow>
               <TableHead className="text-center">Usuário</TableHead>
               <TableHead className="text-center">Matrícula</TableHead>
-              <TableHead className="text-center">Data</TableHead>
-              <TableHead className="text-center">Tipo</TableHead>
-              <TableHead className="text-center">Status</TableHead>
+              <TableHead 
+                className="text-center cursor-pointer"
+                onClick={() => handleSort("data")}
+              >
+                Data {sortCol === "data" && (sortDir === "asc" ? "▲" : "▼")}
+              </TableHead>
+              <TableHead 
+                className="text-center cursor-pointer"
+                onClick={() => handleSort("tipo")}
+              >
+                Tipo
+              </TableHead>
+              <TableHead 
+                className="text-center cursor-pointer"
+                onClick={() => handleSort("status")}
+                >
+                Status
+              </TableHead>
               <TableHead className="text-center">Hora Entrada</TableHead>
               <TableHead className="text-center">Origem</TableHead>
             </TableRow>
@@ -110,7 +173,7 @@ export function ConsultarPresenca() {
               </TableRow>
             )}
 
-            {presencas?.map((dados) => (
+            {dadosOrdenados.map((dados) => (
               <TableRow
                 key={dados.id}
                 className="text-center"

@@ -19,6 +19,7 @@ import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogHeader, 
 import { Dialog } from "./ui/dialog";
 import { UpdateTarefas } from "./updateTarefas";
 import { FindUserId } from "./findUserId";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function TabelaAtividades({ dados }: any) {
     //descrição do usuario da atividade
@@ -30,6 +31,8 @@ export function TabelaAtividades({ dados }: any) {
     // filtro de ordenação
     const [sortCol, setSortCol] = useState<string | null>(null);
     const [sortDir, setSortDir] = useState<"asc" | "desc" | null>(null);
+
+    const queryClient = useQueryClient();
 
     // fecha dialog
     const [open, setOpen] = useState(false);
@@ -110,19 +113,25 @@ export function TabelaAtividades({ dados }: any) {
         return dadosOrdenados.slice(inicio, fim);
     }, [dadosOrdenados, pagina]);
 
-    async function handleDelete(id: string) {
-        try {
-            const response = await api.post('/tarefas/deletar', {
+    const deleteAtividade = useMutation({
+        mutationFn: async (id: string) => {
+            await api.post('/tarefas/deletar', {
                 id,
                 ativado: false
             })
+        },
 
-            const title = response.status === 200 ? response.data.message : "Atividade deletada"
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ["atividades"] })
 
-            toast.success(title)
+            toast.success("Atividade deletado!")
+        }
+    })
+
+    async function handleDelete(id: string) {
+        try {
+            await deleteAtividade.mutateAsync(id)
             setOpen(false)
-            window.location.reload()
-
         } catch (err) {
             const isAppError = err instanceof AppErrors
             const title = isAppError ? err.message : "Não foi possivel carregar as informações, por favor informe ao administrador!" 

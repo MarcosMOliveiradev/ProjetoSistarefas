@@ -18,6 +18,7 @@ export class FecharPresencasPendentes {
         fim
       );
 
+
     for (const presenca of pendentes) {
       // só datas passadas ou hoje
       if (presenca.data > data) continue;
@@ -27,12 +28,20 @@ export class FecharPresencasPendentes {
 
       if (user.user.turno === turnoEnum.INTEGRAL) continue;
 
-      const horaLimite =
-        user.user.turno === turnoEnum.MANHA ? "08:10" : "13:10";
+      // const horaLimite =
+      //   user.user.turno === turnoEnum.MANHA ? "08:10" : "13:10";
+
+      let status;
+
+      if(presenca.tipoEsperado === "INSTITUICAO") {
+        status = statusPresencaEnum.PRESENTE
+      } else {
+        status = statusPresencaEnum.FALTA
+      }
 
       await this.presencaRepository.updateStatus(
         presenca.id,
-        statusPresencaEnum.FALTA
+        status
       );
     }
   }

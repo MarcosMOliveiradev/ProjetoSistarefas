@@ -55,19 +55,18 @@ export function UpdateTarefas({dados, onSuccess}: UpdateTarefasProps) {
 
       // 🔄 atualiza a listagem
       await queryClient.invalidateQueries({
-        queryKey: ['tarefas']
+        queryKey: ['atividades']
       })
 
       toast.success("Tarefa atualizada com sucesso!")
       onSuccess() // 🔒 fecha o dialog
-      window.location.reload()
     } catch {
       toast.error("Erro ao atualizar tarefa")
     }
   }
 
   const { data: tarefa, isLoading } = useQuery({
-    queryKey: ['tarefas', dados.tarefas.id],
+    queryKey: ['atividades', dados.tarefas.id],
     queryFn: () => getTarefas(dados.tarefas.id),
     enabled: !!dados?.tarefas?.id, // 🔥 evita fetch indevido
   })

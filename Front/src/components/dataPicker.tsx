@@ -87,7 +87,6 @@ export function DataPicker({ onDadosTarefas }: any) {
 
     async function onSubmit(values: DataPickerSchema) {
         setRangeKey(values.dateRage);
-        // não precisa chamar refetch aqui porque a queryKey muda e ele refaz sozinho
     }
 
     useEffect(() => {

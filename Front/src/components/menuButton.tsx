@@ -98,7 +98,7 @@ export function MenuButton() {
                     }
 
                     <DropdownMenuItem asChild>
-                        <Button onClick={signOut} className="w-[100%] hover:bg-muted mt-4" variant={"destructive"}>
+                        <Button onClick={signOut} className="w-[100%] hover:bg-muted mt-4 cursor-pointer " variant={"destructive"}>
                             <Link to={"/"}>SAIR</Link>
                         </Button>
                     </DropdownMenuItem>

@@ -50,26 +50,26 @@ export function GerenciaPresenca() {
   }
 
   function handleSort(col: string) {
-        if (sortCol !== col) {
-            // primeira vez clicando → ASC
-            setSortCol(col);
-            setSortDir("asc");
-            return;
-        }
-
-        if (sortDir === "asc") {
-            // segunda vez → DESC
-            setSortDir("desc");
-            return;
-        }
-
-        if (sortDir === "desc") {
-            // terceira vez → remove ordenação
-            setSortCol(null);
-            setSortDir(null);
-            return;
-        }
+    if (sortCol !== col) {
+      // primeira vez clicando → ASC
+      setSortCol(col);
+      setSortDir("asc");
+      return;
     }
+
+    if (sortDir === "asc") {
+      // segunda vez → DESC
+      setSortDir("desc");
+      return;
+    }
+
+    if (sortDir === "desc") {
+      // terceira vez → remove ordenação
+      setSortCol(null);
+      setSortDir(null);
+      return;
+    }
+  }
 
 const dadosOrdenados = useMemo(() => {
   if (!sortCol || !sortDir) return [...presencas]
@@ -193,11 +193,15 @@ const dadosOrdenados = useMemo(() => {
               <TableHead 
                 className="text-center cursor-pointer"
                 onClick={() => handleSort("data")}
-              >Data {sortCol === "data" && (sortDir === "asc" ? "▲" : "▼")} </TableHead>
+              >
+                Data {sortCol === "data" && (sortDir === "asc" ? "▲" : "▼")}
+              </TableHead>
               <TableHead 
                 className="text-center cursor-pointer"
                 onClick={() => handleSort("tipo")}
-              >Tipo</TableHead>
+              >
+                Tipo
+              </TableHead>
               <TableHead className="text-center">Status</TableHead>
               <TableHead className="text-center">Hora Entrada</TableHead>
               <TableHead className="text-center">Origem</TableHead>

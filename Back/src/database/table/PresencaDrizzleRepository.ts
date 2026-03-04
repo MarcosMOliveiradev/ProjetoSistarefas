@@ -121,7 +121,7 @@ export class PresencaDrizzleRepository extends PresencaRepository {
       eq(schema.presenca.userId, userId),
       gte(schema.presenca.data, toDateOnly(inicio)),
       lte(schema.presenca.data, toDateOnly(fim))
-    )).innerJoin(schema.user, eq(schema.user.id, schema.presenca.userId))
+    )).innerJoin(schema.user, eq(schema.user.id, schema.presenca.userId)).orderBy(schema.presenca.data)
 
     return rows
   }
