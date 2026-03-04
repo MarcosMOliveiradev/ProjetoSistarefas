@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import type { Spinner } from "@/components/ui/spinner";
 import { useAuth } from "@/hooks/useAuth";
 import { AppErrors } from "@/lib/appErrors";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -21,11 +23,16 @@ export function SignIn() {
   })
   const { signIg } = useAuth()
 
-  async function logIn({ matriculaBody, passwordBody }: z.infer<typeof logInSchema>) {
-    const matricula = parseInt(matriculaBody)
-
-    try {
+  const auth = useMutation({
+    mutationFn: async ({ matriculaBody, passwordBody }: z.infer<typeof logInSchema>) => {
+      const matricula = parseInt(matriculaBody)
       await signIg(matricula, passwordBody)
+    }
+  })
+
+  async function logIn({ matriculaBody, passwordBody }: z.infer<typeof logInSchema>) {
+    try {
+     await auth.mutateAsync({ matriculaBody, passwordBody })
     } catch (err) {
       const isAppError = err instanceof AppErrors
       const title = isAppError ? err.message : 'Não foi possivel efetuar o log in. Tente novamente mais tarde'
@@ -75,7 +82,13 @@ export function SignIn() {
               />
             </div>
 
-            <Button className="w-full bg-muted-foreground hover:bg-muted-foreground/80 cursor-pointer" type="submit">ENTRAR</Button>
+            <Button 
+              className="w-full bg-muted-foreground hover:bg-muted-foreground/80 cursor-pointer" 
+              type="submit"
+              disabled={auth.isPending}
+            >
+              {auth.isPending ? "Logando..." : "ENTRAR"}
+            </Button>
           </form>
         </Form>
      </div>
