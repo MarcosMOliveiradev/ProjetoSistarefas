@@ -47,42 +47,6 @@ export function AnaliseMensal() {
         !!userIdConsulta
     })
 
-  // async function handleBaixarPdf(mes: number, ano: number) {
-  //   if (!userIdConsulta) return
-    
-  //   try {
-  //     const response = await api.post(
-  //       "/analise/pdf",
-  //       {
-  //         userId: userIdConsulta,
-  //         mes,
-  //         ano,
-  //       },
-  //       {
-  //         responseType: "blob", // 🔥 IMPORTANTE
-  //       }
-  //     )
-
-  //     // Criar arquivo PDF no navegador
-  //     const blob = new Blob([response.data], {
-  //       type: "application/pdf",
-  //     })
-
-  //     // Criar link temporário
-  //     const url = URL.createObjectURL(blob)
-
-  //     const link = document.createElement("a")
-  //     link.href = url
-  //     link.download = `selo-${mes}-${ano}.pdf`
-  //     link.click()
-
-  //     // Limpa memória
-  //     window.URL.revokeObjectURL(url)
-  //   } catch (err) {
-  //     alert("Erro ao gerar PDF")
-  //   }
-  // }
-
   return (
     <div className="m-10 h-[80%]">
       <Helmet title="SELOS"/>

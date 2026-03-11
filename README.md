@@ -55,4 +55,4 @@ Foram utilizado nesse projeto as seguintes tecnologias:
 
 ### Porximas atualizações
 * Kambam e métodos ágeis
-  - [ ] Criar tabela de kambam
+  - [x] Criar tabela de kambam

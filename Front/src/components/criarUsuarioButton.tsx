@@ -20,6 +20,8 @@ import { AppErrors } from "@/lib/appErrors";
 import { toast } from "sonner";
 import { api } from "@/lib/axios";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Dialog } from "@radix-ui/react-dialog";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const criarUsuarioSchema = z.object({
   name: z.string(),
@@ -33,26 +35,40 @@ const criarUsuarioSchema = z.object({
     path: ["confirmPassword"],
 })
 
-export function CriarUsuarioButton() {
-    
+interface Props {
+    open: boolean
+    onClose: (v: boolean) => void
+}
+
+export function CriarUsuarioButton({ open, onClose }: Props) {
+    const queryClient = useQueryClient();
     const form = useForm<z.infer<typeof criarUsuarioSchema>>({
         resolver: zodResolver(criarUsuarioSchema),
     })
 
-    async function onSubmit(dados: z.infer<typeof criarUsuarioSchema>) {
-      const matricula = parseInt(dados.matriculaInput)
-        try {
-            const response = await api.post('/user/created', {
+    const criarUsario = useMutation({
+        mutationFn: async (dados: z.infer<typeof criarUsuarioSchema>) => {
+            const matricula = parseInt(dados.matriculaInput)
+            await api.post('/user/created', {
               name: dados.name,
               matricula: matricula,
               turno: dados.turno,
               passwordBody: dados.passwordBody,
               role: dados.role
             })
+        },
 
-            if(response.status === 201) {
-                window.location.reload()
-            }
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ["findUser"] })
+            onClose(false)
+            toast.success("Usario criado")
+        }
+    })
+
+    async function onSubmit(dados: z.infer<typeof criarUsuarioSchema>) {
+        try {
+            criarUsario.mutateAsync(dados)
+            form.reset()
         } catch (err) {
             const isAppError = err instanceof AppErrors
             const title = isAppError ? err.message : "Não foi possivel carregar as informações, por favor informe ao administrador!" 
@@ -62,128 +78,136 @@ export function CriarUsuarioButton() {
     }
 
     return (
-        <DialogContent className="flex flex-col bg-muted min-w-[50rem] content-center text-muted-foreground">
-            <DialogHeader>
-                <DialogTitle>Criar novo usuario</DialogTitle>
-            </DialogHeader>
-            <Form {...form}>
-                <form className="grid grid-cols-4 gap-4 " onSubmit={form.handleSubmit(onSubmit)}>
-                    <FormField
-                        name="name"
-                        control={form.control}
-                        render={({ field}) => (
-                            <FormItem className="col-span-4">
-                                <FormLabel>Nome</FormLabel>
-                                <FormControl>
-                                    <Input id="nome" placeholder="Jhon Doe" {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        name="role"
-                        control={form.control}
-                        render={({ field}) => (
-                            <FormItem className="col-span-2">
-                                <FormLabel>Selecione o tipo de usuario</FormLabel>
-                                <Select
-                                    onValueChange={field.onChange}
-                                    defaultValue={field.value}
-                                >
-                                    <FormControl className="w-full">
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Selecione..." />
-                                        </SelectTrigger>
+        <Dialog open={open} onOpenChange={onClose} >
+            <DialogContent className="flex flex-col bg-muted min-w-[50rem] content-center text-muted-foreground">
+                <DialogHeader>
+                    <DialogTitle>Criar novo usuario</DialogTitle>
+                </DialogHeader>
+                <Form {...form}>
+                    <form className="grid grid-cols-4 gap-4 " onSubmit={form.handleSubmit(onSubmit)}>
+                        <FormField
+                            name="name"
+                            control={form.control}
+                            render={({ field}) => (
+                                <FormItem className="col-span-4">
+                                    <FormLabel>Nome</FormLabel>
+                                    <FormControl>
+                                        <Input id="nome" placeholder="Jhon Doe" {...field} />
                                     </FormControl>
-                                    <SelectContent>
-                                        <SelectItem value="TODOS">TODOS</SelectItem>
-                                        <SelectItem value="COMPRAS">COMPRAS</SelectItem>
-                                        <SelectItem value="ALMOXARIFADO">ALMOXARIFADO</SelectItem>
-                                        <SelectItem value="SECRETARIA">SECRETARIA</SelectItem>
-                                        <SelectItem value="FINANCEIRO">FINANCEIRO</SelectItem>
-                                        <SelectItem value="DP">DP</SelectItem>
-                                        <SelectItem value="INFORMATICA">INFORMATICA</SelectItem>
-                                        <SelectItem value="PONTO">PONTO</SelectItem>
-                                        <SelectItem value="SEMAC">SEMAC</SelectItem>
-                                        <SelectItem value="SEMEL">SEMEL</SelectItem>
-                                        <SelectItem value="PCM">PCM</SelectItem>
-                                        <SelectItem value="PJA">PJA</SelectItem>
-                                        <SelectItem value="OUTROS">OUTROS</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </FormItem>
-                        )}
-                    />
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        name="turno"
-                        control={form.control}
-                        render={({ field}) => (
-                            <FormItem className="col-span-2">
-                                <FormLabel>Selecione o turno do usuario</FormLabel>
-                                <Select
-                                    onValueChange={field.onChange}
-                                    defaultValue={field.value}
-                                >
-                                    <FormControl className="w-full">
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Selecione..." />
-                                        </SelectTrigger>
+                        <FormField
+                            name="role"
+                            control={form.control}
+                            render={({ field}) => (
+                                <FormItem className="col-span-2">
+                                    <FormLabel>Selecione o tipo de usuario</FormLabel>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <FormControl className="w-full">
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Selecione..." />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="TODOS">TODOS</SelectItem>
+                                            <SelectItem value="COMPRAS">COMPRAS</SelectItem>
+                                            <SelectItem value="ALMOXARIFADO">ALMOXARIFADO</SelectItem>
+                                            <SelectItem value="SECRETARIA">SECRETARIA</SelectItem>
+                                            <SelectItem value="FINANCEIRO">FINANCEIRO</SelectItem>
+                                            <SelectItem value="DP">DP</SelectItem>
+                                            <SelectItem value="INFORMATICA">INFORMATICA</SelectItem>
+                                            <SelectItem value="PONTO">PONTO</SelectItem>
+                                            <SelectItem value="SEMAC">SEMAC</SelectItem>
+                                            <SelectItem value="SEMEL">SEMEL</SelectItem>
+                                            <SelectItem value="PCM">PCM</SelectItem>
+                                            <SelectItem value="PJA">PJA</SelectItem>
+                                            <SelectItem value="OUTROS">OUTROS</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            name="turno"
+                            control={form.control}
+                            render={({ field}) => (
+                                <FormItem className="col-span-2">
+                                    <FormLabel>Selecione o turno do usuario</FormLabel>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <FormControl className="w-full">
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Selecione..." />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="MANHA">MANHÃ</SelectItem>
+                                            <SelectItem value="TARDE">TARDE</SelectItem>
+                                            <SelectItem value="INTEGRAL">INTEGRAL</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            name="matriculaInput"
+                            control={form.control}
+                            render={({ field}) => (
+                                <FormItem className="col-span-2">
+                                    <FormLabel>Matricula</FormLabel>
+                                    <FormControl>
+                                        <Input id="matriculaInput" {...field} />
                                     </FormControl>
-                                    <SelectContent>
-                                        <SelectItem value="MANHA">MANHÃ</SelectItem>
-                                        <SelectItem value="TARDE">TARDE</SelectItem>
-                                        <SelectItem value="INTEGRAL">INTEGRAL</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </FormItem>
-                        )}
-                    />
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        name="matriculaInput"
-                        control={form.control}
-                        render={({ field}) => (
-                            <FormItem className="col-span-2">
-                                <FormLabel>Matricula</FormLabel>
-                                <FormControl>
-                                    <Input id="matriculaInput" {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
+                        <FormField
+                            name="passwordBody"
+                            control={form.control}
+                            render={({ field}) => (
+                                <FormItem className="col-span-2">
+                                    <FormLabel>Senha</FormLabel>
+                                    <FormControl>
+                                        <Input id="senha" type="password" {...field} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        name="passwordBody"
-                        control={form.control}
-                        render={({ field}) => (
-                            <FormItem className="col-span-2">
-                                <FormLabel>Senha</FormLabel>
-                                <FormControl>
-                                    <Input id="senha" type="password" {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        name="confirmPassword"
-                        control={form.control}
-                        render={({ field}) => (
-                            <FormItem className="col-span-2">
-                                <FormLabel>Confirmar senha</FormLabel>
-                                <FormControl>
-                                    <Input id="confirmPassword" type="password" {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-                    <div className="grid col-start-2 col-span-2 justify-center">
-                        <Button className="w-[8rem] bg-slate-700 hover:bg-slate-400" type="submit">SALVAR</Button>
-                    </div>
-                </form>
-            </Form>
-        </DialogContent>
+                        <FormField
+                            name="confirmPassword"
+                            control={form.control}
+                            render={({ field}) => (
+                                <FormItem className="col-span-2">
+                                    <FormLabel>Confirmar senha</FormLabel>
+                                    <FormControl>
+                                        <Input id="confirmPassword" type="password" {...field} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                        <div className="grid col-start-2 col-span-2 justify-center">
+                            <Button 
+                                className="w-[8rem] bg-slate-700 hover:bg-slate-400" 
+                                type="submit"
+                                disabled={criarUsario.isPending}
+                            >
+                                {criarUsario.isPending ? "CRIANDO..." : "CRIAR"}
+                            </Button>
+                        </div>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
     )
 }

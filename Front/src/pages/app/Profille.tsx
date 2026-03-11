@@ -23,6 +23,7 @@ import type { usersDTO } from "@/dtos/userDto"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { UpdateUser } from "@/components/UpdateUser"
 import { Helmet } from "react-helmet-async"
+import { Spinner } from "@/components/ui/spinner"
 
 const updateSchema = z.object({
   nome: z.string().optional(),
@@ -35,13 +36,14 @@ const updateSchema = z.object({
 
 export function Profile() {
   const [usuarioOpen, setUsuarioOpen] = useState(false)
+  const [open, setOpen] = useState(false)
 
   const { data: user } = useQuery({
     queryKey: ['profile'],
     queryFn: getProfile,
   })
 
-  const { data: listUsuarios } = useQuery<usersDTO[]>({
+  const { data: listUsuarios, isFetching } = useQuery<usersDTO[]>({
     queryKey: ['findUser'],
     queryFn: () => findUser(),
     enabled: user?.user_roles.role === 'INFORMATICA'
@@ -167,19 +169,28 @@ export function Profile() {
         {
           user?.user_roles.role === "INFORMATICA" ?
             <>
-              <Dialog>
-                  <DialogTrigger asChild>
-                      <Button className="w-[15rem] h-[3rem] mt-4 text-[20px] bg-slate-700 hover:bg-slate-400 cursor-pointer">Criar novo usuario</Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                      <CriarUsuarioButton/>
-                  </DialogContent>
-              </Dialog>
+              <div>
+                  <Button 
+                    className="w-[15rem] h-[3rem] mt-4 text-[20px] bg-slate-700 hover:bg-slate-400 cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation(),
+                      setOpen(true)
+                    }}
+                  >
+                    Criar novo usuario
+                  </Button>
+                  <CriarUsuarioButton
+                    open={open}
+                    onClose={setOpen}
+                  />
+              </div>
 
-              <ScrollArea className="h-[20rem] w-[90%] p-4 m-4 rounded-2xl bg-slate-900">
+              <ScrollArea className={`h-[20rem] w-[90%] p-4 m-4 rounded-2xl bg-slate-900`}>
                 <h2 className="text-xl font-semibold mb-4">Usuários</h2>
     
-                {listUsuarios?.map(u => (
+                { isFetching ? 
+                <Spinner /> :
+                listUsuarios?.map(u => (
                       <button
                         key={u.id}
                         onClick={() => {
@@ -195,7 +206,8 @@ export function Profile() {
                         </>
                       </button>
                   
-                ))}
+                ))
+                }
               </ScrollArea>
 
             </>

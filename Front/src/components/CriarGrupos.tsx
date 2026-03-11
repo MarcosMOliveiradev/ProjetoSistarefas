@@ -1,5 +1,5 @@
 import z from "zod";
-import { DialogContent, DialogHeader } from "./ui/dialog";
+import { Dialog, DialogContent, DialogHeader } from "./ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -9,6 +9,12 @@ import { Button } from "./ui/button";
 import { api } from "@/lib/axios";
 import { toast } from "sonner";
 import { AppErrors } from "@/lib/appErrors";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+interface Props {
+    open: boolean
+    onClose: (v: boolean) => void
+}
 
 const diasSemana = [
   { label: "Domingo", value: 0 },
@@ -71,7 +77,8 @@ const criarGruposSchema = z
     }
   )
 
-export function CriarGrupos() {
+export function CriarGrupos({ onClose, open }: Props) {
+    const queryClient = useQueryClient();
     const form = useForm<z.infer<typeof criarGruposSchema>>({
         resolver: zodResolver(criarGruposSchema),
         defaultValues: {
@@ -80,20 +87,27 @@ export function CriarGrupos() {
         },
     })
 
-    async function onSubmit({nome, dataInicio, diasEmpresa, diasInstituicao}: z.infer<typeof criarGruposSchema>) {
-        try {
-            const { status } = await api.post('/grupos/create', {
+    const criarGrupo = useMutation({
+        mutationFn: async ({nome, dataInicio, diasEmpresa, diasInstituicao}: z.infer<typeof criarGruposSchema>) => {
+            await api.post('/grupos/create', {
                 nome,
                 diasEmpresa,
                 diasInstituicao,
                 dataInicio
             })
+        },
 
-        if( status === 201 ) {
-            toast.success("Grupo Criado")
-            window.location.reload()
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ["grupos"] })
+            onClose(false)
+            toast.success("Grupo Criado!")
         }
-        } catch (err) {
+    })
+
+    async function onSubmit({ nome, dataInicio, diasEmpresa, diasInstituicao }: z.infer<typeof criarGruposSchema>) {
+        try {
+            criarGrupo.mutateAsync({ nome, dataInicio, diasEmpresa, diasInstituicao })
+        }catch (err) {
             const isAppError = err instanceof AppErrors
             const title = isAppError ? err.message : "Não foi possivel carregar as informações, por favor informe ao administrador!" 
 
@@ -102,118 +116,120 @@ export function CriarGrupos() {
     }
 
     return (
-        <DialogContent>
-            <DialogHeader>
-                CÓDIGOS DE ATIVIDADES
-            </DialogHeader>
+        <Dialog open={open} onOpenChange={onClose}>
+            <DialogContent>
+                <DialogHeader>
+                    CÓDIGOS DE ATIVIDADES
+                </DialogHeader>
 
-            <Form {...form}>
-                <form className="flex flex-col gap-4" onSubmit={form.handleSubmit(onSubmit)}>
-                    <FormField
-                        name="nome"
-                        control={form.control}
-                        render={({ field}) => (
-                            <FormItem className="col-span-4">
-                                <FormLabel>Nome do Grupo</FormLabel>
-                                <FormControl>
-                                    <Input id="nome" placeholder="Grupo Manha 01" {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
+                <Form {...form}>
+                    <form className="flex flex-col gap-4" onSubmit={form.handleSubmit(onSubmit)}>
+                        <FormField
+                            name="nome"
+                            control={form.control}
+                            render={({ field}) => (
+                                <FormItem className="col-span-4">
+                                    <FormLabel>Nome do Grupo</FormLabel>
+                                    <FormControl>
+                                        <Input id="nome" placeholder="Grupo Manha 01" {...field} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        control={form.control}
-                        name="diasEmpresa"
-                        render={({ field }) => (
-                            <FormItem>
-                            <FormLabel>Dias na Empresa</FormLabel>
+                        <FormField
+                            control={form.control}
+                            name="diasEmpresa"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>Dias na Empresa</FormLabel>
 
-                            <div className="grid grid-cols-2 gap-2">
-                                {diasSemana.map((dia) => (
-                                <label key={dia.value} className="flex items-center gap-2">
-                                    <input
-                                    type="checkbox"
-                                    checked={field.value?.includes(dia.value)}
-                                    onChange={(e) => {
-                                        if (e.target.checked) {
-                                        field.onChange([...(field.value ?? []), dia.value])
-                                        } else {
-                                        field.onChange(
-                                            field.value?.filter((v) => v !== dia.value)
-                                        )
-                                        }
-                                    }}
-                                    />
-                                    {dia.label}
-                                </label>
-                                ))}
-                            </div>
-
-                            <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="diasInstituicao"
-                        render={({ field }) => (
-                            <FormItem>
-                            <FormLabel>Dias na Instituição</FormLabel>
-
-                            <div className="grid grid-cols-2 gap-2">
-                                {diasSemana.map((dia) => (
-                                <label key={dia.value} className="flex items-center gap-2">
-                                    <input
-                                    type="checkbox"
-                                    checked={field.value?.includes(dia.value)}
-                                    onChange={(e) => {
-                                        if (e.target.checked) {
-                                        field.onChange([...(field.value ?? []), dia.value])
-                                        } else {
-                                        field.onChange(
-                                            field.value?.filter((v) => v !== dia.value)
-                                        )
-                                        }
-                                    }}
-                                    />
-                                    {dia.label}
-                                </label>
-                                ))}
-                            </div>
-
-                            <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="dataInicio"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                                <FormLabel>Data</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="date"
-                                        className="w-full bg-muted"
-                                        value={field.value ? format(field.value, "yyyy-MM-dd") : ""}
+                                <div className="grid grid-cols-2 gap-2">
+                                    {diasSemana.map((dia) => (
+                                    <label key={dia.value} className="flex items-center gap-2">
+                                        <input
+                                        type="checkbox"
+                                        checked={field.value?.includes(dia.value)}
                                         onChange={(e) => {
-                                            const dateStr = e.target.value;
-                                            const date = dateStr ? new Date(dateStr + "T00:00:00") : undefined;
-                                            field.onChange(date);
+                                            if (e.target.checked) {
+                                            field.onChange([...(field.value ?? []), dia.value])
+                                            } else {
+                                            field.onChange(
+                                                field.value?.filter((v) => v !== dia.value)
+                                            )
+                                            }
                                         }}
-                                    />
-                                </FormControl>
-                                <FormMessage className="text-center"/>
-                            </FormItem>
-                        )}
-                    />
+                                        />
+                                        {dia.label}
+                                    </label>
+                                    ))}
+                                </div>
 
-                    <Button className="w-[10rem] bg-slate-700 hover:bg-slate-400" type="submit">ENVIAR</Button>
-                </form>
-            </Form>
-        </DialogContent>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="diasInstituicao"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>Dias na Instituição</FormLabel>
+
+                                <div className="grid grid-cols-2 gap-2">
+                                    {diasSemana.map((dia) => (
+                                    <label key={dia.value} className="flex items-center gap-2">
+                                        <input
+                                        type="checkbox"
+                                        checked={field.value?.includes(dia.value)}
+                                        onChange={(e) => {
+                                            if (e.target.checked) {
+                                            field.onChange([...(field.value ?? []), dia.value])
+                                            } else {
+                                            field.onChange(
+                                                field.value?.filter((v) => v !== dia.value)
+                                            )
+                                            }
+                                        }}
+                                        />
+                                        {dia.label}
+                                    </label>
+                                    ))}
+                                </div>
+
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="dataInicio"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>Data</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="date"
+                                            className="w-full bg-muted"
+                                            value={field.value ? format(field.value, "yyyy-MM-dd") : ""}
+                                            onChange={(e) => {
+                                                const dateStr = e.target.value;
+                                                const date = dateStr ? new Date(dateStr + "T00:00:00") : undefined;
+                                                field.onChange(date);
+                                            }}
+                                        />
+                                    </FormControl>
+                                    <FormMessage className="text-center"/>
+                                </FormItem>
+                            )}
+                        />
+
+                        <Button className="w-[10rem] bg-slate-700 hover:bg-slate-400" type="submit">ENVIAR</Button>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
     )
 }
