@@ -8,8 +8,6 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import { VincularUsuarioDialog } from "./VincularUsuarioDialog";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogHeader, AlertDialogTrigger } from "./ui/alert-dialog";
-import { toast } from "sonner";
-import { AppErrors } from "@/lib/appErrors";
 import { api } from "@/lib/axios";
 import { Trash2 } from "lucide-react";
 

@@ -1,6 +1,6 @@
 import type { userDTO } from "@/dtos/userDto"
 import { DialogContent, DialogHeader, DialogTitle } from "./ui/dialog"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { findUserId } from "@/api/findUserId"
 import { useEffect } from "react"
 import z from "zod"
@@ -17,7 +17,7 @@ import type { gruposDTO } from "@/dtos/gruposDTO"
 
 type UpdateUserProps = {
   id: string
-  onSuccess: () => void
+  success: () => void
 }
 
 // TODO: Corrigir retorno de data de criação do grupo
@@ -44,19 +44,20 @@ const updateUserProps = z.object({
   }
 )
 
-  export function UpdateUser({ id, onSuccess }: UpdateUserProps) {
-    const { data: user } = useQuery<userDTO>({
+  export function UpdateUser({ id, success }: UpdateUserProps) {
+    const queryClient = useQueryClient();
+
+    const { data: user } = useQuery<userDTO | null>({
       queryKey: ['user', id],
       queryFn: () => findUserId(id),
       enabled: !!id
     })
 
     const { data: grupo } = useQuery<gruposDTO>({
-      queryKey: ['grupo', id],
+      queryKey: ['grupo', id, user],
       queryFn: () => findUserGrupo(id),
       enabled: !!id
     })
-
   const form = useForm<z.infer<typeof updateUserProps>>({
     resolver: zodResolver(updateUserProps),
     defaultValues: {
@@ -67,20 +68,56 @@ const updateUserProps = z.object({
     },
   })
 
-  async function updateUser(dados: z.infer<typeof updateUserProps>) {
-    try {
+  const updateUserMutation = useMutation({
+    mutationFn: async (dados: z.infer<typeof updateUserProps>) => {
       await api.post('/user/updateuser', {
         id: id,
         name: dados.name,
         password: dados.password,
         ativado: dados.ativado
       })
+    },
 
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["findUser"] })
+      success()
       toast.success('Usuario atualizado')
-      onSuccess()
-      window.location.reload()
+    }
+  })
+
+  async function updateUser(dados: z.infer<typeof updateUserProps>) {
+    try {
+      await updateUserMutation.mutateAsync(dados)
     } catch (err) {
       toast.error('Erro ao atualizar o usuario')
+    }
+  }
+
+  const desvincularGrupoMutation = useMutation({
+    mutationFn: async (dataFim: Date) => {
+
+      await api.post('/grupos/encerrarvinculo', {
+        userId: id,
+        dataFim: dataFim,
+      })
+    },
+
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["grupo"] })
+      await queryClient.invalidateQueries({ queryKey: ["findUser"] })
+      success()
+    }
+  })
+
+  async function desvincularGrupo() {
+    try {
+      const dataFim = new Date()
+
+      await desvincularGrupoMutation.mutateAsync(dataFim)
+      form.reset()
+      toast.success("Grupo desvinculado com sucesso")
+    } catch (err) {
+      toast.error("Erro ao desvincular grupo")
     }
   }
 
@@ -97,23 +134,6 @@ const updateUserProps = z.object({
       })
     }
   }, [id, user, grupo, form])
-
-  async function desvincularGrupo() {
-    try {
-      const dataFim = new Date()
-
-      await api.post('/grupos/encerrarvinculo', {
-        userId: id,
-        dataFim: dataFim,
-      })
-
-      toast.success("Grupo desvinculado com sucesso")
-      onSuccess()
-      window.location.reload()
-    } catch (err) {
-      toast.error("Erro ao desvincular grupo")
-    }
-  }
 
   return (
     <DialogContent>

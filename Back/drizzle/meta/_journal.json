@@ -57,6 +57,13 @@
       "when": 1771519164107,
       "tag": "0007_real_toad_men",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1774377000612,
+      "tag": "0008_common_omega_sentinel",
+      "breakpoints": true
     }
   ]
 }
