@@ -10,7 +10,9 @@ export const userGrupos = pgTable("user_grupos", {
     onDelete: "cascade",
   }).notNull(),
 
-  grupoId: text("grupo_id").references(() => grupos.id).notNull(),
+  grupoId: text("grupo_id").references(() => grupos.id, {
+    onDelete: "cascade",
+  }).notNull(),
 
   dataInicio: date("data_inicio").notNull(),
   dataFim: date("data_fim"),
