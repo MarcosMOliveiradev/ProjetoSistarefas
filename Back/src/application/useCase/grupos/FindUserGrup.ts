@@ -11,13 +11,14 @@ export class FindUserGrup {
     const userGrupo = await this.userGrupRepository.findGrupoAtivoDoUsuario(id)
 
     if(!userGrupo) {
-      throw new Error('Nenhum vinculo encontrado')
+      return null
     }
 
     const grupo = await this.grupoRepository.findById(userGrupo.grupoId)
     if(!grupo) {
       throw new Error('Nenhum grupo encontrado')
     }
+
 
     return grupo
   }

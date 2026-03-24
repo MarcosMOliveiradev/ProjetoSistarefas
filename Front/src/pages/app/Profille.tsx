@@ -128,7 +128,6 @@ export function Profile() {
   }
 
   return (
-
     <div className="grid grid-cols-[20%_1fr] h-[90vh]">
       <Helmet title="PROFILE"/>
       <div className="flex flex-col items-center col-[20rem] border-r-2 border-muted-foreground">
@@ -219,7 +218,7 @@ export function Profile() {
         {usuarioSelecionado && (
           <UpdateUser 
             id={usuarioSelecionado}
-            onSuccess={() => {
+            success={() => {
               setUsuarioOpen(false)
               setUsuarioSelecionado(null)
             }}

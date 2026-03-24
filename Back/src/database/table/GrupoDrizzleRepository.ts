@@ -35,7 +35,7 @@ export class GrupoDrizzleRepository extends GrupoRepository {
   async findById(id: string): Promise<Grupo | null> {
     const [row] = await db.select().from(schema.grupos).where(eq(schema.grupos.id, id))
 
-    if(!row) return null
+    // if(!row) return null
     
     return Grupo.restore({
       id: row.id,
