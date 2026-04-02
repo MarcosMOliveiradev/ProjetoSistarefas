@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async"
 
 export function Video() {
     
-    let video = "http://localhost:3333/uploads/057814-teste.mp4"
+    let video = "https://www.youtube.com/watch?v=9ADK8xO2hpA"
     return (
         <div className="flex gap-4 ">
             <Helmet title="LISTA DE VIDEOS" />
@@ -14,9 +14,9 @@ export function Video() {
                     <MenuVideos />
                 </div>
             </div>
-            <div className="flex flex-col gap-4 h-full w-full">
+            <div className="flex flex-col gap-4 h-[80vh] w-screen">
                 <VideoPlayer video={video}/>
-                <div className="min-h-full w-5/6">
+                <div className="w-5/6">
                     <div className="text-2xl font-semibold">
                         Descrição
                     </div>
@@ -25,5 +25,3 @@ export function Video() {
         </div>
     )
 }
-
-// className="max-h-screen w-3/4"

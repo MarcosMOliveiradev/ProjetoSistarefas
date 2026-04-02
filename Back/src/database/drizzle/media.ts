@@ -21,12 +21,13 @@ export const categoryEnum = pgEnum("category_enum", [
 
 export const media = pgTable("media", {
     id: text("id").$defaultFn(() => createId()).primaryKey(),
-    name: text("name").notNull(),
+    titulo: text("titulo").notNull(),
     description: text("description"),
     costumerId: text("customer_id").references(() => user.id, {
         onDelete: "cascade",
     }).notNull(),
     category: categoryEnum("category").notNull(),
+    url: text("url").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
 })

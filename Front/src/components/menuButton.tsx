@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { CodAtividades } from "./codAtividades";
 import type { userDTO } from "@/dtos/userDto";
+import { UpLoadVideos } from "./UploadVideos";
 
 export function MenuButton() {
     const { signOut } = useAuth()
@@ -76,6 +77,13 @@ export function MenuButton() {
                         </Button>
                     </DropdownMenuItem>
 
+                    {/* Lista de videos */}
+                    <DropdownMenuItem asChild>
+                        <Button className="w-[100%] hover:bg-muted border-2 cursor-pointer" variant={"ghost"}>
+                            <Link to={"/video"}>LISTA DE VIDEOS</Link>
+                        </Button>
+                    </DropdownMenuItem>
+
                     {user?.user_roles.role !== "INFORMATICA" ? 
                         <></> :
                         <>
@@ -94,6 +102,16 @@ export function MenuButton() {
                                     <Link to={"/gerenciarpresenca"}>GERENCIAR PRESENÇA</Link>
                                 </Button>
                             </DropdownMenuItem>
+
+                            {/* Criar novo video */}
+                            <DropdownMenuItem asChild>
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button className="w-[100%] hover:bg-muted border-2 cursor-pointer" variant={"ghost"}>UPLOAD DE VIDEOS</Button>
+                                    </DialogTrigger>
+                                    <UpLoadVideos />
+                                </Dialog>
+                            </DropdownMenuItem>
                         </>
                     }
 
@@ -102,23 +120,6 @@ export function MenuButton() {
                             <Link to={"/"}>SAIR</Link>
                         </Button>
                     </DropdownMenuItem>
-
-                    {/* Lista de videos */}
-                    {/* <DropdownMenuItem asChild>
-                        <Button className="w-[100%]" variant={"ghost"}>
-                            <Link to={"/videos"}>LISTA DE VIDEOS</Link>
-                        </Button>
-                    </DropdownMenuItem> */}
-
-                    {/* Criar novo video */}
-                    {/* <DropdownMenuItem asChild>
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button className="w-[100%]" variant={"ghost"}>UPLOAD DE VIDEOS</Button>
-                            </DialogTrigger>
-                            <UpLoadVideos />
-                        </Dialog>
-                    </DropdownMenuItem> */}
                 </DropdownMenuGroup>
             </DropdownMenuContent>
         </DropdownMenu>

@@ -10,7 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { CriarUsuarioButton } from "@/components/criarUsuarioButton"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog } from "@/components/ui/dialog"
 import { api } from "@/lib/axios"
 import { AppErrors } from "@/lib/appErrors"
 
@@ -100,8 +100,8 @@ export function Profile() {
       const file = event.target.files?.[0]
       if (!file) return;
 
-    const previewURL = URL.createObjectURL(file)
-    setPreview(previewURL)
+      const previewURL = URL.createObjectURL(file)
+      setPreview(previewURL)
 
       avatarMutation.mutate(file)
     } catch (err) {

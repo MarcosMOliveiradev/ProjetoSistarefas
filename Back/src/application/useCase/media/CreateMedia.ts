@@ -4,11 +4,12 @@ import { MediaRepository } from "../../repositories/MediaRepository.ts";
 import { MediaRoleRepository } from "../../repositories/MediaRoleRepository.ts";
 
 export interface ICreateMedia {
-    name: string;
+    titulo: string;
     description: string | undefined;
     category: CategoryEnum;
     costumerId: string;
     listFor: Roles
+    url: string;
 }
 
 export class CreateMedia {
@@ -18,13 +19,15 @@ export class CreateMedia {
     ) {}
 
     async exec(data: ICreateMedia) {
-        const { name, category, costumerId, description, listFor } = data
+        const { titulo, category, costumerId, description, listFor, url } = data
 
         const created = new Media({
             category,
             costumerId,
             description,
-            name,
+            url,
+            titulo,
+
             createdAt: new Date(),
         })
 
