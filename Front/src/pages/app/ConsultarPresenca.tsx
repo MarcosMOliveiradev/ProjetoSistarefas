@@ -182,7 +182,12 @@ export function ConsultarPresenca() {
                 <TableCell>{dados.matricula}</TableCell>
                 <TableCell>{dados.data}</TableCell>
                 <TableCell>{dados.tipoEsperado}</TableCell>
-                <TableCell>{dados.status}</TableCell>
+                <TableCell
+                  className={dados.status == "PRESENTE" ? "text-green-600" 
+                    : dados.status == "PENDENTE" ? "text-yellow-600"
+                    : dados.status == "FALTA" ? "text-red-600" : ""
+                  }
+                >{dados.status}</TableCell>
                 <TableCell>
                   {dados.horaEntrada ?? "—"}
                 </TableCell>

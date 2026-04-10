@@ -17,6 +17,7 @@ import { updateStatusController } from "./updateStatusController.ts";
 import { findPresencaByPeriodController } from "./findPresencaByPeriodController.ts";
 import { findUserGrupController } from "./findUserGrupController.ts";
 import { deleteGrupoController } from "./deleteGrupoController.ts";
+import { updatePendenteController } from "./updatePendenteController.ts";
 
 export async function routesGrupos(app: FastifyInstance) {
     app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -214,5 +215,15 @@ export async function routesGrupos(app: FastifyInstance) {
     }
     }, async (request, reply) => {
         return deleteGrupoController(request, reply)
+    })
+
+    app.withTypeProvider<ZodTypeProvider>().get('/updatependentes', {
+        onRequest: [verifyJwt],
+        schema: {
+            tags: ['Grupos'],
+            summary: 'Atualiza pendentes'
+        }
+    }, async (request, reply) => {
+        return updatePendenteController(request, reply)
     })
 }
