@@ -10,13 +10,14 @@ export async function createMedia(
     reply: FastifyReply
 ) {
     const createMediaSchema = z.object({
-        name: z.string(),
+        titulo: z.string(),
         description: z.string(),
         category: z.enum(CategoryEnum),
         roleBody: z.enum(Roles),
+        url: z.string(),
     })
 
-    const { name, description, category, roleBody } = createMediaSchema.parse(request.body)
+    const { titulo, description, category, roleBody, url } = createMediaSchema.parse(request.body)
 
     let costumerId = request.user.sub
 
@@ -24,9 +25,10 @@ export async function createMedia(
         const createMedia = makeCreateMedia()
 
         const { media } = await createMedia.exec({
-            name,
+            titulo,
             description,
             category,
+            url,
             costumerId,
             listFor: roleBody,
         })

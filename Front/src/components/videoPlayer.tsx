@@ -21,8 +21,8 @@ export function VideoPlayer({ video }: IVideo) {
     return (
         <MediaController style={{
                 display: "flex",
-                width: "60%",
-                height: "20%",
+                width: "90%",
+                height: "100%",
                 justifyContent: "center"
             }}>
                 <ReactPlayer 
@@ -32,8 +32,8 @@ export function VideoPlayer({ video }: IVideo) {
                         display: "flex",
                         alignContent: "center",
                         alignItems: "center",
-                        width: "50%",
-                        height: "30%",
+                        width: "100%",
+                        height: "100%",
                         justifyContent: "center"
                     }}
                     src={video}>

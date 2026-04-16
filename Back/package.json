@@ -1,6 +1,6 @@
 {
   "name": "@sistearefas/back",
-  "version": "2.3.5",
+  "version": "2.4.0",
   "description": "Novo modelo de sistarefas",
   "type": "module",
   "scripts": {
@@ -33,7 +33,7 @@
     "@fastify/swagger": "^9.5.2",
     "@fastify/swagger-ui": "^5.2.3",
     "@paralleldrive/cuid2": "^2.2.2",
-    "axios": "^1.10.0",
+    "axios": "^1.15.0",
     "bcryptjs": "^3.0.2",
     "dotenv": "^17.2.0",
     "drizzle-orm": "^0.45.1",

@@ -5,9 +5,11 @@ export async function listMedias(
     request: FastifyRequest,
     reply: FastifyReply
 ) {
+
+    const role = request.user.role
     try {
         const listMedias = makeListMedias()
-        const medias = await listMedias.exec();
+        const medias = await listMedias.exec({ role });
 
         return reply.status(200).send(medias);
     } catch (error) {

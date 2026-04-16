@@ -49,6 +49,7 @@ export function AppRoutes() {
                             <Route path="/analise" element={<AnaliseMensal/>} />
                             <Route path="/analises" element={<AnalisesMensais/>} />
                             <Route path="/kanban" element={<Kanban/>} />
+                            <Route path="/video" element={<Video/>} />
                         </Route>
                          <Route path="*" element={<Navigate to="/" replace />} />
                     </>

@@ -7,7 +7,7 @@ export function MenuVideos() {
             <AccordionItem className="flex flex-col items-center font-medium" value="item1">
                 <div className="flex items-center gap-4">
                     <Folder />
-                    <AccordionTrigger>
+                    <AccordionTrigger className="cursor-pointer">
                         COMPRAS
                     </AccordionTrigger>
                 </div>

@@ -18,9 +18,10 @@ export enum CategoryEnum {
 }
 
 export interface IMedia {
-    name: string;
+    titulo: string;
     description?: string;
     category: CategoryEnum;
+    url: string;
     createdAt: Date;
     updatedAt?: Date | null;
 
@@ -43,11 +44,18 @@ export class Media {
         return this._id;
     }
 
-    public set name(name: string) {
-        this.props.name = name;
+    public set titulo(titulo: string) {
+        this.props.titulo = titulo;
     }
-    public get name(): string {
-        return this.props.name;
+    public get titulo(): string {
+        return this.props.titulo;
+    }
+
+    public set url(url: string) {
+        this.props.url = url;
+    }
+    public get url(): string {
+        return this.props.url;
     }
 
     public set description(description: string | undefined) {
