@@ -70,17 +70,17 @@ export function MenuButton() {
                             <Link to={"/analise"}>SELOS</Link>
                         </Button>
                     </DropdownMenuItem>
+
+                    {/* Lista de videos */}
+                    {/* <DropdownMenuItem asChild>
+                        <Button className="w-[100%] hover:bg-muted border-2 cursor-pointer" variant={"ghost"}>
+                            <Link to={"/video"}>LISTA DE VIDEOS</Link>
+                        </Button>
+                    </DropdownMenuItem> */}
                    
                     <DropdownMenuItem asChild>
                         <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
                             <Link to={"/sobre"}>SOBRE</Link>
-                        </Button>
-                    </DropdownMenuItem>
-
-                    {/* Lista de videos */}
-                    <DropdownMenuItem asChild>
-                        <Button className="w-[100%] hover:bg-muted border-2 cursor-pointer" variant={"ghost"}>
-                            <Link to={"/video"}>LISTA DE VIDEOS</Link>
                         </Button>
                     </DropdownMenuItem>
 
