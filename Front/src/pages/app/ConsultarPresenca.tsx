@@ -8,9 +8,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import type { presecaDTOS } from "@/dtos/presencaDTOS"
 import type { userDTO } from "@/dtos/userDto"
 import { api } from "@/lib/axios"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
 import { Helmet } from "react-helmet-async"
+import { toast } from "sonner"
 import type z from "zod"
 
 export function ConsultarPresenca() {
@@ -66,6 +67,18 @@ export function ConsultarPresenca() {
       !!periodo.dateRage.to,
   })
 
+  const updatePendentes = useMutation({
+    mutationFn: async () => {
+      const { data } = await api.get('/grupos/updatependentes');
+      return data;
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['presencas'] });
+      toast.success("Pendências atualizadas com sucesso")
+    }
+  });
+
   function handleSort(col: string) {
     if (sortCol !== col) {
       // primeira vez clicando → ASC
@@ -113,7 +126,19 @@ export function ConsultarPresenca() {
   return (
     <div className="m-10 h-[80%]">
       <Helmet title="CONSULTAR PRESENÇA"/>
-      <DataPicker onDadosTarefas={setPeriodo} />
+      <div className="flex justify-between items-center">
+        <DataPicker onDadosTarefas={setPeriodo} />
+        {isInformatica && (
+          <Button 
+            className="cursor-pointer"
+            onClick={() => {
+              updatePendentes.mutateAsync()
+            }}
+          >
+            REMOVER PENDENCIA
+          </Button>
+        )}
+      </div>
       {isInformatica && (
         <div className="w-[20rem] mb-4">
           <label className="text-sm font-medium">Selecionar usuário</label>
