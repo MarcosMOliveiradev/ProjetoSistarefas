@@ -1,4 +1,4 @@
-import PdfPriter from "pdfmake";
+import PdfPrinter from "pdfmake";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 import { makeListTarefas } from "../../application/useCase/tarefas/factories/makeListTarefas.ts";
@@ -19,6 +19,10 @@ export async function geraPdf(
   
   const { startDate, endDate } = dataTarefasSchema.parse(request.body)
   const userId = request.user.sub
+
+  if(!startDate || !endDate) {
+    return reply.status(400).send({ message: "Data de início e fim são obrigatórias." })
+  }
   
   try {
     if(startDate !== endDate) {
@@ -34,7 +38,7 @@ export async function geraPdf(
       },
     };
 
-    const printer = new PdfPriter(fonts);
+    const printer = new PdfPrinter(fonts);
 
     const docDefinition: TDocumentDefinitions = {
       defaultStyle: {
@@ -134,7 +138,7 @@ export async function geraPdf(
         },
       };
 
-      const printer = new PdfPriter(fonts);
+      const printer = new PdfPrinter(fonts);
 
       const docDefinition: TDocumentDefinitions = {
         defaultStyle: {
