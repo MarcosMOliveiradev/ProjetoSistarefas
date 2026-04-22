@@ -15,6 +15,8 @@ export async function updatePendenteController(
   try {
     const updatePendentes = makeUpdatePendentes()
     await updatePendentes.execute()
+
+    return reply.status(200).send({ message: "Pendentes atualizados com sucesso" });
   } catch (error) {
     return reply.status(500).send({ message: `${error}` });
   }
