@@ -37,14 +37,7 @@ export class GrupoDrizzleRepository extends GrupoRepository {
 
     // if(!row) return null
     
-    return Grupo.restore({
-      id: row.id,
-      nome: row.nome,
-      dataInicio: row.dataInicio,
-      dataFim: row.dataFim,
-      diasEmpresa: row.diasEmpresa,
-      diasInstituicao: row.diasInstituicao
-    })
+    return row
   }
 
   async findAtivoByDate(date: Date): Promise<Grupo[]> {
@@ -53,13 +46,23 @@ export class GrupoDrizzleRepository extends GrupoRepository {
     return row
   }
 
-  async update(grupo: Grupo): Promise<void> {
+  async update({ 
+    name, 
+    diasEmpresa, 
+    diasInstituicao,  
+    dataFim, 
+    id }: {
+      name?: string; 
+      diasEmpresa?: number[]; 
+      diasInstituicao?: number[];
+      dataFim?: Date; 
+      id: string 
+    }): Promise<void> {
     await db.update(schema.grupos).set({
-      nome: grupo.nome,
-      diasEmpresa: grupo.diasEmpresa,
-      diasInstituicao: grupo.diasInstituicao,
-      dataInicio: toDateOnly(grupo.dataInicio),
-      dataFim: grupo.dataFim ? toDateOnly(grupo.dataFim) : null,
-    }).where(eq(schema.grupos.id, grupo.id))
+      nome: name,
+      diasEmpresa: diasEmpresa,
+      diasInstituicao: diasInstituicao,
+      dataFim: dataFim ? toDateOnly(dataFim) : null,
+    }).where(eq(schema.grupos.id, id))
   }
 }

@@ -5,6 +5,17 @@ export abstract class GrupoRepository {
   abstract findById(id: string): Promise<Grupo | null>;
   abstract find(): Promise<Grupo[]>
   abstract findAtivoByDate(date: Date): Promise<Grupo[]>;
-  abstract update(grupo: Grupo): Promise<void>;
+  abstract update({ 
+    name, 
+    diasEmpresa, 
+    diasInstituicao,  
+    dataFim, 
+    id }: {
+      name?: string; 
+      diasEmpresa?: number[]; 
+      diasInstituicao?: number[];
+      dataFim?: Date; 
+      id: string 
+    }): Promise<void>;
   abstract delete(id: string): Promise<void>;
 }
