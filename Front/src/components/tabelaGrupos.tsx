@@ -9,11 +9,15 @@ import { useState } from "react";
 import { VincularUsuarioDialog } from "./VincularUsuarioDialog";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogHeader, AlertDialogTrigger } from "./ui/alert-dialog";
 import { api } from "@/lib/axios";
-import { Trash2 } from "lucide-react";
+import { SquarePen, Trash2 } from "lucide-react";
+import { UpdateGrupo } from "./UpdateGrupo";
+import { Dialog } from "./ui/dialog";
 
 export function TabelaGrupos() {
     const [grupoSelecionado, setGrupoSelecionado] = useState<string | null>(null)
     const [open, setOpen] = useState(false)
+    const [updateOpen, setUpdateOpen] = useState(false)
+    const [updateDescricao, setUpdateDescricao] = useState<string | null>(null)
 
     const queryClient = useQueryClient();
 
@@ -88,6 +92,18 @@ export function TabelaGrupos() {
                                     </AlertDialogContent>
                                 </AlertDialog>
                             </TableCell>
+                            <TableCell>
+                                <Button
+                                    variant={'ghost'}
+                                    className="cursor-pointer"
+                                    onClick={() => {
+                                        setUpdateDescricao(dados.id)
+                                        setUpdateOpen(true)
+                                    }}
+                                >
+                                    <SquarePen className="w-4"/>
+                                </Button>
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
@@ -98,6 +114,17 @@ export function TabelaGrupos() {
                     onClose={() => setGrupoSelecionado(null)}
                 />
             )}
+            <Dialog open={updateOpen} onOpenChange={setUpdateOpen}>
+                {updateDescricao && (
+                    <UpdateGrupo 
+                        id={updateDescricao}
+                        success={() => {
+                            setUpdateOpen(false)
+                            setUpdateDescricao(null)
+                        }}
+                    />
+                )}
+            </Dialog>
         </ScrollArea>
     )
 }

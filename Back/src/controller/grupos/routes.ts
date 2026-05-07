@@ -18,6 +18,8 @@ import { findPresencaByPeriodController } from "./findPresencaByPeriodController
 import { findUserGrupController } from "./findUserGrupController.ts";
 import { deleteGrupoController } from "./deleteGrupoController.ts";
 import { updatePendenteController } from "./updatePendenteController.ts";
+import { updateGrupController } from "./updateGrupController.ts";
+import { findGrupController } from "./findGrupController.ts";
 
 export async function routesGrupos(app: FastifyInstance) {
     app.withTypeProvider<ZodTypeProvider>().post('/create', {
@@ -225,5 +227,31 @@ export async function routesGrupos(app: FastifyInstance) {
         }
     }, async (request, reply) => {
         return updatePendenteController(request, reply)
+    })
+
+    app.withTypeProvider<ZodTypeProvider>().patch('/updategrupo', {
+     onRequest: [verifyJwt],
+     schema: {
+        tags: ['Grupos'],
+        summary: 'Atualiza um grupo',
+        body: z.object({
+            id: z.string(),
+            name: z.string().optional(),
+            diasEmpresa: z.array(z.number()).optional(),
+            diasInstituicao: z.array(z.number()).optional(),
+            dataFim: z.date().optional()
+        })
+     }}, async (request, reply) => {
+        return updateGrupController(request, reply)
+     })
+
+    app.withTypeProvider<ZodTypeProvider>().get('/findgrup/:id', {
+        onRequest: [verifyJwt],
+        schema: {
+            tags: ['Grupos'],
+            summary: 'Busca um grupo pelo id',
+        }
+    }, async (request, reply) => {
+        return findGrupController(request, reply)
     })
 }
