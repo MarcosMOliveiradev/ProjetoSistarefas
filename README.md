@@ -1,58 +1,119 @@
-<h1 align="center">Projeto SisTarefas</h1>
+## SisTarefas
 
-<p>O Projeto SisTarefas é um empreendimento dedicado ao desenvolvimento de um sistema de gerenciamento de tarefas destinado ao Programa de Jovem Aprendiz. Este sistema oferece aos jovens a capacidade de registrar suas atividades diárias, facilitando a filtragem por dia e a geração de relatórios em formato PDF. Além disso, proporciona à gestão do programa uma visão abrangente das atividades realizadas pelos jovens aprendizes, incluindo a quantidade de tarefas realizadas diariamente e as áreas específicas em que cada jovem atua com mais frequência.
+Sistema full-stack para **gestão de tarefas/atividades** do **Programa de Jovem Aprendiz (PJA)**, com foco em:
 
-Com o SisTarefas, os jovens aprendizes têm uma plataforma intuitiva para inserir suas atividades diárias, proporcionando uma gestão eficiente do seu tempo. A funcionalidade de filtragem por dia permite uma análise detalhada das tarefas realizadas em datas específicas. Além disso, a capacidade de gerar relatórios em PDF oferece uma forma fácil de compartilhar e documentar suas realizações.
+- **Registro diário de tarefas** (com filtros por período e exportação em PDF)
+- **Visão gerencial** com métricas (totais, top 5, média de tempo, série mensal)
+- **Gestão de grupos e presenças** (com automação por jobs)
+- **Análises mensais (“selos”)** com consultas por usuário e por período
+- **Kanban** para organizar atividades em fluxo (TODO → IN_PROGRESS → DONE, com cancelamento)
+- **Feedback** (entrada pública + tratamento/triagem)
+- **Mídia/Vídeos** (upload e listagem por categoria/setor)
 
-Para a equipe de gestão do programa, o SisTarefas se torna uma ferramenta valiosa. A plataforma fornece uma visão consolidada das atividades realizadas por todos os participantes, permitindo uma análise aprofundada da produtividade e engajamento dos jovens aprendizes. Essa análise abrange dados como a quantidade diária de tarefas concluídas e a distribuição de esforços em diferentes setores.
+## Problema que resolve e público-alvo
 
-Em resumo, o SisTarefas não apenas simplifica o registro e acompanhamento das atividades diárias dos jovens aprendizes, mas também oferece insights valiosos para aprimorar a eficiência e eficácia do Programa de Jovem Aprendiz. Este sistema contribui significativamente para o monitoramento e avaliação contínuos, possibilitando uma gestão mais informada e assertiva do programa.
-</p>
+- **Público-alvo**: jovens aprendizes (PJA) e equipe de gestão/TI (papel `INFORMATICA`).
+- **Problema**: centralizar o registro e acompanhamento de tarefas e presenças, garantindo rastreabilidade e visibilidade gerencial do desempenho/participação.
 
-</br>
+## Principais módulos entregues (derivado do código)
 
-## Tecnologias utilizadas
+- **Tarefas**: criação, listagem, busca, atualização, “exclusão” (soft), métricas e PDF
+- **Atividades (códigos)**: cadastro e listagem de códigos/setores/descrições
+- **Feedback**: criação e atualização de status
+- **Grupos/Presença**: criação de grupos, vínculo usuário↔grupo, consulta/gestão de presenças, registro de entrada e jobs
+- **Análise Mensal**: criação e consultas (por usuário e por período) + PDF (backend)
+- **Kanban**: criar, listar, iniciar, concluir, cancelar e deletar
+- **Mídia/Vídeos**: upload de arquivo/URL e listagem por categoria
 
-Foram utilizado nesse projeto as seguintes tecnologias:
+## Arquitetura em alto nível
 
-* Back-end
-  - TypeScript
-  - NodeJs
-  - Fastify
-  - Swagger
-  - Drizzle
-  - Postgresql
-  - Zod
-  - JWT
-  - PdfMaker
+```mermaid
+flowchart LR
+  subgraph Front[Front-end (React/Vite)]
+    UI[SPA]
+  end
 
-* Front-end
-  - React
-  - Vite
-  - Shadcn
-  - Tanstack
-  - Tailwindcss
-  - Zod
+  subgraph Back[Back-end (Fastify)]
+    API[REST API + Swagger /docs]
+    Jobs[Jobs node-cron (presença)]
+  end
 
+  subgraph DB[(PostgreSQL)]
+    PG[(Schema Drizzle)]
+  end
 
-</br>
+  UI -->|HTTP + Bearer JWT| API
+  API --> PG
+  Jobs --> PG
+```
 
-## Lista de afazeres
+## Stack resumida
 
-- [x] Criar estrutura e relacionamento do banco de dados;
-- [x] Criar authenticator de usuario;
-- [x] Deve ser possível listar as tarefas por dia;
-- [x] Deve ser possível gerar relatório em PDF;
-- [x] Usuario PJA deve ser capaz de criar e lista atividades;
-- [x] Usuario INFORMATICA deve ser capaz de criar novas tarefas, adicionar novos setores, criar novos usuarios, etc...;
-- [x] Usuario INFORMATICA deve ser capaz de vizualizar contagem geral da atividade feitas por cada usuario PJA;
-- [x] Usuario INFORMATICA deve ser capaz de pesquisar as atividades feitas por qualquer usuario PJA;
-- [x] Usuario PJA deve ser capaz de pesquisar as atividades feitas por ele mesmo;
-- [ ] Criar no fronte formaluario para cadastro de novos codigos de atividades;
-- [x] Usuario PJA pode ver suas analises de desempenho mês a mês;
-- [x] Ao efetuar loguin regstrar presença na tabela de presencas
-- [x] Usuario INFORMATICA pode criar grupos e vincular a usuarios, iniciando o processo de presenca para a analise de desempenho;
+- **Back-end**: Node.js + TypeScript + Fastify + JWT + Zod + Swagger + Drizzle + PostgreSQL + node-cron + pdfmake
+- **Front-end**: React + Vite + React Router + TanStack React Query + React Hook Form + Zod + TailwindCSS + Radix UI
 
-### Porximas atualizações
-* Kambam e métodos ágeis
-  - [x] Criar tabela de kambam
+## Quickstart local
+
+### Pré-requisitos
+
+- Node.js
+- PostgreSQL
+
+### 1) Back-end
+
+Env de exemplo: `Back/.env.exemplo`  
+Schema/validação de env: `Back/src/lib/env.ts`
+
+```bash
+cd Back
+npm install
+cp .env.exemplo .env
+npm run migrate
+npm run dev
+```
+
+Swagger UI: `http://localhost:3333/docs` (porta padrão: 3333)
+
+### 2) Front-end
+
+Chaves esperadas (validadas em `Front/src/lib/env.ts`):
+
+- `VITE_API_URL`
+- `VITE_ENABLE_API_DELAY`
+
+```bash
+cd Front
+npm install
+# crie um .env com:
+# VITE_API_URL=http://localhost:3333
+# VITE_ENABLE_API_DELAY=false
+npm run dev
+```
+
+## Documentação detalhada
+
+Índice: [`docs/00-indice.md`](./docs/00-indice.md)
+
+- Visão geral: [`docs/00-visao-geral.md`](./docs/00-visao-geral.md)
+- Back-end: [`docs/01-arquitetura-backend.md`](./docs/01-arquitetura-backend.md)
+- Front-end: [`docs/02-arquitetura-frontend.md`](./docs/02-arquitetura-frontend.md)
+- API: [`docs/03-api-endpoints.md`](./docs/03-api-endpoints.md)
+- Dados: [`docs/04-modelo-de-dados.md`](./docs/04-modelo-de-dados.md)
+- Fluxos: [`docs/05-fluxos-de-negocio.md`](./docs/05-fluxos-de-negocio.md)
+- Setup: [`docs/06-setup-e-execucao.md`](./docs/06-setup-e-execucao.md)
+- Operação: [`docs/07-operacao-e-manutencao.md`](./docs/07-operacao-e-manutencao.md)
+- Roadmap: [`docs/08-roadmap-tecnico.md`](./docs/08-roadmap-tecnico.md)
+
+## Status atual do projeto e próximos passos
+
+Status (observado no código):
+
+- **MVP funcional** com módulos centrais (tarefas, presença, análises, kanban, feedback e mídia).
+- **Swagger disponível** em `/docs`.
+
+Próximos passos técnicos recomendados:
+
+- Padronizar contratos (Swagger vs payload real), erros e status codes.
+- Implementar autorização server-side por `role` em rotas críticas.
+- Robustez dos jobs (evitar execução duplicada em múltiplas instâncias).
+- Testes mínimos de use cases (auth, tarefas, presença e kanban).
