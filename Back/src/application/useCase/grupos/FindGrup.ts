@@ -4,6 +4,6 @@ export class FindGrup {
   constructor(private grupoRepository: GrupoRepository) {}
 
   execute(id: string) {
-    return this.grupoRepository.findById(id)
+    return this.grupoRepository.findGrupById(id)
   }
 }

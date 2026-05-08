@@ -12,7 +12,7 @@ export class UpdateGrupo {
   constructor (private grupoRepository: GrupoRepository) {}
 
   execute({ id, name, diasEmpresa, diasInstituicao, dataFim }: UpdateGrupoRequest) {
-    const isGrupoExist = this.grupoRepository.findById(id)
+    const isGrupoExist = this.grupoRepository.findGrupById(id)
     if(!isGrupoExist) {
       throw new Error('Grupo não encontrado!')
     }
