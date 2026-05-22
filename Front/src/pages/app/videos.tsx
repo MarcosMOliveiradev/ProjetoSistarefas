@@ -1,9 +1,20 @@
 import { MenuVideos } from "@/components/menuVideos"
 import { VideoPlayer } from "@/components/videoPlayer"
+import type { videos } from "@/dtos/videosDTO"
+import { api } from "@/lib/axios"
+import { useQuery } from "@tanstack/react-query"
 import { Helmet } from "react-helmet-async"
 
 export function Video() {
-    
+    const { data: videos } = useQuery<videos[]>({
+        queryKey: ['videos'],
+        queryFn: async () => {
+            const response = await api.get('/media/list')
+
+            return response.data
+        }
+    })
+
     let video = "https://www.youtube.com/watch?v=9ADK8xO2hpA"
     return (
         <div className="flex gap-4 ">
