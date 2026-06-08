@@ -10,6 +10,12 @@ function toDateOnly(date: Date): string {
 
 
 export class GrupoDrizzleRepository extends GrupoRepository {
+  async findGrupById(id: string): Promise<Grupo | null> {
+    const [row] = await db.select().from(schema.grupos).where(eq(schema.grupos.id, id))
+
+    return row
+  }
+
   async delete(id: string): Promise<void> {
     await db
       .delete(schema.grupos)
@@ -21,7 +27,7 @@ export class GrupoDrizzleRepository extends GrupoRepository {
 
     return grupos
   }
-  
+
   async create(grupo: Grupo): Promise<void> {
     await db.insert(schema.grupos).values({
       id: grupo.id,

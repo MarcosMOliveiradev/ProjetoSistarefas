@@ -54,7 +54,11 @@ app.register(fastifyJwt, {
 })
 
 
-app.register(multipart)
+app.register(multipart, {
+    limits: {
+        fileSize: 1024 * 1024 * 500 // 500MB
+    }
+})
 
 app.register(fastifyStatic, {
     root: resolve(process.cwd(), 'uploads'),

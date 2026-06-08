@@ -18,4 +18,5 @@ export abstract class GrupoRepository {
       id: string 
     }): Promise<void>;
   abstract delete(id: string): Promise<void>;
+  abstract findGrupById(id: string): Promise<Grupo | null>;
 }

@@ -84,6 +84,7 @@ export class PresencaDrizzleRepository extends PresencaRepository {
       .innerJoin(schema.user, eq(schema.user.id, schema.presenca.userId))
       .where(and(
         eq(schema.presenca.status, status),
+        eq(schema.user.ativado, true),
         gte(schema.presenca.data, toDateOnly(inicio)),
         lte(schema.presenca.data, toDateOnly(fim))
       )
