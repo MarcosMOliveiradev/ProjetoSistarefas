@@ -9,11 +9,13 @@ import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { CodAtividades } from "./codAtividades";
 import type { userDTO } from "@/dtos/userDto";
 import { UpLoadVideos } from "./UploadVideos";
+import { useState } from "react";
 
 export function MenuButton() {
     const { signOut } = useAuth()
     const queryClient = useQueryClient()
     const user = queryClient.getQueryData<userDTO>(['profile'])
+    const [open, setOpen] = useState(false)
 
     return (
         <DropdownMenu>
@@ -106,10 +108,19 @@ export function MenuButton() {
                             {/* Criar novo video */}
                             <DropdownMenuItem asChild>
                                 <Dialog>
-                                    <DialogTrigger asChild>
-                                        <Button className="w-[100%] hover:bg-muted border-2 cursor-pointer" variant={"ghost"}>UPLOAD DE VIDEOS</Button>
-                                    </DialogTrigger>
-                                    <UpLoadVideos />
+                                    <Button 
+                                        className="w-[100%] hover:bg-muted border-2 cursor-pointer" 
+                                        variant={"ghost"}
+                                        onClick={(e) => {
+                                            setOpen(true)
+                                        }}
+                                    >
+                                        UPLOAD DE VIDEOS
+                                    </Button>
+                                    <UpLoadVideos
+                                        open={open}
+                                        onClose={setOpen}
+                                    />
                                 </Dialog>
                             </DropdownMenuItem>
                         </>
