@@ -58,6 +58,7 @@ export function UpLoadVideos() {
             setPreview(previewURL)
 
             const videoUrl = await mutationVideo.mutateAsync(file)
+            console.log(videoUrl)
             setUrl(videoUrl)
         } catch (error) {
             toast.error("Erro ao carregar o vídeo. Tente novamente.")
