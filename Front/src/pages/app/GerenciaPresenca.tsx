@@ -16,6 +16,7 @@ import z from "zod";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 
 const statusSchema = z.object({
   status: z.enum(["PENDENTE", "PRESENTE", "ATRASADO", "FALTA"]),
@@ -26,27 +27,47 @@ const statusSchema = z.object({
 })
 
 export function GerenciaPresenca() {
-  const [presencas, setPresencas] = useState<presecaDTOS[]>([])
   const [presencaSelecionada, setPresencaSelecionada] =
     useState<presecaDTOS | null>(null)
   const [sortCol, setSortCol] = useState<string | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc" | null>(null);
+  const [filters, setFilters] = useState<{
+    status: "PENDENTE" | "PRESENTE" | "ATRASADO" | "FALTA";
+    inicio: Date;
+    fim: Date;
+  } | null>(null);
 
   const form = useForm<z.infer<typeof statusSchema>>({
     resolver: zodResolver(statusSchema),
   })
 
-  async function findStatus({ status, dateRage }: z.infer<typeof statusSchema>) {
-    const { data } = await api.post<presecaDTOS[]>(
+  const { data: presencas = [], isLoading } = useQuery({
+    queryKey: [
+      "presencas", filters
+    ],
+    queryFn: async () => {
+      const { data } = await api.post<presecaDTOS[]>(
       "/grupos/findbystatus",
-      { 
-        status,
-        inicio: dateRage.from,
-        fim: dateRage.to
-      }
-    )
+        { 
+          status: filters!.status,
+          inicio: filters!.inicio,
+          fim: filters!.fim
+        }
+      )
 
-    setPresencas(data)
+      return data
+    }
+  })
+
+  function findStatus({
+    status,
+    dateRage,
+  }: z.infer<typeof statusSchema>) {
+    setFilters({
+      status,
+      inicio: dateRage.from,
+      fim: dateRage.to,
+    });
   }
 
   function handleSort(col: string) {
