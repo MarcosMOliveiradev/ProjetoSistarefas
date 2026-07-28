@@ -5,71 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1766508904306,
-      "tag": "0000_lonely_tigra",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1766518547048,
-      "tag": "0001_wild_the_executioner",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1766518571923,
-      "tag": "0002_chunky_garia",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1770123139466,
-      "tag": "0003_blushing_sprite",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1770123767860,
-      "tag": "0004_mysterious_peter_parker",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1770639645863,
-      "tag": "0005_red_red_wolf",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1771508861164,
-      "tag": "0006_damp_karnak",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1771519164107,
-      "tag": "0007_real_toad_men",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1774377000612,
-      "tag": "0008_common_omega_sentinel",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1775055128968,
-      "tag": "0009_melted_lily_hollister",
+      "when": 1785243432937,
+      "tag": "0000_polite_riptide",
       "breakpoints": true
     }
   ]
