@@ -4,6 +4,7 @@ import { createMedia } from "./create.ts";
 import { MediaController } from '../MediaController.ts';
 import { listMedias } from './listMedias.ts';
 import { verifyJwt } from '../../lib/verify-jwt.ts';
+import { deleteMedia } from './delete.ts';
 
 const file = new MediaController()
 
@@ -15,6 +16,10 @@ export const mediaRoutes: FastifyPluginCallbackZod = (app) => {
     })
     app.post('/file', async (request, reply) => {
         return file.uploadMedia(request, reply);
+    })
+
+    app.delete('/delete/:id', async (request, reply) => {
+        return deleteMedia(request, reply);
     })
 
     app.get('/list', {

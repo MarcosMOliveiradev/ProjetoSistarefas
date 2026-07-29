@@ -6,6 +6,11 @@ import { schema } from "../drizzle/index.ts";
 import { Roles } from "../../application/entities/Roles.ts";
 
 export class MediaDrizzleRepository extends MediaRepository {
+    async findID(id: string): Promise<Media> {
+        const [media] = await db.select().from(schema.media).where(eq(schema.media.id, id))
+
+        return media
+    }
     async create(data: Media): Promise<Media> {
         const [createMedia] = await db.insert(schema.media).values([{
             id: data.id,
@@ -47,5 +52,8 @@ export class MediaDrizzleRepository extends MediaRepository {
             )
         
         return findMedia;
+    }
+    async delete(id: string): Promise<void> {
+        await db.delete(schema.media).where(eq(schema.media.id, id))
     }
 }

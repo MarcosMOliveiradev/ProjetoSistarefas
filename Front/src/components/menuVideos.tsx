@@ -42,15 +42,24 @@ export function MenuVideos({
                                 {items.map(video => (
                                     <button
                                         key={video.media.id}
+                                        type="button"
                                         className="
-                                            text-left
-                                            hover:text-blue-500
-                                            cursor-pointer
+                                        w-full
+                                        text-left
+                                        break-words
+                                        whitespace-normal
+                                        rounded-md
+                                        px-2
+                                        py-2
+                                        text-sm
+                                        leading-relaxed
+                                        hover:bg-muted
+                                        hover:text-blue-500
+                                        cursor-pointer
+                                        transition-colors
                                         "
                                         onClick={() =>
-                                            onSelectVideo(
-                                                video.media.url
-                                            )
+                                        onSelectVideo(video.media.url)
                                         }
                                     >
                                         {video.media.titulo}
