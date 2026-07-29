@@ -37,7 +37,7 @@ export const schema = {
     grupos,
     userGrupos,
     presenca,
-    // analisesMensais,
+    analisesMensais,
     kanban,
     kanbanColaboradores,
     kanbanStatusEnum
