@@ -1,6 +1,8 @@
+import { Roles } from "../../entities/Roles.ts";
 import { MediaRepository } from "../../repositories/MediaRepository.ts";
+
 interface IUserRole {
-    role: string
+    role: Roles
 }
 export class ListMedias {
     constructor ( private mediaRepository: MediaRepository) {}

@@ -1,6 +1,6 @@
 import { makeGeraPresencaDiaJob } from "../../application/useCase/grupos/factories/make-gera-presenca-dia-job.ts"
 
-async function test() {
+async function CriarPresenca() {
   const job = makeGeraPresencaDiaJob()
 
   const data = new Date()
@@ -11,7 +11,7 @@ async function test() {
   console.log("Job executado com sucesso")
 }
 
-test()
+CriarPresenca()
   .then(() => process.exit(0))
   .catch(err => {
     console.error(err)

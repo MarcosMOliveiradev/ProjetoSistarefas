@@ -31,13 +31,13 @@ services:
   
     sistarefas:
       container_name: sistarefas
-      image: postgres:14-alpine
+      image: postgres:18.1-alpine
       ports:
         - 5432:5432
       environment:
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: Leer2025
-        POSTGRES_DB: PJASisTarefas
+        POSTGRES_DB: PjaSistarefas
       deploy:
         resources:
           limits:

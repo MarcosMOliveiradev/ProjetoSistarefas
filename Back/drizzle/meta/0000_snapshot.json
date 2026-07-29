@@ -1,5 +1,5 @@
 {
-  "id": "5e32bf4c-8edd-40c4-9130-9949e9e02814",
+  "id": "84bc8315-e5c8-498b-9de1-5bbb029a38ff",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -32,20 +32,45 @@
           "primaryKey": false,
           "notNull": true
         },
-        "dias_esperados": {
-          "name": "dias_esperados",
+        "dias_esperados_empresa": {
+          "name": "dias_esperados_empresa",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "dias_cumpridos": {
-          "name": "dias_cumpridos",
+        "dias_esperados_instituicao": {
+          "name": "dias_esperados_instituicao",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "percentual": {
-          "name": "percentual",
+        "dias_cumpridos_empresa": {
+          "name": "dias_cumpridos_empresa",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dias_cumpridos_instituicao": {
+          "name": "dias_cumpridos_instituicao",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "atrasos": {
+          "name": "atrasos",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "percentual_empresa": {
+          "name": "percentual_empresa",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "percentual_intituicao": {
+          "name": "percentual_intituicao",
           "type": "numeric(5, 2)",
           "primaryKey": false,
           "notNull": true
@@ -225,13 +250,13 @@
           "name": "dias_empresa",
           "type": "integer[]",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "dias_instituicao": {
           "name": "dias_instituicao",
           "type": "integer[]",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "data_inicio": {
           "name": "data_inicio",
@@ -250,6 +275,246 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.kanban": {
+      "name": "kanban",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "titulo": {
+          "name": "titulo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cod_atividade": {
+          "name": "cod_atividade",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "descricao": {
+          "name": "descricao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "kanbanStatusEnum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'TODO'"
+        },
+        "criado_por": {
+          "name": "criado_por",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "iniciado_por": {
+          "name": "iniciado_por",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "iniciado_em": {
+          "name": "iniciado_em",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "finalizado_por": {
+          "name": "finalizado_por",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "finalizado_em": {
+          "name": "finalizado_em",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cancelado_por": {
+          "name": "cancelado_por",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cancelado_em": {
+          "name": "cancelado_em",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motivo_cancelamento": {
+          "name": "motivo_cancelamento",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "kanban_cod_atividade_Atividade_cod_atividade_fk": {
+          "name": "kanban_cod_atividade_Atividade_cod_atividade_fk",
+          "tableFrom": "kanban",
+          "tableTo": "Atividade",
+          "columnsFrom": [
+            "cod_atividade"
+          ],
+          "columnsTo": [
+            "cod_atividade"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "kanban_criado_por_user_id_fk": {
+          "name": "kanban_criado_por_user_id_fk",
+          "tableFrom": "kanban",
+          "tableTo": "user",
+          "columnsFrom": [
+            "criado_por"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "kanban_iniciado_por_user_id_fk": {
+          "name": "kanban_iniciado_por_user_id_fk",
+          "tableFrom": "kanban",
+          "tableTo": "user",
+          "columnsFrom": [
+            "iniciado_por"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "kanban_finalizado_por_user_id_fk": {
+          "name": "kanban_finalizado_por_user_id_fk",
+          "tableFrom": "kanban",
+          "tableTo": "user",
+          "columnsFrom": [
+            "finalizado_por"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "kanban_cancelado_por_user_id_fk": {
+          "name": "kanban_cancelado_por_user_id_fk",
+          "tableFrom": "kanban",
+          "tableTo": "user",
+          "columnsFrom": [
+            "cancelado_por"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.kanban_colaboradores": {
+      "name": "kanban_colaboradores",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "kanban_id": {
+          "name": "kanban_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "adicionado_em": {
+          "name": "adicionado_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "kanban_colaboradores_kanban_id_kanban_id_fk": {
+          "name": "kanban_colaboradores_kanban_id_kanban_id_fk",
+          "tableFrom": "kanban_colaboradores",
+          "tableTo": "kanban",
+          "columnsFrom": [
+            "kanban_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "kanban_colaboradores_user_id_user_id_fk": {
+          "name": "kanban_colaboradores_user_id_user_id_fk",
+          "tableFrom": "kanban_colaboradores",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "uniq_kanban_colab": {
+          "name": "uniq_kanban_colab",
+          "nullsNotDistinct": false,
+          "columns": [
+            "kanban_id",
+            "user_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -328,8 +593,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "name": {
-          "name": "name",
+        "titulo": {
+          "name": "titulo",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -350,6 +615,12 @@
           "name": "category",
           "type": "category_enum",
           "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -654,7 +925,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -863,6 +1134,16 @@
         "EM ANDAMENTO",
         "CONCLUIDO",
         "CANCELADO"
+      ]
+    },
+    "public.kanbanStatusEnum": {
+      "name": "kanbanStatusEnum",
+      "schema": "public",
+      "values": [
+        "TODO",
+        "IN_PROGRESS",
+        "DONE",
+        "CANCELED"
       ]
     },
     "public.category_enum": {

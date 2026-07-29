@@ -1,1 +1,0 @@
-ALTER TABLE "grupos" ALTER COLUMN "data_fim" SET DATA TYPE text;

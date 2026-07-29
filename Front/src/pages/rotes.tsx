@@ -2,7 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 
 import { SignIn } from "./auth/sign-in";
 
-import { AppLayout } from "./layout/AppLayout";
+import { AppLayout } from "./layout/appLayout";
 import { Atividades } from "./app/Atividades";
 import { Video } from "./app/videos";
 import { Profile } from "./app/Profille";
