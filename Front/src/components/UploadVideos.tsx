@@ -4,10 +4,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { 
     Select, 
-    SelectContent, 
-    SelectGroup, 
-    SelectItem, 
-    SelectLabel, 
+    SelectContent,
+    SelectItem,
     SelectTrigger, 
     SelectValue 
 } from "./ui/select";
@@ -33,7 +31,23 @@ interface Props {
     onClose: (v: boolean) => void
 }
 
+function normalizeFileName(name: string) {
+  const extension = name.split(".").pop() ?? "";
+
+  const baseName = name
+    .replace(/\.[^/.]+$/, "") // remove extensão
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // remove acentos
+    .replace(/[^a-zA-Z0-9-_]/g, "_") // troca caracteres especiais
+    .replace(/_+/g, "_") // evita vários _ seguidos
+    .toLowerCase();
+
+  return `${baseName}.${extension.toLowerCase()}`;
+}
+
 export function UpLoadVideos({ open, onClose }: Props) {
+    const [uploadProgress, setUploadProgress] = useState(0)
+    const [isUploading, setIsUploading] = useState(false)
     const [preview, setPreview] = useState<string | null>(null)
     const [url, setUrl] = useState<string | null>(null)
     const queryClient = useQueryClient()
@@ -44,15 +58,46 @@ export function UpLoadVideos({ open, onClose }: Props) {
 
     const mutationVideo = useMutation({
         mutationFn: async (file: File) => {
-            const formData = new FormData()
-            formData.append("file", file)
+            setIsUploading(true)
+            setUploadProgress(0)
 
-            const { data } = await api.post('/media/file', formData, {
-                headers: { "Content-Type": "multipart/form-data" }
-            })
+            const normalizedName = normalizeFileName(file.name)
+
+            const normalizedFile = new File(
+            [file],
+            normalizedName,
+            { type: file.type }
+            )
+
+            const formData = new FormData()
+            formData.append("file", normalizedFile)
+
+            const { data } = await api.post(
+            "/media/file",
+            formData,
+            {
+                headers: {
+                "Content-Type": "multipart/form-data",
+                },
+
+                onUploadProgress: (progressEvent) => {
+                if (!progressEvent.total) return
+
+                const percent = Math.round(
+                    (progressEvent.loaded * 100) / progressEvent.total
+                )
+
+                setUploadProgress(percent)
+                },
+            }
+            )
 
             return data
-        }
+        },
+
+        onSettled: () => {
+            setIsUploading(false)
+        },
     })
 
     const uploadVideo = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -222,8 +267,31 @@ export function UpLoadVideos({ open, onClose }: Props) {
                                 />
                             </label>
                         </div>
+                        {isUploading && (
+                            <div className="col-span-2 flex flex-col gap-2">
+                                <div className="flex items-center justify-between text-sm">
+                                <span>Enviando vídeo...</span>
+                                <span>{uploadProgress}%</span>
+                                </div>
 
-                        <Button type="submit" disabled={mutationVideo.isPending} className="bg-gray-800 cursor-pointer">ENVIAR</Button>
+                                <div className="h-2 w-full overflow-hidden rounded-full bg-gray-700">
+                                <div
+                                    className="h-full bg-emerald-500 transition-all duration-300"
+                                    style={{ width: `${uploadProgress}%` }}
+                                />
+                                </div>
+                            </div>
+                        )}
+
+                        <Button
+                            type="submit"
+                            disabled={isUploading || !url}
+                            className="bg-gray-800 cursor-pointer"
+                            >
+                            {isUploading
+                                ? `Enviando vídeo... ${uploadProgress}%`
+                                : "ENVIAR"}
+                        </Button>
                         <Button type="reset" className="border-red-500 text-muted-foreground cursor-pointer" variant={"outline"}>CANCELAR</Button>
                     </form>
                 </Form>
