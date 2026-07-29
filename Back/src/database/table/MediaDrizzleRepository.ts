@@ -3,6 +3,7 @@ import { Media } from "../../application/entities/Media.ts";
 import { MediaRepository } from "../../application/repositories/MediaRepository.ts";
 import { db } from "../connection.ts";
 import { schema } from "../drizzle/index.ts";
+import { Roles } from "../../application/entities/Roles.ts";
 
 export class MediaDrizzleRepository extends MediaRepository {
     async create(data: Media): Promise<Media> {
@@ -19,7 +20,7 @@ export class MediaDrizzleRepository extends MediaRepository {
 
         return createMedia
     }
-    async find(role: string): Promise<Media[]> {
+    async find(role: Roles): Promise<Media[]> {
         // Se for INFORMATICA, retorna tudo
         if (role === "INFORMATICA") {
             const allMedia = await db.select()
@@ -40,12 +41,11 @@ export class MediaDrizzleRepository extends MediaRepository {
             )
             .where(
                 or(
-                    eq(schema.mediaRoles.role, role),
-                    eq(schema.mediaRoles.role, "TODOS")
+                    eq(schema.mediaRoles.role, "TODOS"),
+                    eq(schema.mediaRoles.role, role)
                 )
             )
-            .groupBy(schema.media.id);
-
+        
         return findMedia;
     }
 }
