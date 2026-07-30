@@ -17,6 +17,7 @@ export async function createAtividadeController(
   const userId = request.user.sub
 
   const { cod_atividade, descricao, setor, tempoMedio, ativado } = atividadeSchema.parse(request.body)
+  console.log( cod_atividade, descricao, setor, tempoMedio, ativado )
 
   try {
     const createAtividade = makeCreateAtividade()

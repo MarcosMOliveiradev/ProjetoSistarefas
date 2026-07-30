@@ -24,6 +24,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { UpdateUser } from "@/components/UpdateUser"
 import { Helmet } from "react-helmet-async"
 import { Spinner } from "@/components/ui/spinner"
+import { NovoCodAtividade } from "@/components/NovoCodAtividade"
 
 const updateSchema = z.object({
   nome: z.string().optional(),
@@ -37,6 +38,7 @@ const updateSchema = z.object({
 export function Profile() {
   const [usuarioOpen, setUsuarioOpen] = useState(false)
   const [open, setOpen] = useState(false)
+  const [openCod, setOpenCod] = useState(false)
 
   const { data: user } = useQuery({
     queryKey: ['profile'],
@@ -168,7 +170,7 @@ export function Profile() {
         {
           user?.user_roles.role === "INFORMATICA" ?
             <>
-              <div>
+              <div className="flex flex-col justify-center">
                   <Button 
                     className="w-[15rem] h-[3rem] mt-4 text-[20px] bg-slate-700 hover:bg-slate-400 cursor-pointer"
                     onClick={(e) => {
@@ -181,6 +183,21 @@ export function Profile() {
                   <CriarUsuarioButton
                     open={open}
                     onClose={setOpen}
+                  />
+
+                  <Button
+                    className="w-[15rem] h-[3rem] mt-4 text-[20px] bg-slate-700 hover:bg-slate-400 cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setOpenCod(true)
+                    }}
+                  >
+                    Criar novo cód. atividade
+                  </Button>
+
+                  <NovoCodAtividade
+                    openCod={openCod}
+                    onCloseCod={setOpenCod}
                   />
               </div>
 
