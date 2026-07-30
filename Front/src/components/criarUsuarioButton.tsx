@@ -3,6 +3,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { 
+    Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
@@ -20,7 +21,6 @@ import { AppErrors } from "@/lib/appErrors";
 import { toast } from "sonner";
 import { api } from "@/lib/axios";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { Dialog } from "@radix-ui/react-dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const criarUsuarioSchema = z.object({
