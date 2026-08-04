@@ -20,11 +20,7 @@ export async function authenticateController(
     
     const authenticateUser = makeAutheticate()
     const user = await authenticateUser.expec({matricula, passwordBody})
-    const token = await reply.jwtSign({
-      name: user.user.name,
-      matricula: user.user.matricula,
-      role: user.user_roles.role
-    },
+    const token = await reply.jwtSign(
     {
       sub: user.user.id,
       expiresIn: '4h'

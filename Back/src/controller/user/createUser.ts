@@ -4,6 +4,7 @@ import { Roles, turnoEnum } from "../../application/entities/Roles.ts";
 import { makeCreateUser } from "../../application/useCase/user/factories/make-create-user.ts";
 import { UserAlreadyExistError } from "../../application/useCase/user/error/userAlreadyExistsError.ts";
 import type { User } from "../../application/entities/User.ts";
+import { getUser } from "../../application/useCase/user/function/user.ts";
 
 export async function createUserController(
   request: FastifyRequest,
@@ -20,10 +21,14 @@ export async function createUserController(
 
   const { name, matricula, passwordBody, avatarUrl, role, turno } = createUserSchema.parse(request.body)
 
-  const userRole = request.user.role
+  const userId = request.user.sub
+  const userRole = await getUser(userId)
 
-  if(userRole != Roles.INFORMATICA) {
-    return reply.send(401).send('Você não pode criar um usuario')
+  if(!userRole || 'message' in userRole) {
+    return reply.status(401).send({ message: 'Você não pode criar um usuario' })
+  }
+  if(userRole.user_roles.role !== Roles.INFORMATICA) {
+    return reply.status(401).send({ message: 'Você não pode criar um usuario' })
   }
   
   try {

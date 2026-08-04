@@ -2,6 +2,7 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 import { SearchType } from "../../application/useCase/tarefas/searchTarefas.ts";
 import { makeSearchTarefas } from "../../application/useCase/tarefas/factories/makeSearchTarefas.ts";
+import { getUser } from "../../application/useCase/user/function/user.ts";
 
 export async function searchTarefasController(
   request: FastifyRequest,
@@ -12,9 +13,12 @@ export async function searchTarefasController(
     value: z.string(),
   })
   let userId = undefined
-  const userRole = request.user.role
-
-  if (userRole !== "INFORMATICA") {
+  const user = request.user.sub
+  const userRole = await getUser(user)
+  if(!userRole || 'message' in userRole) {
+    return reply.status(401).send({ message: 'Você não tem permissão' })
+  }
+  if (userRole.user_roles.role !== "INFORMATICA") {
     userId = request.user.sub
   }
 

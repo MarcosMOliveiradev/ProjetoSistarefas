@@ -1,6 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 import { makeFindAnaliseForPeriod } from "../../application/useCase/analiseMensal/factories/make-find-analise-for-period.ts";
+import { getUser } from "../../application/useCase/user/function/user.ts";
 
 export async function findAnaliseForPeriodController(
   request: FastifyRequest,
@@ -11,9 +12,14 @@ export async function findAnaliseForPeriodController(
     ano: z.number()
   })
 
-  const userRole = request.user.role
-  if(userRole !== 'INFORMATICA') {
-    return reply.status(400).send({message: 'Você não tem permissão para acessar está pagina'})
+  const user = request.user.sub
+  const userRole = await getUser(user)
+
+  if(!userRole || 'message' in userRole) {
+    return reply.status(401).send({ message: 'Você não tem permissão' })
+  }
+  if(userRole.user_roles.role !== 'INFORMATICA') {
+    return reply.status(401).send({ message: 'Você não tem permissão' })
   }
 
   const { ano, mes } = dataSchema.parse(request.body)

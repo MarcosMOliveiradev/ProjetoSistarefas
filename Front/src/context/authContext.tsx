@@ -3,7 +3,6 @@ import { api } from "@/lib/axios"
 import { createContext, useEffect, useState, type ReactNode } from "react"
 import { toast } from "sonner"
 
-// import { storageUserGet, storageUserRemove, storageUserSave } from "@/stora/storageUser"
 import { storageAuthTokenGet, storageAuthTokenRemove, storageAuthTokenSave } from "@/stora/storaAuth"
 import type { userDTO } from "@/dtos/userDto"
 
@@ -40,7 +39,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       if ( apiUser && data ) {
         setIsLoadingUserStorageData(true)
 
-        // await storageUserSave(apiUser)
         setUser(apiUser)
         setToken(data)
         await storageAuthTokenSave(data)

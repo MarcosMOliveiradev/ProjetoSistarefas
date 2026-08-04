@@ -1,6 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 import { makeCreateAnaliseMensal } from "../../application/useCase/analiseMensal/factories/make-create-analise-mensal.ts";
+import { getUser } from "../../application/useCase/user/function/user.ts";
 
 export async function createAnaliseMensalController(
   request: FastifyRequest,
@@ -12,9 +13,14 @@ export async function createAnaliseMensalController(
     ano: z.number().min(2000),
   })
   
-  const useRole = request.user.role;
-  if(useRole !== "INFORMATICA") {
-    return reply.status(403).send({ message: "Acesso negado." });
+  const user = request.user.sub
+  const userRole = await getUser(user)
+
+  if(!userRole || 'message' in userRole) {
+    return reply.status(401).send({ message: 'Você não tem permissão' })
+  }
+  if(userRole.user_roles.role !== 'INFORMATICA') {
+    return reply.status(401).send({ message: 'Você não tem permissão' })
   }
 
   const { userId, mes, ano } = analiseMensalSchema.parse(request.body);
