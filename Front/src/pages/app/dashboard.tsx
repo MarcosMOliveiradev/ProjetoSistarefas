@@ -43,7 +43,8 @@ export function Dashboard() {
   const user = queryClient.getQueryData<userDTO>(['profile'])
 
   if(!user) {
-    return signOut()
+    signOut()
+    return null
   }
   const [usuarioSelecionado, setUsuarioSelecionado] = useState(user.user.id)
 

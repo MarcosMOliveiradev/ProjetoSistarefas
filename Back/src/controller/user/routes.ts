@@ -62,7 +62,7 @@ export async function userRoutes(app: FastifyInstance) {
         }),
         response: {
           200: z.object({
-            token: z.string()
+            accessToken: z.string()
           })
         }
       }

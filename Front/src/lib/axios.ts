@@ -1,4 +1,4 @@
-import axios, { type AxiosInstance } from "axios"
+import axios, { AxiosError, type AxiosInstance } from "axios"
 import { env } from "./env";
 import { AppErrors } from "./appErrors";
 
@@ -9,34 +9,60 @@ type ApiInstaceProps = AxiosInstance & {
 }
 
 export const api = axios.create({
-  baseURL: env.VITE_API_URL
+  baseURL: env.VITE_API_URL,
+  withCredentials: true,
 }) as ApiInstaceProps
 
-if ( env.VITE_ENABLE_API_DELAY ) {
-  api.interceptors.request.use(async (config) => {
-    await new Promise((resolve) =>
-      setTimeout(resolve, Math.round(Math.random() * 2000)),
-    )
-    return config
-  })
-}
-
 api.registerInterceptTokenMeneger = signOut => {
-  const InterceptTokenMeneger = api.interceptors.response.use(response => response, requestError => {
-    console.log(requestError.response.data.message)
-    if( requestError?.response?.status === 404 || requestError?.response?.status === 401) {
-      if( requestError.response.data.message === 'Unauthorized.' || requestError.response.data.message === 'invalid') {
-        signOut()
+  const interceptor = api.interceptors.response.use(
+    response => response,
+
+    async (error: AxiosError<any>) => {
+      const originalRequest: any = error.config
+
+      // token expirou
+      if (
+        error.response?.status === 401 &&
+        !originalRequest._retry
+      ) {
+        originalRequest._retry = true
+
+        try {
+          const { data } = await axios.post(
+            `${env.VITE_API_URL}/auth/refresh`,
+            {},
+            { withCredentials: true }
+          )
+
+          const newToken = data.accessToken
+
+          // atualiza o header padrão
+          api.defaults.headers.common.Authorization =
+            `Bearer ${newToken}`
+
+          // atualiza a requisição que falhou
+          originalRequest.headers.Authorization =
+            `Bearer ${newToken}`
+
+          // repete a requisição original
+          return api(originalRequest)
+        } catch {
+          signOut()
+          return Promise.reject(error)
+        }
       }
+
+      if (error.response?.data) {
+        return Promise.reject(
+          new AppErrors(error.response.data.message)
+        )
+      }
+
+      return Promise.reject(error)
     }
-    if(requestError.response && requestError.response.data) {
-      return Promise.reject(new AppErrors(requestError.response.data.message))
-    } else {
-      return Promise.reject(requestError)
-    }
-  })
+  )
 
   return () => {
-    api.interceptors.response.eject(InterceptTokenMeneger)
+    api.interceptors.response.eject(interceptor)
   }
 }

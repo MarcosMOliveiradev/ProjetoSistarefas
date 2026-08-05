@@ -17,24 +17,36 @@ export async function authenticateController(
   const { matricula, passwordBody } = authenticateSchema.parse(request.body)
   
   try {
-    
     const authenticateUser = makeAutheticate()
+    
     const user = await authenticateUser.expec({matricula, passwordBody})
-    const token = await reply.jwtSign(
-    {
+
+    const accessToken = await reply.jwtSign(
+      {},
+      {
+        sub: user.user.id,
+        expiresIn: '15m'
+      }
+    )
+
+    // token longo
+    const refreshToken = await reply.jwtSign({}, {
       sub: user.user.id,
-      expiresIn: '4h'
+      expiresIn: '4h',
     })
 
-    return reply.setCookie('refreshToken', token, {
+    reply.setCookie('refreshToken', refreshToken, {
       path: '/',
-      secure: false,
-      sameSite: 'lax',
       httpOnly: true,
-    }).status(200).send(token)
+      sameSite: 'lax',
+      secure: false,
+    })
+
+    return reply.status(200).send({
+      accessToken
+    })
   
   } catch (err) {
-
     if(err instanceof UnexistUser) {
       return reply.status(400).send({ message: err.message })
     }
