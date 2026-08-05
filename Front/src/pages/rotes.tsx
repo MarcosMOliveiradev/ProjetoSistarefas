@@ -11,9 +11,9 @@ import { FeedbackRelatorio } from "./app/FeedbackRelatorio";
 import { Dashboard } from "./app/dashboard";
 import { GerenciarGrupos } from "./app/GerenciarGrupos";
 import { GerenciaPresenca } from "./app/GerenciaPresenca";
-import { ConsultarPresenca } from "./app/consultarPresenca";
+import { ConsultarPresenca } from "./app/ConsultarPresenca";
 import { Sobre } from "./app/Sobre";
-import { AnaliseMensal } from "./app/analiseMensal";
+import { AnaliseMensal } from "./app/AnaliseMensal";
 import { AnalisesMensais } from "./app/analisesMensais";
 import { Kanban } from "./app/Kanban";
 

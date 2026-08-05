@@ -4,6 +4,7 @@ import { z } from "zod";
 import { Roles } from "../../application/entities/Roles.ts";
 import { makeCreateMedia } from "../../application/useCase/media/factories/make-create-media.ts";
 import { CategoryEnum } from "../../application/entities/Media.ts";
+import { getUser } from "../../application/useCase/user/function/user.ts";
 
 export async function createMedia(
     request: FastifyRequest,
@@ -16,6 +17,15 @@ export async function createMedia(
         roleBody: z.enum(Roles),
         url: z.string(),
     })
+    const userId = request.user.sub
+    const userRole = await getUser(userId)
+
+    if(!userRole || 'message' in userRole) {
+    return reply.status(401).send({ message: 'Você não tem permissão' })
+    }
+    if(userRole.user_roles.role !== 'INFORMATICA') {
+    return reply.status(401).send({ message: 'Você não tem permissão' })
+    }
 
     const { titulo, description, category, roleBody, url } = createMediaSchema.parse(request.body)
 

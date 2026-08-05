@@ -1,9 +1,8 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 import { feedbackOptions } from "../../application/entities/Feedback.ts";
-import { makeProfile } from "../../application/useCase/user/factories/make-profile.ts";
-import { Roles } from "../../application/entities/Roles.ts";
 import { makeUpdateFeedbackStatus } from "../../application/useCase/feedback/factoris/makeUpdateFeedbakStatus.ts";
+import { getUser } from "../../application/useCase/user/function/user.ts";
 
 export async function updateFeedbackStatusController(
   request: FastifyRequest,
@@ -16,12 +15,13 @@ export async function updateFeedbackStatusController(
   const { status, id } = updateFeedbackStatusSchema.parse(request.body)
   
   const userId = request.user.sub
+  const userRole = await getUser(userId)
 
-   const profileMake = makeProfile()
-  const user = await profileMake.exec({id: userId})
-
-  if(user?.user_roles.role !== Roles.INFORMATICA) {
-    return reply.status(404).send({message: "Você não tem permissão para fazer essa alteração"})
+  if(!userRole || 'message' in userRole) {
+    return reply.status(401).send({ message: 'Você não tem permissão' })
+  }
+  if(userRole.user_roles.role !== 'INFORMATICA') {
+    return reply.status(401).send({ message: 'Você não tem permissão' })
   }
 
   try {

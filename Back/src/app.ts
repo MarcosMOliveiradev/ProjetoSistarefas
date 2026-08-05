@@ -26,6 +26,8 @@ import "./application/useCase/grupos/function/criaPresencaJob.ts"
 import "./application/useCase/grupos/function/fechaPresencaJob.ts"
 import { analiseRoute } from './controller/analiseMensal/route.ts';
 import { kanbanRoute } from './controller/kanban/route.ts';
+import { refreshController } from './controller/user/refreshController.ts';
+import { signOutController } from './controller/user/signOutController.ts';
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -36,7 +38,17 @@ app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
 
 app.register(fastifyCors, {
-    origin:'*',
+    origin:[
+        'http://192.168.0.64:5173',
+        'http://192.168.0.51:5173',
+        'http://wdesk44:5173',
+        'http://wdesk43:5173',
+        'http://192.168.0.64:4173',
+        'http://192.168.0.51:4173',
+        'http://wdesk44:4173',
+        'http://wdesk43:4173',
+    ],
+    credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"]
 })
 
@@ -84,6 +96,10 @@ app.register(fastifySwagger, {
     },
     transform: jsonSchemaTransform
 })
+
+app.post('/auth/refresh', refreshController)
+
+app.post('/auth/sign-out', signOutController)
 
 app.register(fastifySwaggerUi, {
     routePrefix: '/docs'

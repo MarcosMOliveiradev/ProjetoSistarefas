@@ -1,3 +1,5 @@
+import { Roles } from "../application/entities/Roles.ts";
+
 export type userRoleDTO = {
     user: {
         id: string
@@ -10,7 +12,7 @@ export type userRoleDTO = {
         updatedAt?: Date | null;
     },
     user_roles: {
-        role: string,
+        role: Roles,
         userId: string
     }
 }

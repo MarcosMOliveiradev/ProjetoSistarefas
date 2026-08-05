@@ -5,9 +5,6 @@ declare module '@fastify/jwt' {
   export interface FastifyJWT {
     user: {
       sub: string
-      name: string
-      matricula: number
-      role: Roles
     }
   }
 }

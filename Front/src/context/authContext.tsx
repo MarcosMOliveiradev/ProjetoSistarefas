@@ -1,11 +1,9 @@
-import { AppErrors } from "@/lib/appErrors"
 import { api } from "@/lib/axios"
 import { createContext, useEffect, useState, type ReactNode } from "react"
-import { toast } from "sonner"
 
-// import { storageUserGet, storageUserRemove, storageUserSave } from "@/stora/storageUser"
-import { storageAuthTokenGet, storageAuthTokenRemove, storageAuthTokenSave } from "@/stora/storaAuth"
 import type { userDTO } from "@/dtos/userDto"
+import { toast } from "sonner"
+import { AppErrors } from "@/lib/appErrors"
 
 type AuthContextDataProps = {
   user: userDTO
@@ -23,30 +21,30 @@ export const AuthContext = createContext<AuthContextDataProps>({} as AuthContext
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [user, setUser] = useState<userDTO>({} as userDTO)
-  const [token, setToken] = useState<string | null | undefined>()
+  const [token, setToken] = useState<string | null>(null)
   const [isLoadingUserStorageData, setIsLoadingUserStorageData] = useState(true)
 
-  async function UserAndTokenUpdate(token: string) {
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-  }
+  function UserAndTokenUpdate(token: string) {
+  api.defaults.headers.common.Authorization = `Bearer ${token}`
+}
 
   async function signIg(matricula: number, passwordBody: string) {
     try {
-      const { data } = await api.post('/user/auth', { matricula, passwordBody })
-      const response = await api.get('/user/profile', {headers: {Authorization: `Bearer ${data}`}})
+      setIsLoadingUserStorageData(true)
 
-      const apiUser = response.data
+      const { data } = await api.post('/user/auth', {
+        matricula,
+        passwordBody,
+      })
 
-      if ( apiUser && data ) {
-        setIsLoadingUserStorageData(true)
+      const accessToken = data.accessToken
 
-        // await storageUserSave(apiUser)
-        setUser(apiUser)
-        setToken(data)
-        await storageAuthTokenSave(data)
+      UserAndTokenUpdate(accessToken)
 
-        UserAndTokenUpdate(data)
-      }
+      const response = await api.get('/user/profile')
+
+      setUser(response.data)
+      setToken(accessToken)
     } catch (err) {
       throw err
     } finally {
@@ -58,18 +56,22 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     try {
       setIsLoadingUserStorageData(true)
 
-      const token = await storageAuthTokenGet()
-      if (!token) {
-        return
-      }
-      setToken(token)
-      await UserAndTokenUpdate(token)
+      // tenta gerar um novo access token usando o cookie HttpOnly
+      const { data } = await api.post('/auth/refresh')
 
-      const { data } = await api.get('/user/profile')
-      setUser(data)
+      const accessToken = data.accessToken
 
+      setToken(accessToken)
+      UserAndTokenUpdate(accessToken)
+
+      // agora a API já recebe Authorization automaticamente
+      const response = await api.get('/user/profile')
+
+      setUser(response.data)
     } catch (error) {
-      signOut()
+      // não faz logout aqui porque pode ser apenas um usuário não autenticado
+      setUser({} as userDTO)
+      setToken(null)
     } finally {
       setIsLoadingUserStorageData(false)
     }
@@ -78,13 +80,18 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   async function signOut() {
     try {
       setIsLoadingUserStorageData(true)
-      setUser({} as userDTO)
-      storageAuthTokenRemove()
-      window.location.reload()
 
+      await api.post('/auth/sign-out')
+
+      setUser({} as userDTO)
+      setToken(null)
+
+      delete api.defaults.headers.common.Authorization
+
+      window.location.reload()
     } catch (err) {
       const isApiError = err instanceof AppErrors
-      const title = isApiError ? err.message : "Erro inesperado"
+      const title = isApiError ? err.message : 'Erro inesperado'
       toast.error(title)
     } finally {
       setIsLoadingUserStorageData(false)

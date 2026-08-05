@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { makeDeleteMedias } from "../../application/useCase/media/factories/make-delete-media.ts";
 import z from "zod";
+import { getUser } from "../../application/useCase/user/function/user.ts";
 
 export async function deleteMedia(
     request: FastifyRequest,
@@ -11,13 +12,17 @@ export async function deleteMedia(
   })
 
   const { id } = mediaSchema.parse(request.params)
-  console.log(id)
 
-  const userRole = request.user.sub
+  const userId = request.user.sub
+  const userRole = await getUser(userId)
 
-  if(userRole !== "INFORMARTICA") {
-    return reply.status(400).send('Você não tem altorização')
+  if(!userRole || 'message' in userRole) {
+    return reply.status(401).send({ message: 'Você não tem permissão' })
   }
+  if(userRole.user_roles.role !== 'INFORMATICA') {
+    return reply.status(401).send({ message: 'Você não tem permissão' })
+  }
+
   try {
     const deleteMedia = makeDeleteMedias()
     await deleteMedia.execute({ id });

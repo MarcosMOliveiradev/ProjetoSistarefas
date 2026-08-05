@@ -18,7 +18,9 @@ export const mediaRoutes: FastifyPluginCallbackZod = (app) => {
         return file.uploadMedia(request, reply);
     })
 
-    app.delete('/delete/:id', async (request, reply) => {
+    app.delete('/delete/:id', {
+        onRequest: [verifyJwt]
+    }, async (request, reply) => {
         return deleteMedia(request, reply);
     })
 
