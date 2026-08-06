@@ -42,11 +42,7 @@ app.register(fastifyCors, {
         'http://192.168.0.64:5173',
         'http://192.168.0.51:5173',
         'http://wdesk44:5173',
-        'http://wdesk43:5173',
-        'http://192.168.0.64:4173',
-        'http://192.168.0.51:4173',
-        'http://wdesk44:4173',
-        'http://wdesk43:4173',
+        'http://wdesk31:5173',
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"]
