@@ -9,12 +9,12 @@ export async function findUserController(
   const userId = request.user.sub
   const userRole = await getUser(userId)
 
-  if(!userRole || 'message' in userRole) {
-    return reply.status(401).send({ message: 'Você não tem permissão' })
-  }
-  if(userRole.user_roles.role !== 'INFORMATICA') {
-    return reply.status(401).send({ message: 'Você não tem permissão' })
-  }
+  // if(!userRole || 'message' in userRole) {
+  //   return reply.status(401).send({ message: 'Você não tem permissão' })
+  // }
+  // if(userRole.user_roles.role !== 'INFORMATICA') {
+  //   return reply.status(401).send({ message: 'Você não tem permissão' })
+  // }
 
   try {
     const findUser = makeFindUser()
