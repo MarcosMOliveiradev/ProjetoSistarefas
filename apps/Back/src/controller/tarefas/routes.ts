@@ -47,7 +47,8 @@ export async function tarefasRoutes(app: FastifyInstance) {
       tags: ['Tarefas'],
       summary: 'Lista tarefas dos usuarios',
       body: z.object({
-        dataB: z.string().optional()
+        dataB: z.string().optional(),
+        userId: z.string()
       }),
     }
   }, async (reques, reply) => {
@@ -173,7 +174,8 @@ export async function tarefasRoutes(app: FastifyInstance) {
       summary: 'Retorna as atividades feitas em um intervalo de datas',
       body: z.object({
         startDate: z.string(),
-        endDate: z.string()
+        endDate: z.string(),
+        userId: z.string()
       })
     }
   }, async (request, reply) => {

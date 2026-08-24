@@ -7,14 +7,12 @@ export async function listaTarefasController(
   reply: FastifyReply
 ) {
   const dataTarefasSchema = z.object({
-    dataB: z.string().optional()
+    dataB: z.string().optional(),
+    userId: z.string()
   })
 
-  const { dataB } = dataTarefasSchema.parse(request.body)
+  const { dataB, userId } = dataTarefasSchema.parse(request.body)
 
-  const userId = request.user.sub
-
-  
   const today = new Date().toLocaleDateString('pt-BR')
   let data
 
