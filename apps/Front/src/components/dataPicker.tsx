@@ -1,203 +1,498 @@
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { format } from "date-fns"
-import { Calendar } from "./ui/calendar"
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { Calendar } from "./ui/calendar";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
+import { AppErrors } from "@/lib/appErrors";
+import { toast } from "sonner";
+import { api } from "@/lib/axios";
 
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
-import { Button } from "./ui/button"
-import { cn } from "@/lib/utils"
-import { AppErrors } from "@/lib/appErrors"
-import { toast } from "sonner"
-import { api } from "@/lib/axios"
-import { useEffect, useState } from "react"
-import { useAuth } from "@/hooks/useAuth"
-import type { tarefasDTO } from "@/dtos/tarefasDTO"
-import { useQuery } from "@tanstack/react-query"
-
+import { findUser } from "@/api/findUser";
+import type { userDTO } from "@/dtos/userDto";
 
 const dataPickerSchema = z.object({
-    dateRage: z.object({
-        from: z.date(),
-        to: z.date()
-    }),
-})
+  dateRage: z.object({
+    from: z.date(),
+    to: z.date(),
+  }),
+});
 
-type DataPickerSchema = z.infer<typeof dataPickerSchema>;
+type DataPickerSchema = z.infer<
+  typeof dataPickerSchema
+>;
 
-function toBR(d: Date) {
-  return d.toLocaleDateString("pt-BR");
+function toBR(date: Date) {
+  return date.toLocaleDateString("pt-BR");
 }
 
-async function fetchTarefas(from: Date, to: Date) {
+async function fetchTarefas(
+  from: Date,
+  to: Date,
+  userIdConsulta: string
+) {
   const startDate = toBR(from);
   const endDate = toBR(to);
 
+  console.log("Consultando tarefas:", {
+    startDate,
+    endDate,
+    userIdConsulta,
+  });
+
   if (startDate === endDate) {
-    const { data } = await api.post("/tarefas/listaTarefas", { dataB: startDate });
+    const { data } = await api.post(
+      "/tarefas/listaTarefas",
+      {
+        dataB: startDate,
+        userId: userIdConsulta,
+      }
+    );
+
     return data.tarefas;
   }
 
-  const { data } = await api.post("/tarefas/listbyinterval", { startDate, endDate });
+  const { data } = await api.post(
+    "/tarefas/listbyinterval",
+    {
+      startDate,
+      endDate,
+      userId: userIdConsulta,
+    }
+  );
+
   return data.tarefas;
 }
 
-export function DataPicker({ onDadosTarefas }: any) {
-    const { user } = useAuth()
-    const form = useForm<z.infer<typeof dataPickerSchema>>({
-        resolver: zodResolver(dataPickerSchema),
-        defaultValues: {
-            dateRage: {
-                from: new Date(),
-                to: new Date(),
-            },
-        }
-    })
+export function DataPicker({
+  onDadosTarefas,
+}: {
+  onDadosTarefas: (dados: any[]) => void;
+}) {
+  const queryClient = useQueryClient();
 
-    const [rangeKey, setRangeKey] = useState(() => {
-        const now = new Date();
-        return { from: now, to: now };
+  const user =
+    queryClient.getQueryData<userDTO>([
+      "profile",
+    ]);
+
+  const isInformatica =
+    user?.user_roles?.role === "INFORMATICA";
+
+  const [
+    usuarioSelecionado,
+    setUsuarioSelecionado,
+  ] = useState<string | null>(null);
+
+  const { data: usuarios } = useQuery({
+    queryKey: ["usuarios"],
+    queryFn: findUser,
+    enabled: isInformatica,
+  });
+
+  const userIdConsulta = isInformatica
+    ? usuarioSelecionado
+    : user?.user?.id;
+
+  const form = useForm<DataPickerSchema>({
+    resolver: zodResolver(
+      dataPickerSchema
+    ),
+
+    defaultValues: {
+      dateRage: {
+        from: new Date(),
+        to: new Date(),
+      },
+    },
+  });
+
+  const [rangeKey, setRangeKey] =
+    useState(() => {
+      const now = new Date();
+
+      return {
+        from: now,
+        to: now,
+      };
     });
 
-    const query = useQuery({
-        queryKey: ["atividades", toBR(rangeKey.from), toBR(rangeKey.to)],
-        queryFn: () => fetchTarefas(rangeKey.from, rangeKey.to),
-        staleTime: 0,
-    });
+  const query = useQuery({
+    queryKey: [
+      "atividades",
 
-    useEffect(() => {
-        if (!query.data) return;
-        onDadosTarefas(query.data);
-    }, [query.data]);
+      userIdConsulta,
 
-    async function onSubmit(values: DataPickerSchema) {
-        setRangeKey(values.dateRage);
+      toBR(rangeKey.from),
+      toBR(rangeKey.to),
+    ],
+
+    queryFn: () =>
+      fetchTarefas(
+        rangeKey.from,
+        rangeKey.to,
+        userIdConsulta!
+      ),
+
+    enabled: !!userIdConsulta,
+
+    staleTime: 0,
+  });
+
+  useEffect(() => {
+    if (!query.data) {
+      return;
     }
 
-    useEffect(() => {
-        if (!query.isError) return;
-        const err = query.error as any;
-        const msg =
-        err instanceof AppErrors
-            ? err.message
-            : err?.response?.data?.message ?? err?.message ?? "Erro ao carregar tarefas";
-        toast.error(msg);
-    }, [query.isError, query.error])
+    onDadosTarefas(query.data);
+  }, [
+    query.data,
+    onDadosTarefas,
+  ]);
 
-    async function geraPDF(data: z.infer<typeof dataPickerSchema>) {
-        const startDate = new Date(data.dateRage.from).toLocaleDateString("pt-BR");
-        const endDate = new Date(data.dateRage.to).toLocaleDateString("pt-BR");
-        
-        try {
-            const response = await api.post(
-            "/tarefas/gerarPdf",
-            { startDate, endDate },
-            { responseType: "blob" }
-            );
-            
-            const pdfBlob = new Blob([response.data], { type: "application/pdf" });
-
-            const fileURL = URL.createObjectURL(pdfBlob);
-
-            const link = document.createElement("a");
-            link.href = fileURL;
-            link.download = `${user.user.name}-${startDate}.pdf`;
-            link.click();
-
-            URL.revokeObjectURL(fileURL);
-        } catch (err) {
-            console.error("Erro ao gerar PDF:", err);
-        }
+  useEffect(() => {
+    if (!query.isError) {
+      return;
     }
 
-    useEffect(() => {
-        const hoje = {
-            dateRage: {
-                from: new Date(),
-                to: new Date(),
-            }
-        }
-        onSubmit(hoje)
-    }, []);
+    const err =
+      query.error as any;
 
-    return (
-        <div className="pl-8">
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-4 items-center ">
-                    {/* Data Inicial */}
-                    <FormField
-                        control={form.control}
-                        name="dateRage"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Data</FormLabel>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <FormControl className="bg-muted hover:bg-gray-800 hover:text-amber-50">
-                                            <Button
-                                                variant="outline"
-                                                className={cn(
-                                                "w-[14rem] pl-3 text-left font-normal",
-                                                !field.value?.from && "text-muted-foreground"
-                                            )}
-                                            >
-                                            {field.value?.from ? (
-                                                field.value.to ? (
-                                                <>
-                                                    {format(field.value.from, "dd/MM/yyyy")} -{" "}
-                                                    {format(field.value.to, "dd/MM/yyyy")}
-                                                </>
-                                                ) : (
-                                                format(field.value.from, "dd/MM/yyyy")
-                                                )
-                                            ) : (
-                                                "Selecione o período"
-                                            )}
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0 bg-muted text-muted-foreground" align="start">
-                                        <Calendar
-                                            mode="range"
-                                            selected={field.value}
-                                            onSelect={field.onChange}
-                                            disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-                                            captionLayout="dropdown"
-                                        />
-                                    </PopoverContent>
-                                </Popover>
-                                <FormDescription>
-                                    Selecione a data.
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
+    const msg =
+      err instanceof AppErrors
+        ? err.message
+        : err?.response?.data
+            ?.message ??
+          err?.message ??
+          "Erro ao carregar tarefas";
+
+    toast.error(msg);
+  }, [
+    query.isError,
+    query.error,
+  ]);
+
+  function onSubmit(
+    values: DataPickerSchema
+  ) {
+    setRangeKey(
+      values.dateRage
+    );
+  }
+
+  async function geraPDF() {
+    const dateRange =
+      form.getValues("dateRage");
+
+    const startDate =
+      toBR(dateRange.from);
+
+    const endDate =
+      toBR(dateRange.to);
+
+    if (!userIdConsulta) {
+      toast.error(
+        "Selecione um usuário."
+      );
+
+      return;
+    }
+
+    try {
+      const response =
+        await api.post(
+          "/tarefas/gerarPdf",
+          {
+            startDate,
+            endDate,
+
+            userId:
+              userIdConsulta,
+          },
+          {
+            responseType: "blob",
+          }
+        );
+
+      const pdfBlob =
+        new Blob(
+          [response.data],
+          {
+            type: "application/pdf",
+          }
+        );
+
+      const fileURL =
+        URL.createObjectURL(
+          pdfBlob
+        );
+
+      const link =
+        document.createElement(
+          "a"
+        );
+
+      link.href = fileURL;
+
+      const nomeUsuario =
+        isInformatica
+          ? usuarios?.find(
+              (u: any) =>
+                u.id ===
+                usuarioSelecionado
+            )?.name
+          : user?.user?.name;
+
+      link.download = `${
+        nomeUsuario ??
+        "tarefas"
+      }-${startDate}.pdf`;
+
+      document.body.appendChild(
+        link
+      );
+
+      link.click();
+
+      link.remove();
+
+      URL.revokeObjectURL(
+        fileURL
+      );
+    } catch (err) {
+      console.error(
+        "Erro ao gerar PDF:",
+        err
+      );
+
+      toast.error(
+        "Erro ao gerar PDF."
+      );
+    }
+  }
+
+  return (
+    <div className="pl-8">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(
+            onSubmit
+          )}
+          className="flex gap-4 items-center"
+        >
+          <FormField
+            control={form.control}
+            name="dateRage"
+            render={({
+              field,
+            }) => (
+              <FormItem>
+                <FormLabel>
+                  Data
+                </FormLabel>
+
+                <Popover>
+                  <PopoverTrigger
+                    asChild
+                  >
+                    <FormControl>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className={cn(
+                          "w-[14rem] pl-3 text-left font-normal",
+                          !field.value
+                            ?.from &&
+                            "text-muted-foreground",
+                          "bg-muted hover:bg-gray-800 hover:text-amber-50"
                         )}
+                      >
+                        {field.value
+                          ?.from ? (
+                          field.value
+                            ?.to ? (
+                            <>
+                              {format(
+                                field
+                                  .value
+                                  .from,
+                                "dd/MM/yyyy"
+                              )}
+
+                              {" - "}
+
+                              {format(
+                                field
+                                  .value
+                                  .to,
+                                "dd/MM/yyyy"
+                              )}
+                            </>
+                          ) : (
+                            format(
+                              field
+                                .value
+                                .from,
+                              "dd/MM/yyyy"
+                            )
+                          )
+                        ) : (
+                          "Selecione o período"
+                        )}
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+
+                  <PopoverContent
+                    className="w-auto p-0 bg-muted text-muted-foreground"
+                    align="start"
+                  >
+                    <Calendar
+                      mode="range"
+                      selected={
+                        field.value
+                      }
+                      onSelect={
+                        field.onChange
+                      }
+                      disabled={(
+                        date
+                      ) =>
+                        date >
+                          new Date() ||
+                        date <
+                          new Date(
+                            "1900-01-01"
+                          )
+                      }
+                      captionLayout="dropdown"
                     />
-                    <Button 
-                        className="hover:bg-muted w-[8rem] hover:text-muted-foreground hover:border-muted-foreground hover:border-2 bg-cyan-700 cursor-pointer" 
-                        type="submit"
-                        disabled={query.isFetching}
+                  </PopoverContent>
+                </Popover>
+
+                <FormDescription>
+                  Selecione o período.
+                </FormDescription>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {isInformatica && (
+            <div className="w-[20rem]">
+              <label className="text-sm font-medium">
+                Selecionar usuário
+              </label>
+
+              <select
+                className="w-full border p-2 rounded bg-background"
+                value={
+                  usuarioSelecionado ??
+                  ""
+                }
+                onChange={(e) => {
+                  const value =
+                    e.target.value;
+
+                  setUsuarioSelecionado(
+                    value || null
+                  );
+                }}
+              >
+                <option value="">
+                  Selecione um usuário
+                </option>
+
+                {usuarios?.map(
+                  (u: any) => (
+                    <option
+                      key={u.id}
+                      value={u.id}
                     >
-                        {query.isFetching ? "Carregando..." : "FILTRAR"}
-                    </Button>
-                    <Button className="cursor-pointer w-[8rem] bg-slate-700 hover:bg-slate-400" onClick={() => geraPDF({dateRage: form.getValues("dateRage")})}>GERAR PDF</Button>
-                </form>
-            </Form>
-        </div>
-    )
+                      {u.name}
+                    </option>
+                  )
+                )}
+              </select>
+            </div>
+          )}
+
+          <Button
+            className="
+              hover:bg-muted
+              w-[8rem]
+              hover:text-muted-foreground
+              hover:border-muted-foreground
+              hover:border-2
+              bg-cyan-700
+              cursor-pointer
+            "
+            type="submit"
+            disabled={
+              query.isFetching ||
+              (
+                isInformatica &&
+                !usuarioSelecionado
+              )
+            }
+          >
+            {query.isFetching
+              ? "Carregando..."
+              : "FILTRAR"}
+          </Button>
+
+          {/**
+           * BOTÃO PDF
+           */
+          }
+
+          <Button
+            type="button"
+            className="
+              cursor-pointer
+              w-[8rem]
+              bg-slate-700
+              hover:bg-slate-400
+            "
+            disabled={
+              query.isFetching ||
+              (
+                isInformatica &&
+                !usuarioSelecionado
+              )
+            }
+            onClick={
+              geraPDF
+            }
+          >
+            GERAR PDF
+          </Button>
+        </form>
+      </Form>
+    </div>
+  );
 }

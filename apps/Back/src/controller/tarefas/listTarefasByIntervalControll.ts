@@ -8,11 +8,11 @@ export async function listTarefasByIntervalControll(
 ) {
   const intervalSchema = z.object({
     startDate: z.string(),
-    endDate: z.string()
+    endDate: z.string(),
+    userId: z.string()
   })
 
-  const { startDate, endDate } = intervalSchema.parse(request.body)
-  const userId = request.user.sub
+  const { startDate, endDate, userId } = intervalSchema.parse(request.body)
 
   try {
 
