@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Input } from "./ui/input";
@@ -142,7 +142,15 @@ export function UpLoadVideos({ open, onClose }: Props) {
         } catch (error) {
             toast.error("Erro ao enviar o vídeo. Tente novamente.")
         }
-    } 
+    }
+
+    useEffect(() => {
+        console.log("UPLOAD MONTADO");
+
+        return () => {
+            console.log("UPLOAD DESMONTADO");
+        };
+    }, []);
     return (
         <Dialog open={open} onOpenChange={onClose}>
             <DialogContent className="flex flex-col bg-muted text-muted-foreground">

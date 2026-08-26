@@ -3,20 +3,26 @@ import { DataPicker } from "../../components/dataPicker";
 import { TabelaAtividades } from "@/components/tabelaAtividades";
 import { Button } from "@/components/ui/button";
 import { CriarAtividadeButton } from "@/components/criarAtividadeButton";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { tarefasDTO } from "@/dtos/tarefasDTO";
 import { SearchTarefas } from "@/components/searchTarefas";
 
 export function Atividades() {
     const [tarefas, setTarefas] = useState<tarefasDTO[]>([])
     const [open, setOpen] = useState(false)
+    const handleDadosTarefas = useCallback((dados: any[]) => {
+        setTarefas(dados);
+    }, []);
+    
     return (
         <div >
             <Helmet title="ATIVIDADES"/>
             <div>
                 <div className="flex justify-between items-center mr-8">
                     {/* Componente que filtra data */}
-                    <DataPicker onDadosTarefas={setTarefas} />
+                    <DataPicker
+                        onDadosTarefas={handleDadosTarefas}
+                    />
 
                     <SearchTarefas onDadosTarefas={setTarefas}/>
 

@@ -18,96 +18,96 @@ export function MenuButton() {
     const [open, setOpen] = useState(false)
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant={"outline"} className="bg-muted cursor-pointer"> <Menu /></Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-muted text-muted-foreground w-[15rem]" align="end">
-                <DropdownMenuGroup className="flex flex-col gap-1">
+        <>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant={"outline"} className="bg-muted cursor-pointer"> <Menu /></Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-muted text-muted-foreground w-[15rem]" align="end">
+                    <DropdownMenuGroup className="flex flex-col gap-1">
 
-                    {/* Lista de atividades */}
-                    <DropdownMenuItem asChild>
-                        <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
-                            <Link to={"/"}>ATIVIDADES</Link>
-                        </Button>
-                    </DropdownMenuItem>
+                        {/* Lista de atividades */}
+                        <DropdownMenuItem asChild>
+                            <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
+                                <Link to={"/"}>ATIVIDADES</Link>
+                            </Button>
+                        </DropdownMenuItem>
 
-                    <DropdownMenuItem asChild>
-                        <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
-                            <Link to={"/kanban"}>KANBAN</Link>
-                        </Button>
-                    </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                            <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
+                                <Link to={"/kanban"}>KANBAN</Link>
+                            </Button>
+                        </DropdownMenuItem>
 
-                    <DropdownMenuItem asChild>
-                        <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
-                            <Link to={"/dash"}>DASHBOARD</Link>
-                        </Button>
-                    </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                            <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
+                                <Link to={"/dash"}>DASHBOARD</Link>
+                            </Button>
+                        </DropdownMenuItem>
 
-                    <DropdownMenuItem asChild>
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>CÓD DE ATIVIDADE</Button>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <CodAtividades />
-                                </DialogContent>
-                            </Dialog>
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem asChild>
-                        <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
-                            <Link to={"/feedback"}>RELATÓRIO DE FEEDBACK</Link>
-                        </Button>
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem asChild>
-                        <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
-                            <Link to={"/consultar"}>CONSULTAR PRESENÇA</Link>
-                        </Button>
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem asChild>
-                        <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
-                            <Link to={"/analise"}>SELOS</Link>
-                        </Button>
-                    </DropdownMenuItem>
-
-                    {/* Lista de videos */}
-                    <DropdownMenuItem asChild>
-                        <Button className="w-[100%] hover:bg-muted border-2 cursor-pointer" variant={"ghost"}>
-                            <Link to={"/video"}>LISTA DE VIDEOS</Link>
-                        </Button>
-                    </DropdownMenuItem>
-                   
-                    <DropdownMenuItem asChild>
-                        <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
-                            <Link to={"/sobre"}>SOBRE</Link>
-                        </Button>
-                    </DropdownMenuItem>
-
-                    {user?.user_roles.role !== "INFORMATICA" ? 
-                        <></> :
-                        <>
-                            <DropdownMenuItem asChild>
-                                <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
-                                    <Link to={"/analises"}>RELATÓRIO DE SELOS</Link>
-                                </Button>
-                            </DropdownMenuItem>                        
-                            <DropdownMenuItem asChild>
-                                <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
-                                    <Link to={"/gerenciargrupo"}>GERENCIAR GRUPO</Link>
-                                </Button>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                                <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
-                                    <Link to={"/gerenciarpresenca"}>GERENCIAR PRESENÇA</Link>
-                                </Button>
-                            </DropdownMenuItem>
-
-                            {/* Criar novo video */}
-                            <DropdownMenuItem asChild>
+                        <DropdownMenuItem asChild>
                                 <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>CÓD DE ATIVIDADE</Button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <CodAtividades />
+                                    </DialogContent>
+                                </Dialog>
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem asChild>
+                            <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
+                                <Link to={"/feedback"}>RELATÓRIO DE FEEDBACK</Link>
+                            </Button>
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem asChild>
+                            <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
+                                <Link to={"/consultar"}>CONSULTAR PRESENÇA</Link>
+                            </Button>
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem asChild>
+                            <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
+                                <Link to={"/analise"}>SELOS</Link>
+                            </Button>
+                        </DropdownMenuItem>
+
+                        {/* Lista de videos */}
+                        <DropdownMenuItem asChild>
+                            <Button className="w-[100%] hover:bg-muted border-2 cursor-pointer" variant={"ghost"}>
+                                <Link to={"/video"}>LISTA DE VIDEOS</Link>
+                            </Button>
+                        </DropdownMenuItem>
+                    
+                        <DropdownMenuItem asChild>
+                            <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
+                                <Link to={"/sobre"}>SOBRE</Link>
+                            </Button>
+                        </DropdownMenuItem>
+
+                        {user?.user_roles.role !== "INFORMATICA" ? 
+                            <></> :
+                            <>
+                                <DropdownMenuItem asChild>
+                                    <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
+                                        <Link to={"/analises"}>RELATÓRIO DE SELOS</Link>
+                                    </Button>
+                                </DropdownMenuItem>                        
+                                <DropdownMenuItem asChild>
+                                    <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
+                                        <Link to={"/gerenciargrupo"}>GERENCIAR GRUPO</Link>
+                                    </Button>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <Button asChild className="w-[100%] hover:bg-muted border-2 cursor-pointer " variant={"ghost"}>
+                                        <Link to={"/gerenciarpresenca"}>GERENCIAR PRESENÇA</Link>
+                                    </Button>
+                                </DropdownMenuItem>
+
+                                {/* Criar novo video */}
+                                <DropdownMenuItem asChild>
                                     <Button 
                                         className="w-[100%] hover:bg-muted border-2 cursor-pointer" 
                                         variant={"ghost"}
@@ -117,22 +117,23 @@ export function MenuButton() {
                                     >
                                         UPLOAD DE VIDEOS
                                     </Button>
-                                    <UpLoadVideos
-                                        open={open}
-                                        onClose={setOpen}
-                                    />
-                                </Dialog>
-                            </DropdownMenuItem>
-                        </>
-                    }
+                                </DropdownMenuItem>
+                            </>
+                        }
 
-                    <DropdownMenuItem asChild>
-                        <Button onClick={signOut} className="w-[100%] hover:bg-muted mt-4 cursor-pointer " variant={"destructive"}>
-                            <Link to={"/"}>SAIR</Link>
-                        </Button>
-                    </DropdownMenuItem>
-                </DropdownMenuGroup>
-            </DropdownMenuContent>
-        </DropdownMenu>
+                        <DropdownMenuItem asChild>
+                            <Button onClick={signOut} className="w-[100%] hover:bg-muted mt-4 cursor-pointer " variant={"destructive"}>
+                                <Link to={"/"}>SAIR</Link>
+                            </Button>
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                </DropdownMenuContent>
+            </DropdownMenu>
+
+            <UpLoadVideos
+                open={open}
+                onClose={setOpen}
+            />
+        </>
     )
 }
