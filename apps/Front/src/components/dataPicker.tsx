@@ -301,7 +301,7 @@ export function DataPicker({
           onSubmit={form.handleSubmit(
             onSubmit
           )}
-          className="flex gap-4 items-center"
+          className="flex flex-col gap-4 items-start"
         >
           <FormField
             control={form.control}
@@ -392,12 +392,6 @@ export function DataPicker({
                     />
                   </PopoverContent>
                 </Popover>
-
-                <FormDescription>
-                  Selecione o período.
-                </FormDescription>
-
-                <FormMessage />
               </FormItem>
             )}
           />
@@ -440,57 +434,54 @@ export function DataPicker({
               </select>
             </div>
           )}
+          <div className="flex gap-4">
+            <Button
+              className="
+                hover:bg-muted
+                w-[8rem]
+                hover:text-muted-foreground
+                hover:border-muted-foreground
+                hover:border-2
+                bg-cyan-700
+                cursor-pointer
+              "
+              type="submit"
+              disabled={
+                query.isFetching ||
+                (
+                  isInformatica &&
+                  !usuarioSelecionado
+                )
+              }
+            >
+              {query.isFetching
+                ? "Carregando..."
+                : "FILTRAR"}
+            </Button>
 
-          <Button
-            className="
-              hover:bg-muted
-              w-[8rem]
-              hover:text-muted-foreground
-              hover:border-muted-foreground
-              hover:border-2
-              bg-cyan-700
-              cursor-pointer
-            "
-            type="submit"
-            disabled={
-              query.isFetching ||
-              (
-                isInformatica &&
-                !usuarioSelecionado
-              )
-            }
-          >
-            {query.isFetching
-              ? "Carregando..."
-              : "FILTRAR"}
-          </Button>
+            <Button
+              type="button"
+              className="
+                cursor-pointer
+                w-[8rem]
+                bg-slate-700
+                hover:bg-slate-400
+              "
+              disabled={
+                query.isFetching ||
+                (
+                  isInformatica &&
+                  !usuarioSelecionado
+                )
+              }
+              onClick={
+                geraPDF
+              }
+            >
+              GERAR PDF
+            </Button>
 
-          {/**
-           * BOTÃO PDF
-           */
-          }
-
-          <Button
-            type="button"
-            className="
-              cursor-pointer
-              w-[8rem]
-              bg-slate-700
-              hover:bg-slate-400
-            "
-            disabled={
-              query.isFetching ||
-              (
-                isInformatica &&
-                !usuarioSelecionado
-              )
-            }
-            onClick={
-              geraPDF
-            }
-          >
-            GERAR PDF
-          </Button>
+          </div>
         </form>
       </Form>
     </div>
