@@ -28,6 +28,8 @@ import { analiseRoute } from './controller/analiseMensal/route.ts';
 import { kanbanRoute } from './controller/kanban/route.ts';
 import { refreshController } from './controller/user/refreshController.ts';
 import { signOutController } from './controller/user/signOutController.ts';
+import { sql } from 'drizzle-orm';
+import { db } from './database/connection.ts';
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -67,6 +69,31 @@ app.register(multipart, {
         fileSize: 1024 * 1024 * 500 // 500MB
     }
 })
+
+app.get('/health/live', async (_request, reply) => {
+  return reply.code(200).send({
+    status: 'ok',
+  });
+});
+
+app.get('/health/ready', async (request, reply) => {
+  try {
+    await db.execute(sql`SELECT 1`);
+
+    return reply.code(200).send({
+      status: 'ready',
+    });
+  } catch (error) {
+    request.log.error(
+      { err: error },
+      'Database health check failed'
+    );
+
+    return reply.code(503).send({
+      status: 'not_ready',
+    });
+  }
+});
 
 app.register(fastifyStatic, {
     root: resolve(process.cwd(), 'uploads'),

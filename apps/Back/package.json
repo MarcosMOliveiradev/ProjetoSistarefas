@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "build": "tsup src/server.ts --format esm --out-dir dist",
+    "typecheck": "tsc --noEmit",
     "dev": "tsx watch src/server.ts",
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
