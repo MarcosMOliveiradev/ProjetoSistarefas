@@ -1,5 +1,5 @@
 import { UserDrizzleRepository } from "../../../../database/table/UserDrizzleRepository.ts";
-import { UpdateUser } from "../updadteUser.ts";
+import { UpdateUser } from "../UpdadteUser.ts";
 
 export function makeUpdateUser() {
   const userRepository = new UserDrizzleRepository()

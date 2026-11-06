@@ -23,6 +23,8 @@ node_modules
 dist
 dist-ssr
 *.local
+.env.docker
+.env.compose
 
 .vscode/*
 !.vscode/extensions.json

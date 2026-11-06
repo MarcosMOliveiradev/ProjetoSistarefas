@@ -1,5 +1,5 @@
 import { KanbanDrizzleRepository } from "../../../../database/table/KanbanDrizzleRepository.ts"
-import { KanbanStart } from "../kanbanStart.ts"
+import { KanbanStart } from "../KanbanStart.ts"
 
 export function makeStartKanban() {
     const kanbanRepository = new KanbanDrizzleRepository()

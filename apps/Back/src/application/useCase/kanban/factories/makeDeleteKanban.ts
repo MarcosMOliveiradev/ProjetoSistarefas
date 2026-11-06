@@ -1,5 +1,5 @@
 import { KanbanDrizzleRepository } from "../../../../database/table/KanbanDrizzleRepository.ts"
-import { DeleteKanban } from "../deleteKanban.ts"
+import { DeleteKanban } from "../DeleteKanban.ts"
 
 export function makeDeleteKanban() {
   const kanbanRepository = new KanbanDrizzleRepository()
