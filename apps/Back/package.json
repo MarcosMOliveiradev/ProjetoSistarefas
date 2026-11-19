@@ -12,7 +12,9 @@
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
     "criapresenca": "tsx src/teste/job/criaPresencaJob.ts",
-    "fechapresenca": "tsx src/teste/job/fechaPresencaJob.ts"
+    "fechapresenca": "tsx src/teste/job/fechaPresencaJob.ts",
+    "teste": "vitest run",
+    "teste:watch": "vitest"
   },
   "keywords": [],
   "author": "",
@@ -26,7 +28,9 @@
     "pg": "^8.16.3",
     "tsup": "^8.5.1",
     "tsx": "^4.20.3",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^5.1.0"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",

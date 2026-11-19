@@ -14,7 +14,7 @@ export abstract class UserRepository {
     abstract create(user: User): Promise<userDTO>;
     abstract findById(id: string): Promise<userRoleDTO | null>;
     abstract find(): Promise<Users[]>;
-    abstract findByMatricula(matricula: number): Promise<userRoleDTO>;
+    abstract findByMatricula(matricula: number): Promise<userRoleDTO | null>;
     abstract updatePassword(password: string, id: string): Promise<void>;
     abstract updateAvataUrl(avatarUrl: string, userId: string): Promise<void>;
     abstract updateTurno(userId: string, turno: turnoEnum): Promise<void>;

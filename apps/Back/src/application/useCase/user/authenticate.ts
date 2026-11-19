@@ -20,9 +20,8 @@ export class Authenticate {
     if(!user) {
       throw new UnexistUser()
     }
-    
 
-    const hash = user.user.password
+    const hash = (user.user as typeof user.user & { password: string }).password
 
     const comparePass = await compare(passwordBody, hash)
 

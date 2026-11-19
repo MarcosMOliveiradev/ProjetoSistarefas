@@ -5,6 +5,7 @@ export type userRoleDTO = {
         id: string
         name: string;
         matricula: number;
+        password?: string;
         avatarUrl: string | null | undefined;
         ativado: boolean;
         turno: "MANHA" | "TARDE" | "INTEGRAL",
